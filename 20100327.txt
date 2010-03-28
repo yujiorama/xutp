@@ -1,0 +1,111 @@
+2010-03-27  Yuji Okazawa  <yuji-okazawa@artemis>
+
+	* 少しづつ準備が [work]:
+	会議室の鍵が開いた!
+	プロジェクタを借りてくれた方がいた!
+	なんか名札くばってる!
+
+	普通の流れが分からんね。
+	そして配置がわからんけど、偏り気味。
+
+	* オープニング [work]:
+	13:37 くらいに開始。そして沈黙。
+
+	t-wada さんも到着したようだ。
+	mac 率高いな、そして iBus + Anthy は激しく使いづらい。
+
+	なんか手持ちの pc でポジショントークすることになってるみたい。
+	(position.txt)
+
+	* 自己紹介 [work]:
+	拾いきれません。
+	アンダースコアは下心。
+
+	田中さん (@tenkoma) こまてん?
+
+	* Data-Driven Test [c18]:
+	SUT
+	テストで保護されてるシステム?
+
+	S2Unit (dbunit) は Fixture Setup として別扱い。
+
+	テストケース自体がパラメータを受け取るようになってるパターン。
+
+	データでテストケースを表現する、かな。
+
+	parameterized test (pp.607) するための方法として data-driven test
+
+	テスト途中で終わらせない。
+	検証結果を記録して、テストは続行する。
+
+	Incremental Tabular Test。
+	pp.607 で variants に書かれてる。
+
+	>>
+	より少ないコードでより多いカバレッジを。
+	<< 詠み人知らず
+
+	ここからなんか難しいな。
+	>>
+	If we automated test for data-driven behavior using Scripted
+	Tests, we must update the test programs whenever the configuration
+	data changes.
+	<<
+
+	設定値によって振る舞いが変わってしまうプログラムがあるとする。
+
+	Scripted Test において、データドリブンな振る舞いのテストを自動化す
+	る場合、設定値が変わる度にテストプログラムも修正しないといけない。
+
+	これが不自然だという主張になってる。データ駆動テストなのに、設定値
+	が変わったらテストコードを直してコミットしないといけないのは変だ、
+	と。設定値すらもデータ駆動テストのインプットにしておけば、テストコー
+	ドを変えないで済むので、データ駆動テストとして自然になるな。
+
+	TortoiseCVS があったから TortoiseSVN が生まれたんだ…
+
+	受け入れテストから CI で回す (アウトサイドダウン) なら、どこでテス
+	トが通るようになったかを管理しないといけない。
+	初めはすべてのテストが NG になるから。
+	最後まで実装終わらなければ、all green になることはない。
+	やり方どうでもいいけど、テストの状態を管理することが大事、と。
+
+	>>
+	受け入れテストと、ユニットテストでジョブを分けるとかやってた。
+	<< t-wada
+
+	* Shared Fixture [pp.317]:
+	fixture のインスタンスをケースで共有。
+	悪魔の囁き的な。
+
+	どこで tearDown するの問題。
+	- JUnit3:TestCase を Decorator で格調する必要がある
+	- JUnit4:@AfterClass をつければよい
+
+	途中の小話がおもしろいので読んでみよう。
+	[sidebar:Faster Tests Without Shared Fixures]
+
+	* Back Door Manipulation [pp.327]:
+	SUT の API を使わずに Fixture の状態を変えちゃう。
+
+	Test Double のあたりは、wiki に資料としてまとめてある。らしい。
+
+	[sidebar:Database as SUT API]
+
+	アサーションがカラム別になってるのはなぜ?
+	-> 途中でエラーになると何が悪かったのか分からないから。分けておけばわかりやすい。
+
+	* Test Method [c19]:
+	
+
+	* 発表あれこれ [memo]:
+	[メリット]
+	- 誰かが分からないことを答えてくれる (かもしれない)
+	- 誰かが間違ってるところを指摘してくれる (かもしれない)
+
+	[作法]
+	- サンプルコードは重要箇所をハイライトするとか
+	- 直訳よりもまとめのほうが好まれる?
+
+
+
