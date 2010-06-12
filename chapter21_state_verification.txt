@@ -1,0 +1,116 @@
+{{toc}}
+
+! State Verification
+
+ How do we make tests self-checking when there is state to be verified?
+ 
+ We inspect the state of the system under test after it has been
+ exercised and compare it to the expected state.
+
+ SUTの図
+
+* セルフチェックテスト (26ページ) は、誰が、いつ、テストを実行しても、人手の介入無しに「期待した結果」を検証できなければなりません。
+* しかし、「期待した結果」とはなんでしょうか ?
+* SUT はステートフルかもしれませんし、そうでないかもしれません。
+* もしステートフルなら、「exercised の後が同じ状態であること」か、「同じ状態ではないこと」かもしれません。
+* テストの自動化において、私達の期待する結果が「最終的な状態の変化」なのか、「exercised 中のより詳細な状況を知ること」なのかを決めることが私達の役目になります。
+
+""担当者ノート
+""* exercised は言葉が思い付かないのでそのままです
+
+ State Verification involves inspecting the state of the SUT after it has been exercised.
+
+!! How It Works
+
+* SUT の exercise は、着目しているメソッドの呼び出しによって行います。
+* その後、Assertion Method (362ページ) により、SUT から取得した exercise 後の状態と、期待する最終状態を比較します。
+
+* 通常は、状態を返すメソッドや関数によって、容易に SUT の状態にアクセスすることができます。
+* 特に、テスト駆動開発をしているときは顕著です。なぜなら、容易に状態にアクセスできることが保証されているからです。
+* 後付けでテストを作成した場合は、適切な状態の情報へアクセスすることがチャレンジングであることが分かるでしょう。
+* こういったケースでは、状態を晒すため、Test Logic in Production (217ページ) 以外の、Test-Specific Subclass (579ページ) や何か他のテクニックを使う必要があります。
+
+""担当者ノート
+""* TDDをしている=内部状態へのアクセスが容易、というのは何故 ?
+""* 「Test Logic in Production」は、テストのために製品コード中にテスト用のコードを書いてしまう方法のようです
+
+* 関連して、"SUT の状態はどこに保存されるのか?" という疑問があります。
+* たいていは、現在の SUT の内部に保存されているものですが、データベースのような別のコンポーネントに保存されることもあります。
+* 後者のケースでは、他のコンポーネントへのアクセスが必要でしょう (レイヤー交差テストの範疇)。
+* 対照的に、Behavior Verification (468ページ) は、SUT と他のコンポーネントのインタラクションを検証します。
+
+""担当者ノート
+""* 「actual」=「現在の」
+
+!! When to Use It
+
+* State Verification は、私達が SUT の最終的な状態に注目しているときに使うべき手法です。
+* その状態に逹するまでの経緯は含みません。
+* 観点を限定することで、SUT の実装のカプセル化を維持することができます。
+
+* State Verification はソフトウェアを内から外に向けて開発する上で自然に登場します。
+* 最も内側のオブジェクトから順に、外側に向けて開発していくということです。
+* もちろん、テストされないコードパスに起因する Production Bugs (268ページ) を防ぐためにも、
+* SUT からの出力を間接的に制御する Test Stubs (529ページ) を使うことになるでしょう。
+
+* SUT を exercising することによる最終的な状態 (出力) に現れない副作用に注意しましょう。
+* Behavior Verification によって振る舞いを直接観察することが可能です。
+* しかし、ソフトウェアの仕様を限定的にすることで Fragile Tests (239ページ) を作ってしまうことには注意しましょう。
+
+""担当者ノート
+""* 「overspecifying the software」は SUT のことを指している
+
+!! Implementation Notes
+
+ There are two basic styles of implementing State Verification.
+
+!!! Variation: Procedural State Verification
+
+* Procedural State Verification を使うときは、ごく単純に Assertion Method を順番に書いていきます。
+* これらの assertion は、状態に関する情報を分解した値と、個々の期待する結果を比較するものです。
+* 自動テストを始めて書く人には "最小限の抵抗の道のり" だと解釈されがちです。
+* この方法の大きなデメリットは、Obscure Tests (186ページ) になりやすいことです。無数のアサーションは期待する出力を限定的にします。
+* いくつものテストに同じアサーションが並んでいたり、同じアサーションが 1 つのテストメソッドに複数回登場する場合は、Test Code Duplication (213ページ) になっています。
+
+""担当者ノート
+""* 手続き的手法で状態を検証する
+""* "path of least resistance" て何でしょうか ?
+""* 「Obscure Test」とは、実装が変更されると、テストコードも修正しないといけないから、ということか ?
+
+!!! Variation: Expected State Specification
+
+* Expected Stated Specification では、exercise 後の SUT について、期待する属性を持った 1 つ以上のオブジェクトの集合としての仕様を作ります。
+* そして、1 つの Equality Assertion (Assertion Method 参照) により、1 度のアサーションでこれらのオブジェクトを比較します。
+* これは、読み易く簡潔なテストを作成するのに役立ちます。
+* いくつもの属性を検証しなくてはならない状況において、SUT が返すと期待されるオブジェクトと同じようなオブジェクトを構築可能な場合、Expected State Specification を使うことができます。
+* よりたくさんの比較しなければならない属性があり、よりたくさんのテストケースがあるような場面は、Expected State Specification を使う切実な理由になります。
+* 比較するデータが大量にあるような極端な場合、"期待値の表" を作成して、SUT の保持する値と比較します。
+* Fit の "[[行フィクスチャhttp://www.fitnesse.info/fixturegallery:basicfitfixtures:rowfixture]]" は、顧客テストにおいてこのようなテストを実施するよい手段を提供します。
+* DbUnit のようなツールは、Back Door Maniulation (327ページ) のためのよい手段です。
+
+* Expectd State Specification を構築するとき、Parameterized Creation Method (415ページ、Creation Method を参照) を使うことを推奨します。
+* これは、Expected State Specification において必要だけど、重要ではない属性による、コードの読み手の混乱を防ぎます。
+* Expected State Specification は、ほとんどの場合 SUT から返されることが期待されるクラスと、同じクラスのインスタンスです。
+* オブジェクトが等価性を実装していない場合、Expected State Specification には、いくらかの難しさがあります。
+* 各属性の値を比較する (各々のオブジェクト参照を比較するなど) 必要があることや、テストコードと実際の実装の等価性の定義の間に差があるかもしれないこと、などです。
+
+""担当者ノート
+""* equlas メソッドが定義されてないことの影響について言及されている
+
+* テストに限定した等価性の実装による Custom Assertions (474ページ) を作るなどすれば、我々はこういったケースでも Expected State Specification を使うことができます。
+* 言い替えれば、テストにおける等価性を実装したクラスがあれば、Expected State Specification をビルドすることができます。
+* こういったクラスは、equals メソッドをオーバーライドした Test-Specific サブクラス にもなるし、 equals メソッドを実装したシンプルな DTO にもなります。
+* これらの手段は、製品コードに equals メソッドを改善する(もしくは導入する) 契機として望ましいものですが、Equality Pollution として顕在化します (Test Logic in Production を参照)。
+* クラスのインスタンス構築が難しい場合、テストに限定した等価性の実装と必須属性を持った Fake Object (551ページ) を定義することができます。
+* These last few “tricks” are made possible by the fact that Equality Assertions usually ask the Expected State Specification to compare itself to the actual result, rather than the reverse.
+
+""担当者ノート
+""* "Equality Pollution" は、テストを通過させるための equals を製品コードに導入することで、システム要件を満たせなくなること
+""最後意味が取れませんでした
+
+* Expected State Specification は、結果検証フェーズにおける Equality Assertion から使用される直前や、フィクスチャセットアップフェーズに構築することができます。
+* 後者の戦略では、Expected State Specification の属性を SUT にパラメータとして渡すことができます。
+* また、テストフィクスチャの他のオブジェクトを構築するための Derived Values (718ページ) の基盤としても使用できます。
+* これらは、要因 (フィクスチャと Expected State Specification の相互影響) を把握することを容易にします。
+
+!! Motivating Example
