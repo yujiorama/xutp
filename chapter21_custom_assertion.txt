@@ -10,7 +10,6 @@ attributes of the object that deﬁne test-speciﬁc equality.
 * テストに固有の等価性判定ロジックがある場合、セルフチェックテストを構築するにはどうすればよいか ?
 * 同一のアサーションロジックが複数のテストに使われている場合、テストコードの重複を避けるにはどうすればよいか ?
 * 条件依存のテストロジックを無くすにはどうすればよいか ?
-
 * テストに固有の等価性判定で使われている属性だけを比較するような、目的に合わせたアサーションメソッドを作成する。
 
 Most members of the xUnit family provide a reasonably rich set of Assertion
@@ -26,117 +25,221 @@ with an Intent-Revealing Name [SBPP].
 * しかしやがては次のような言葉を口にするでしょう。
 ** 「某のアサーションがあればこのテストはもっと簡単に書けるのに...」
 * 自分達で書いてはどうでしょうか?
-* カスタムアサーションを書くにあたって多くの問題はありますが、そのテクニックは目的に係らずほとんど同じです。
+* カスタムアサーションを書くにあたっての問題
+** その方法は目的に係らずほとんど同じです。
+* Intent-Revealing Name (SBPP) によるアサーションメソッド
+** システムの検証による複雑さを隠蔽できる
 
-* Intent-Revealing Name を使ったアサーションメソッドにより、システムの検証による複雑さを隠蔽することができます。
+!! How It Works
 
+We encapsulate the mechanics of verifying that something is true (an
+assertion) behind an Intent-Revealing Name. To do so, we factor out
+all the common assertion code within the tests into a Custom Assertion
+that implements the veriﬁcation logic. A Custom Equality Assertion
+takes two parameters: an Expected Object (see State Veriﬁcation on
+page 462) and the actual object.  A key characteristic of Custom
+Assertions is that they receive everything they need to pass or fail
+the test as parameters. Other than causing the test to fail, they have
+no side effects.
 
-!! How It Works 
-We encapsulate the mechanics of verifying that something is true (an assertion) 
-behind an Intent-Revealing Name. To do so, we factor out all the common 
-assertion code within the tests into a Custom Assertion that implements the veriﬁ cation logic. A Custom Equality Assertion takes two parameters: an 
-Expected Object (see State Veriﬁ cation on page 462) and the actual object. 
-A key characteristic of Custom Assertions is that they receive everything they 
-need to pass or fail the test as parameters. Other than causing the test to fail, 
-they have no side effects. 
+* Intent-Revealing Name により、真になるアサーションの検証の方法をカプセル化する
+* すべてのアサーションから共通するコードを抽出し、カスタムアサーションとして検証ロジックを実装する
+* Custom Equality Assertion は 2 つのパラメータを取る
+** 期待値オブジェクト (State Verification 462ページ)
+** 結果値オブジェクト
+* カスタムアサーションの要点
+** テスト結果の是非を判断するために必要な情報を、すべてパラメータとして渡すこと
+* Other than causing the test to fail, they have no side effects.
+** what's the meaning of "Other" ?
+
 Typically, we create Custom Assertions through refactoring by identifying 
 common patterns of assertions in our tests. When test driving, we might just 
 go ahead and call a nonexistent Custom Assertion because it makes writing our 
 test easier; this tactic lets us focus on the part of the SUT that needs to be tested 
 rather than the mechanics of how the test would be carried out. 
 
-!! When to Use It 
+* カスタムアサーションは、テストコードのリファクタリングを通じて、共通するパターンを見出すことで作成する
+* SUT のテスト対象部分について集中する方法
+** テストコードを書くとき、まだ書いてないしないカスタムアサーションを呼び出す
+** この方法は、テストが実行された仕組みに依存しない
+
+!! When to Use It
+
 We should consider creating a Custom Assertion whenever any of the following 
 statements are true: 
-• We ﬁ nd ourselves writing (or cloning) the same assertion logic in test 
+• We ﬁnd ourselves writing (or cloning) the same assertion logic in test 
 after test (Test Code Duplication; see page 213). 
-• We ﬁ nd ourselves writing Conditional Test Logic (page 200) in the result 
-veriﬁ cation part of our tests. That is, our calls to Assertion Methods are 
-embedded in i f statements or loops. 
-• The result veriﬁ cation parts of our tests suffer from Obscure Test
+• We ﬁnd ourselves writing Conditional Test Logic (page 200) in the result 
+veriﬁcation part of our tests. That is, our calls to Assertion Methods are 
+embedded in if statements or loops. 
+• The result veriﬁcation parts of our tests suffer from Obscure Test
 (page 186) because we use procedural rather than declarative result 
-veriﬁ cation in the tests. 
-• We ﬁ nd ourselves doing Frequent Debugging (page 248) whenever 
+veriﬁcation in the tests. 
+• We ﬁnd ourselves doing Frequent Debugging (page 248) whenever 
 assertions fail because they do not provide enough information. 
 
-A key reason for moving the assertion logic out of the tests and into Custom
-Assertions is to Minimize Untestable Code (see page 44). Once the veriﬁ cation 
-logic has been moved into a Custom Assertion, we can write Custom Assertion 
-Tests (see Custom Assertion on page 474) to prove the veriﬁ cation logic is working properly. Another important beneﬁ t of using Custom Assertions is that they 
-help avoid Obscure Tests and make tests Communicate Intent (see page 41). 
-That, in turn, will help produce robust, easily maintained tests. 
-If the veriﬁ cation logic must interact with the SUT to determine the actual 
-outcome, we can use a Veriﬁ cation Method (see Custom Assertion) instead of a 
-Custom Assertion. If the setup and exercise parts of the tests are also the same 
-except for the values of the actual/expected objects, we should consider using 
-a Parameterized Test (page 607). The primary advantage of Custom Assertions
-over both of these techniques is reusability; the same Custom Assertion can be reused in many different circumstances because it is independent of its context 
-(its only contact with the outside world occurs through its parameter list). 
-We most commonly write Custom Assertions that are Equality Assertions 
-(see Assertion Method), but there is no reason why we cannot write other kinds 
-as well. 
+*カスタムアサーションを作成にあたっての条件
+** Test Code Duplication (213ぺーじ) が発生している
+*** 同じアサーションロジックがあちこちに
+** Conditional Test Logic (200ページ) が登場する
+*** アサーションメソッドが if 文やループの中に埋め込まれている
+** Obscure Test (186ページ) で悩んでいる
+*** テストコード中の結果の検証が宣言的ではなく手続的になってる
+** Frequent Debugging (248ページ) をよくやっている
+*** アサーションが失敗したときに提供される情報が不十分
+
+A key reason for moving the assertion logic out of the tests and into
+Custom Assertions is to Minimize Untestable Code (see page 44). Once
+the verification logic has been moved into a Custom Assertion, we can
+write Custom Assertion Tests (see Custom Assertion on page 474) to
+prove the verification logic is working properly. Another important
+benefit of using Custom Assertions is that they help avoid Obscure
+Tests and make tests Communicate Intent (see page 41).  That, in turn,
+will help produce robust, easily maintained tests.  If the
+verification logic must interact with the SUT to determine the actual
+outcome, we can use a verification Method (see Custom Assertion)
+instead of a Custom Assertion. If the setup and exercise parts of the
+tests are also the same except for the values of the actual/expected
+objects, we should consider using a Parameterized Test (page 607). The
+primary advantage of Custom Assertions over both of these techniques
+is reusability; the same Custom Assertion can be reused in many
+different circumstances because it is independent of its context (its
+only contact with the outside world occurs through its parameter
+list).  We most commonly write Custom Assertions that are Equality
+Assertions (see Assertion Method), but there is no reason why we
+cannot write other kinds as well.
+
+*テストコードからアサーションロジックを抽出してカスタムアサーションに移動するのは、Minimize Untestable Code (44ページ) のためです。
+*カスタムアサーションに検証ロジックを移動すれば、カスタムアサーションのテストを書くことで検証ロジックが正しく動作することを証明できます。
+*カスタムアサーションを使うことのメリット
+**再利用性
+*** コンテキストに依存しないから、異なる環境でも再利用しやすい
+**Obscure Test を回避する
+**テストを Communicate Intent (41ページ) にする
+**プロダクトを頑健にする
+**テストのメンテナンスを容易にする
+* Verification Method (後述) をお勧めするケース
+** 検証ロジックが、本当の出力を得るために SUT とやりとりしなければならない
+* Parameterized Test (607ページ) をお勧めするケース
+** setup や exercise の部分で SUT とやりとりしなければならない
+*カスタムアサーションの再利用性
+** コンテキストに非依存
+** 外界とのインターフェースはパラメータリストだけ
+** 有名なのは Equality Assertions (assertEqual, assertThat, etc ...)
 
 !!! Variation: Custom Equality Assertion 
-For custom equality assertions, the Custom Assertion must be passed an Expected
-Object and the actual object to be veriﬁ ed. It should also take an Assertion Message (page 370) to avoid playing Assertion Roulette (page 224). Such an assertion 
-is essentially an equals method implemented as a Foreign Method [Fowler]. 
-Variation: Object Attribute Equality Assertion 
-We often run across Custom Assertions that take one actual object and several 
-different Expected Objects that need to be compared with speciﬁ c attributes of 
-the actual object. (The set of attributes to be compared is implied by the name of 
-the Custom Assertion.) The key difference between these Custom Assertions and 
-a Veriﬁ cation Method is that the latter interacts with the SUT while the Object
-Attribute Equality Assertion looks only at the objects passed in as parameters. 
-Variation: Domain Assertion 
-All of the built-in Assertion Methods are domain independent. Custom Equality Assertions implement test-speciﬁ c equality but still compare only two 
-objects. Another style of Custom Assertion helps contribute to the deﬁ nition 
-of a “domain-speciﬁ c” Higher-Level Language (see page 41)—namely, the 
-Domain Assertion.
-A Domain Assertion is a Stated Outcome Assertion (see Assertion Method)
-that states something that should be true in domain-speciﬁ c terms. It helps elevate 
-the test into “business-speak.”
+
+For custom equality assertions, the Custom Assertion must be passed an
+Expected Object and the actual object to be verified. It should also
+take an Assertion Message (page 370) to avoid playing Assertion
+Roulette (page 224). Such an assertion is essentially an equals method
+implemented as a Foreign Method [Fowler].
+
+!!! Variation: Object Attribute Equality Assertion
+
+We often run across Custom Assertions that take one actual object and
+several different Expected Objects that need to be compared with
+specific attributes of the actual object. (The set of attributes to be
+compared is implied by the name of the Custom Assertion.) The key
+difference between these Custom Assertions and a verification Method
+is that the latter interacts with the SUT while the Object Attribute
+Equality Assertion looks only at the objects passed in as parameters.
+
+* 特定の属性を検証するアサーションメソッド
+** メソッド名に検証する属性を示す言葉が含まれている
+* verification Method との違い
+** Object Attribute Equality Assertion はパラメータのオブジェクトしか見ない
+** verification Method では SUT にアクセスする
+
+!!! Variation: Domain Assertion
+
+All of the built-in Assertion Methods are domain independent. Custom
+Equality Assertions implement test-specific equality but still compare
+only two objects. Another style of Custom Assertion helps contribute
+to the definition of a “domain-specific” Higher-Level Language (see
+page 41)—namely, the Domain Assertion.
+
+A Domain Assertion is a Stated Outcome Assertion (see Assertion
+Method) that states something that should be true in domain-specific
+terms. It helps elevate the test into “business-speak.”
+
+* 全ての組み込みアサーションメソッドはドメイン非依存
+* Custom Equality Assertion は、テストに限定された 2 つのオブジェクト間の等価性を実装するだけ
+* Domain Assertion
+** ドメインに限定された Higher-Level Language (41ページ) を定義する
+** Stated Outcome Assertion (Assertion Method 参照)
+** ドメインで規程された条件において真となるアサーション
+** テストケースをビジネス用語で表現
 
 !!! Variation: Diagnostic Assertion 
-Sometimes we ﬁ nd ourselves doing Frequent Debugging whenever a test fails 
-because the assertions tell us only that something is wrong but do not identify 
-the speciﬁ c problem (e.g., the assertions indicate these two objects are not equal 
-but it isn’t clear what isn’t equal about the object). We can write a special kind of 
-Custom Assertion that may look just like one of the built-in assertions but provide more information about what is different between the expected and actual 
-values than a built-in assertion because it is speciﬁ c to our types. (For example, 
-it might tell us which attributes are different or where long strings differ.) 
+
+Sometimes we find ourselves doing Frequent Debugging whenever a test
+fails because the assertions tell us only that something is wrong but
+do not identify the specific problem (e.g., the assertions indicate
+these two objects are not equal but it isn’t clear what isn’t equal
+about the object). We can write a special kind of Custom Assertion
+that may look just like one of the built-in assertions but provide
+more information about what is different between the expected and
+actual values than a built-in assertion because it is specific to our
+types. (For example, it might tell us which attributes are different
+or where long strings differ.)
+
+* アサーションが失敗
+** 失敗したことは分かるけど...
+** 具体的に何が駄目なのか特定できないので Frequent Debugging
+* 組み込みアサーションと同じような使い勝手だけど、失敗の原因を詳しく出力するアサーション
 
 On one project, we were comparing string variables containing XML. 
 Whenever a test failed, we had to bring up two string inspectors and scroll 
 through them looking for the difference. Finally, we got smart and included 
-the logic in a Custom Assertion that told us where the ﬁ rst difference between 
+the logic in a Custom Assertion that told us where the first difference between 
 the two XML strings occurred. The small amount of time we spent writing 
 the diagnostic custom assertion was paid back many times over as we ran 
 our tests.
 
-!!! Variation: Veriﬁ cation Method 
-In customer tests, a lot of the complexity of verifying the outcome is related 
-to interacting with the SUT. Veriﬁ cation Methods are a form of Custom Assertions that interact directly with the SUT, thereby relieving their callers from this 
-task. This simpliﬁ es the tests signiﬁ cantly and leads to a more “declarative” 
-style of outcome speciﬁ cation. After the Custom Assertion has been written, we 
-can write subsequent tests that result in the same outcome much more quickly. 
-In some cases, it may be advantageous to incorporate even the exercise SUT 
-phase of the test into the Veriﬁ cation Method. This is one step short of a full 
-Parameterized Test that incorporates all the test logic in a reusable Test Utility 
-Method (page 599). 
+* XML文字列を比較するテストが失敗
+** インスペクタで文字列をスクロールしながら確認...
+* 異なる最初の部分を出力できるカスタムアサーションを導入した
+** ちょっと時間はかかったけど、充分ペイするだけの価値はあった
+
+!!! Variation: verification Method
+
+In customer tests, a lot of the complexity of verifying the outcome is
+related to interacting with the SUT. verification Methods are a form
+of Custom Assertions that interact directly with the SUT, thereby
+relieving their callers from this task. This simplifies the tests
+significantly and leads to a more “declarative” style of outcome
+specification. After the Custom Assertion has been written, we can
+write subsequent tests that result in the same outcome much more
+quickly.  In some cases, it may be advantageous to incorporate even
+the exercise SUT phase of the test into the verification Method. This
+is one step short of a full Parameterized Test that incorporates all
+the test logic in a reusable Test Utility Method (page 599).
+
+* カスタマーテストにおける結果検証の複雑さは SUT とのやり取りがあることに起因する
+* verification Method
+** SUT と直接やりとりするカスタムアサーション
+** アサーションを実行する側 (テストコード) で SUT へアクセスしなくてもよくなる
+** テストコードが劇的にシンプルに
+** 宣言的な仕様を導出
+** exercise phase のコードも取り込める
+* 完全な Parameterized Test への第一歩
+** Test Utility Method (599ページ)
 
 !! Implementation Notes 
+
 The Custom Assertion is typically implemented as a set of calls to the various 
 built-in Assertion Methods. Depending on how we plan to use it in our tests, 
 we may also want to include the standard Equality Assertion template to ensure 
 correct behavior with null parameters. Because the Custom Assertion is itself an 
 Assertion Method, it should not have any side effects, nor should it call the SUT. 
-(If it needs to do so, it would be a Veriﬁ cation Method.)
+(If it needs to do so, it would be a verification Method.)
 
 !!! Variation: Custom Assertion Test 
 Testing zealots would also write a Custom Assertion Test (a Self-Checking Test—
-see page 26—for Custom Assertions) to verify the Custom Assertion. The beneﬁ t 
-from doing so is obvious: increased conﬁ dence in our tests. In most cases, writing 
-Custom Assertion Tests isn’t particularly difﬁ cult because Assertion Methods take 
+see page 26—for Custom Assertions) to verify the Custom Assertion. The benefit 
+from doing so is obvious: increased confidence in our tests. In most cases, writing 
+Custom Assertion Tests isn’t particularly difficult because Assertion Methods take 
 all their arguments as parameters. 
 We can treat the Custom Assertion as the SUT simply by calling it with various 
 arguments and verifying that it fails in the right cases. Single-Outcome Assertions 
@@ -146,7 +249,7 @@ arguments and verifying that it fails in the right cases. Single-Outcome Asserti
 test for each possible value (or boundary value). Equality Assertions need one test 
 that compares two objects deemed to be equivalent, one test that compares an 
 object with itself, and one test for each attribute whose inequality should cause 
-the assertion to fail. Attributes that don’t affect equality can be veriﬁ ed in one 
+the assertion to fail. Attributes that don’t affect equality can be verified in one 
 additional test because the Equality Assertion should not raise an error for any of 
 them. 
 The Custom Assertions follow the normal Simple Success Test (see Test 
@@ -160,9 +263,9 @@ catch any assertion failures and fail the test.) For the tests where we expect t
 Custom Assertion to fail, we can write the test as an Expected Exception Test
 (except that the exercise SUT and verify outcome phases of the Four-Phase Test
 are combined into the single call to the Custom Assertion).
-The simplest way to build the objects to be compared for a speciﬁ c test is to 
+The simplest way to build the objects to be compared for a specific test is to 
 do something similar to One Bad Attribute (see Derived Value on page 718)—
-that is, build the ﬁ rst object and make a deep copy of it. For successful tests, 
+that is, build the first object and make a deep copy of it. For successful tests, 
 modify any of the attributes that should not be compared. For each test failure, 
 modify one attribute that should be grounds for failing the assertion.
 
@@ -219,7 +322,7 @@ assertions:
       // Veri fy
       List li neItems = i nv. getLi neItems();
       assertEqual s("number of items", li neItems. si ze(), 2);
-      //   Veri fy ﬁrst i tem
+      //   Veri fy first i tem
       LineItem actual = (Li neItem) li neItems. get(0);
       assertEqual s(expItem1. getInv(), actual .getInv() );
       assertEqual s(expItem1. getProd(), actual. getProd() );
@@ -231,7 +334,7 @@ assertions:
       assertEqual s(expItem2. getQuantity(), actual . getQuanti ty() );
    }
 
-Note that the ﬁ rst test ends with a series of three assertions and the second test 
+Note that the first test ends with a series of three assertions and the second test 
 repeats the series of three assertions twice, once for each line item. This is clearly 
 a bad case of Test Code Duplication.
 
@@ -244,7 +347,7 @@ Assertion Methods on a single object to be passed to the Custom Assertion.
 
 !!! Example: Custom Assertion 
 In this test, we use a Custom Assertion to verify that Li neItem matches the expected 
-LineItem(s). For one reason or another, we have chosen to implement a test-speciﬁ c 
+LineItem(s). For one reason or another, we have chosen to implement a test-specific 
 equality rather than using a standard Equality Assertion.
 
    publ ic voi d testInvoi ce_addOneLineItem_quanti ty1_() {
@@ -269,17 +372,17 @@ equality rather than using a standard Equality Assertion.
       // Veri fy
       List li neItems = i nv. getLi neItems();
       assertEqual s("number of items", li neItems. si ze(), 2);
-      // Veri fy ﬁrst i tem
+      // Veri fy first i tem
       LineItem actual = (Li neItem) li neItems. get(0);
       assertLineItemsEqual ("Item 1", expItem1,actual );
       // Veri fy second i tem
       actual = (Li neItem)l i neItems.get(1);
       assertLineItemsEqual ("Item 2", expItem2, actual ) ;
    }
-The tests have become signiﬁ cantly smaller and more intent-revealing. We have 
+The tests have become significantly smaller and more intent-revealing. We have 
 also chosen to pass a string indicating which item we are examining as an argument to the Custom Assertion to avoid playing Assertion Roulette when a test 
 fails.
-This simpliﬁ ed test was made possible by having the following Custom
+This simplified test was made possible by having the following Custom
 Assertion available to us: 
    static voi d assertLi neItemsEqual( 
                      Stri ng  msg, Li neItem exp, Li neItem act) {
@@ -313,7 +416,7 @@ In this next version of the test, we have further elevated the level of the asse
       assertInvoi ceContai nsOnl yThi sLineItem( i nv, expItem);
    }
 
-This simpliﬁed version of the test was made possible by extracting the following 
+This simplified version of the test was made possible by extracting the following 
 Domain Assertion method: 
    void assertInvoi ceContai nsOnl yThi sLineItem(
                                      Invoi ce i nv,
@@ -328,16 +431,16 @@ a bit of space. In real life, we would typically include a message string in the
 parameter list and concatenate the messages of the individual assertions to one 
 passed in. See Assertion Message (page 370) for more details.
 
-!!! Example: Veriﬁ cation Method 
-If the exercise SUT and result veriﬁ cation phases of several tests are pretty much 
+!!! Example: verification Method 
+If the exercise SUT and result verification phases of several tests are pretty much 
 identical, we can incorporate both phases into our reusable Custom Assertion.
 Because this approach changes the semantics of the Custom Assertion from being 
 just a function free of side effects to an operation that changes the state of the 
 SUT, we usually give it a more distinctive name starting with “verify”. 
-This version of the test merely sets up the test ﬁ xture before calling a Veriﬁ cation Method that incorporates both the exercise SUT and verify outcome phases 
+This version of the test merely sets up the test fixture before calling a verification Method that incorporates both the exercise SUT and verify outcome phases 
 of the test. It is most easily recognized by the lack of a distinct “exercise” phase 
 in the calling test and the presence of calls to methods that modify the state of 
-one of the objects passed as a parameter of the Veriﬁ cation Method.
+one of the objects passed as a parameter of the verification Method.
    publ ic voi d testAddOneLi neItem_quanti ty2() {
       Invoi ce i nv = createAnonInvoice();
       LineItem expItem = new LineItem(inv, product, QUANTITY) ;
@@ -345,7 +448,7 @@ one of the objects passed as a parameter of the Veriﬁ cation Method.
       verifyOneLi neItemCanBeAdded(inv, product, QUANTITY, expItem);
    }
 
-The Veriﬁcation Method for this example looks like this: 
+The Verification Method for this example looks like this: 
    publ ic voi d veri fyOneLi neItemCanBeAdded(
                   Invoi ce i nv, Product product,
                   i nt QUANTITY, Li neItem expItem) {
@@ -355,13 +458,13 @@ The Veriﬁcation Method for this example looks like this:
       assertInvoi ceContai nsOnl yThi sLineItem(inv, expItem) ;
    }
 
-This Veriﬁ cation Method calls the “pure” Custom Assertion, although it could 
+This verification Method calls the “pure” Custom Assertion, although it could 
 just as easily have included all the assertion logic if we didn’t have the other Custom Assertion to call. Note the call to addItemQuantity on the parameter inv; this is 
-what changes if from a Custom Assertion to a Veriﬁ cation Method.
+what changes if from a Custom Assertion to a verification Method.
 
 !!! Example: Custom Assertion Test 
 This Custom Assertion isn’t particularly complicated, so we may feel comfortable without having any automated tests for it. If there is anything complex 
-about it, however, we may ﬁ nd it worthwhile to write tests like these: 
+about it, however, we may find it worthwhile to write tests like these: 
    publ ic voi d testassertLi neItemsEqual_equi valent() {
       Invoi ce i nv = createAnonInvoice();
       LineItem item1 = new LineItem(inv, product, QUANTITY1);
