@@ -313,7 +313,8 @@ combined into the single call to the Custom Assertion).
 ** オブジェクトが等価であるならそれしかやることはない
 * 自動化テストフレームワーク (298ページ)
 ** あらゆるアサーションの失敗を catch し テストを失敗させることになってる
-
+* カスタムアサーションが失敗することを期待するようなテストは Expected Exception Test で
+** Four-Phase Test が集約されてない場合を除く
 
 The simplest way to build the objects to be compared for a specific
 test is to do something similar to One Bad Attribute (see Derived
@@ -322,76 +323,97 @@ copy of it. For successful tests, modify any of the attributes that
 should not be compared. For each test failure, modify one attribute
 that should be grounds for failing the assertion.
 
-A brief warning about a possible complication in a few members of the 
-xUnit family: If all of the test failure handling does not occur in the Test Runner
-(page 377), calls to fail or built-in assertions may add messages to the failure 
-log even if we catch the error or exception in our Custom Assertion Test. The 
-only way to circumvent this behavior is to use an “Encapsulated Test Runner” 
-to run each test by itself and verify that the one test failed with the expected 
-error message. 
+* 特定のテストで比較に使われるオブジェクトを簡単に構築する方法
+** オブジェクトを deep copy
+** One Bad Attribute (Derived Value、718ページ) によく似ているが...
+* 成功するテスト
+** 比較しない属性を変える
+* 失敗させるテスト
+** アサーションを失敗させる属性を変える
 
-!! Motivating Example 
+A brief warning about a possible complication in a few members of the
+xUnit family: If all of the test failure handling does not occur in
+the Test Runner (page 377), calls to fail or built-in assertions may
+add messages to the failure log even if we catch the error or
+exception in our Custom Assertion Test. The only way to circumvent
+this behavior is to use an “Encapsulated Test Runner” to run each
+test by itself and verify that the one test failed with the expected
+error message.
+
+*いくつかの xUnit ファミリーについて、複雑な問題になりうることの警告
+** Test Runner (377ページ) でエラーハンドリング機構が動かない
+** fail や組み込みアサーションはログにメッセージを出力するだけ
+*** カスタムアサーションのテストでエラーや例外を catch したくても...
+*そんなときのやりかた
+** "Encapsulated Test Runner" で Test Runner を駆動
+** テストが失敗したときのエラーメッセージを検証する
+
+!! Motivating Example
 
 In the following example, several test methods repeat the same series
 of assertions:
 
-   public void testInvoice_addOneLineItem_quantity1_b() {
-      // Exercise
-      inv.addItemQuantity(product, QUANTITY);
-      // Verify
-      List lineItems = inv. getLineItems();
-      assertEquals("number of items", lineItems. size(), 1);
-    // Verify only item
-      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
-      LineItem actual = (LineItem) lineItems. get(0);
-      assertEquals(expItem. getInv(), actual. getInv()) ;
-      assertEquals(expItem. getProd(), actual.getProd()) ;
-      assertEquals(expItem. getQuantity(), actual. getQuantity()) ;
-   }
-   public void testRemoveLineItemsForProduct_oneOfTwo() {
-      // Setup
-      Invoice inv = createAnonInvoice();
-      inv.addItemQuantity(product, QUANTITY);
-      inv.addItemQuantity(anotherProduct, QUANTITY) ;
-      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
-      // Exercise
-      inv.removeLineItemForProduct(anotherProduct);
-      // Verify
-      List lineItems = inv. getLineItems();
-      assertEquals("number of items", lineItems. size(), 1);
-      LineItem actual= (LineItem) lineItems. get(0);
-      assertEquals(expItem. getInv(), actual. getInv()) ;
-      assertEquals(expItem. getProd(), actual.getProd()) ;
-      assertEquals(expItem. getQuantity(), actual. getQuantity()) ;
-   }
-//
-   //   Adding TWO line items
-   //
-   public void testInvoice_addTwoLineItems_sameProduct() {
-      Invoice inv = createAnonInvoice();
-      LineItem expItem1 = new LineItem(inv, product, QUANTITY1) ;
-      LineItem expItem2 = new LineItem(inv, product, QUANTITY2) ;
-      // Exercise
-      inv.addItemQuantity(product, QUANTITY1);
-      inv.addItemQuantity(product, QUANTITY2);
-      // Verify
-      List lineItems = inv. getLineItems();
-      assertEquals("number of items", lineItems. size(), 2);
-      //   Verify first item
-      LineItem actual= (LineItem) lineItems. get(0);
-      assertEquals(expItem1. getInv(), actual.getInv() );
-      assertEquals(expItem1. getProd(), actual. getProd() );
-      assertEquals(expItem1. getQuantity(), actual. getQuantity() );
-      //   Verify second item
-      actual= (LineItem)lineItems.get(1);
-      assertEquals(expItem2. getInv(), actual.getInv() );
-      assertEquals(expItem2. getProd(), actual. getProd() );
-      assertEquals(expItem2. getQuantity(), actual. getQuantity() );
-   }
+//   public void testInvoice_addOneLineItem_quantity1_b() {
+//      // Exercise
+//      inv.addItemQuantity(product, QUANTITY);
+//      // Verify
+//      List lineItems = inv. getLineItems();
+//      assertEquals("number of items", lineItems. size(), 1);
+//    // Verify only item
+//      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
+//      LineItem actual = (LineItem) lineItems. get(0);
+//      assertEquals(expItem. getInv(), actual. getInv()) ;
+//      assertEquals(expItem. getProd(), actual.getProd()) ;
+//      assertEquals(expItem. getQuantity(), actual. getQuantity()) ;
+//   }
+//   public void testRemoveLineItemsForProduct_oneOfTwo() {
+//      // Setup
+//      Invoice inv = createAnonInvoice();
+//      inv.addItemQuantity(product, QUANTITY);
+//      inv.addItemQuantity(anotherProduct, QUANTITY) ;
+//      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
+//      // Exercise
+//      inv.removeLineItemForProduct(anotherProduct);
+//      // Verify
+//      List lineItems = inv. getLineItems();
+//      assertEquals("number of items", lineItems. size(), 1);
+//      LineItem actual= (LineItem) lineItems. get(0);
+//      assertEquals(expItem. getInv(), actual. getInv()) ;
+//      assertEquals(expItem. getProd(), actual.getProd()) ;
+//      assertEquals(expItem. getQuantity(), actual. getQuantity()) ;
+//   }
+//   //
+//   //   Adding TWO line items
+//   //
+//   public void testInvoice_addTwoLineItems_sameProduct() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem expItem1 = new LineItem(inv, product, QUANTITY1) ;
+//      LineItem expItem2 = new LineItem(inv, product, QUANTITY2) ;
+//      // Exercise
+//      inv.addItemQuantity(product, QUANTITY1);
+//      inv.addItemQuantity(product, QUANTITY2);
+//      // Verify
+//      List lineItems = inv. getLineItems();
+//      assertEquals("number of items", lineItems. size(), 2);
+//      //   Verify first item
+//      LineItem actual= (LineItem) lineItems. get(0);
+//      assertEquals(expItem1. getInv(), actual.getInv() );
+//      assertEquals(expItem1. getProd(), actual. getProd() );
+//      assertEquals(expItem1. getQuantity(), actual. getQuantity() );
+//      //   Verify second item
+//      actual= (LineItem)lineItems.get(1);
+//      assertEquals(expItem2. getInv(), actual.getInv() );
+//      assertEquals(expItem2. getProd(), actual. getProd() );
+//      assertEquals(expItem2. getQuantity(), actual. getQuantity() );
+//   }
 
-Note that the first test ends with a series of three assertions and the second test 
-repeats the series of three assertions twice, once for each line item. This is clearly 
-a bad case of Test Code Duplication.
+Note that the first test ends with a series of three assertions and
+the second test repeats the series of three assertions twice, once for
+each line item. This is clearly a bad case of Test Code Duplication.
+
+最初のテストは 3 つのアサーションで終わっている。
+2 つ目のテストは各行について 3 つのアサーションを 2 回繰り返している。
+Test Code Duplication です。
 
 !! Refactoring Notes 
 
@@ -403,54 +425,72 @@ Assertion. We may also need to introduce an Expected Object to hold
 all the values that were being passed to the individual Assertion
 Methods on a single object to be passed to the Custom Assertion.
 
-!!! Example: Custom Assertion 
-In this test, we use a Custom Assertion to verify that LineItem matches the expected 
-LineItem(s). For one reason or another, we have chosen to implement a test-specific 
-equality rather than using a standard Equality Assertion.
+* リファクタリング厨：Extract Method(Fowler) を使うことに気付く
+** 共通するアサーションメソッドの呼び出しを抽出しても、テストごとの些少な差異に煩わされる
+* 全ての値を保持する期待値オブジェクトを導入
+** オブジェクトを介して個々のアサーションメソッドに値を提供
+** カスタムアサーションには 1 つの引数として期待値オブジェクトを渡す
 
-   public void testInvoice_addOneLineItem_quantity1_() {
-      Invoice inv = createAnonInvoice();
-      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
-      // Exercise
-      inv.addItemQuantity(product, QUANTITY);
-      // Verify
-      List lineItems = inv. getLineItems();
-      assertEquals("number of items", lineItems. size(), 1);
-      // Verify only item
-      LineItem actual= (LineItem) lineItems. get(0);
-      assertLineItemsEqual("LineItem", expItem, actual) ;
-   }
-   public void testAddItemQuantity_sameProduct_() {
-      Invoice inv = createAnonInvoice();
-      LineItem expItem1 = new LineItem(inv, product, QUANTITY1) ;
-      LineItem expItem2 = new LineItem(inv, product, QUANTITY2) ;
-      // Exercise
-      inv.addItemQuantity(product, QUANTITY1);
-      inv.addItemQuantity(product, QUANTITY2);
-      // Verify
-      List lineItems = inv. getLineItems();
-      assertEquals("number of items", lineItems. size(), 2);
-      // Verify first item
-      LineItem actual= (LineItem) lineItems. get(0);
-      assertLineItemsEqual("Item 1", expItem1,actual);
-      // Verify second item
-      actual= (LineItem)lineItems.get(1);
-      assertLineItemsEqual("Item 2", expItem2, actual) ;
-   }
+!!! Example: Custom Assertion
+
+In this test, we use a Custom Assertion to verify that LineItem
+matches the expected LineItem(s). For one reason or another, we have
+chosen to implement a test-specific equality rather than using a
+standard Equality Assertion.
+
+* LineItem を検証するカスタムアサーションを実装
+* ある理由により、標準的な Equality Assertion ではなく テスト固有の等値メソッドを実装
+
+//   public void testInvoice_addOneLineItem_quantity1_() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
+//      // Exercise
+//      inv.addItemQuantity(product, QUANTITY);
+//      // Verify
+//      List lineItems = inv. getLineItems();
+//      assertEquals("number of items", lineItems. size(), 1);
+//      // Verify only item
+//      LineItem actual= (LineItem) lineItems. get(0);
+//      assertLineItemsEqual("LineItem", expItem, actual) ;
+//   }
+//   public void testAddItemQuantity_sameProduct_() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem expItem1 = new LineItem(inv, product, QUANTITY1) ;
+//      LineItem expItem2 = new LineItem(inv, product, QUANTITY2) ;
+//      // Exercise
+//      inv.addItemQuantity(product, QUANTITY1);
+//      inv.addItemQuantity(product, QUANTITY2);
+//      // Verify
+//      List lineItems = inv. getLineItems();
+//      assertEquals("number of items", lineItems. size(), 2);
+//      // Verify first item
+//      LineItem actual= (LineItem) lineItems. get(0);
+//      assertLineItemsEqual("Item 1", expItem1,actual);
+//      // Verify second item
+//      actual= (LineItem)lineItems.get(1);
+//      assertLineItemsEqual("Item 2", expItem2, actual) ;
+//   }
 
 The tests have become significantly smaller and more
 intent-revealing. We have also chosen to pass a string indicating
 which item we are examining as an argument to the Custom Assertion to
 avoid playing Assertion Roulette when a test fails.
 
+* テストコードは目に見えて小さくなった
+** 意図も分かりやすくなった
+* テストが失敗したときのアサーションルーレットを避けるために
+** カスタムアサーションの引数に文字列を加えた
+** どのオブジェクトをテストしていたか分かりやすい
+
 This simplified test was made possible by having the following Custom
-Assertion available to us: 
-   static void assertLineItemsEqual( 
-                     String  msg, LineItem exp, LineItem act) {
-      assertEquals(msg+" Inv",  exp. getInv(),act. getInv() );
-      assertEquals(msg+" Prod", exp. getProd(), act. getProd()) ;
-      assertEquals(msg+" Quan", exp. getQuantity() , act. getQuantity()) ;
-   }
+Assertion available to us:
+
+//   static void assertLineItemsEqual( 
+//                     String  msg, LineItem exp, LineItem act) {
+//      assertEquals(msg+" Inv",  exp. getInv(),act. getInv() );
+//      assertEquals(msg+" Prod", exp. getProd(), act. getProd()) ;
+//      assertEquals(msg+" Quan", exp. getQuantity() , act. getQuantity()) ;
+//   }
 
 This Custom Assertion compares the same attributes of the object as we
 were comparing on an in-line basis in the previous version of the
@@ -459,55 +499,73 @@ concatenate the name of the attribute being compared with the message
 parameter to get a unique failure message, which allows us to avoid
 playing Assertion Roulette when a test fails.
 
-!!! Example: Domain Assertion 
+*このカスタムアサーションの説明
+** 最初のバージョン(直書き)と同様に、オブジェクトのいくつかの属性だけを比較する
+** 意味論的には変わってない
+** 比較される属性をパラメータのメッセージと連結してユニークなエラーメッセージ
+*** アサーションルーレットを回避
+
+!!! Example: Domain Assertion
 
 In this next version of the test, we have further elevated the level
 of the assertions to better communicate the expected outcome of the
 test scenarios:
 
-   public void testAddOneLineItem_quantity1() {
-      Invoice inv = createAnonInvoice();
-      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
-      // Exercise
-      inv.addItemQuantity( product, QUANTITY);
-      // Verify
-      assertInvoiceContainsOnlyThisLineItem( inv, expItem);
-   }
-   public void testRemoveLineItemsForProduct_oneOfTwo_() {
-      Invoice inv = createAnonInvoice();
-      inv.addItemQuantity( product, QUANTITY);
-      inv.addItemQuantity( anotherProduct, QUANTITY);
-      LineItem expItem = new LineItem( inv, product, QUANTITY);
-      // Exercise
-      inv.removeLineItemForProduct( anotherProduct );
-      // Verify
-      assertInvoiceContainsOnlyThisLineItem( inv, expItem);
-   }
+
+//   public void testAddOneLineItem_quantity1() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
+//      // Exercise
+//      inv.addItemQuantity( product, QUANTITY);
+//      // Verify
+//      assertInvoiceContainsOnlyThisLineItem( inv, expItem);
+//   }
+//   public void testRemoveLineItemsForProduct_oneOfTwo_() {
+//      Invoice inv = createAnonInvoice();
+//      inv.addItemQuantity( product, QUANTITY);
+//      inv.addItemQuantity( anotherProduct, QUANTITY);
+//      LineItem expItem = new LineItem( inv, product, QUANTITY);
+//      // Exercise
+//      inv.removeLineItemForProduct( anotherProduct );
+//      // Verify
+//      assertInvoiceContainsOnlyThisLineItem( inv, expItem);
+//   }
 
 This simplified version of the test was made possible by extracting
 the following Domain Assertion method:
 
-   void assertInvoiceContainsOnlyThisLineItem(
-                                     Invoice inv,
-                                     LineItem expItem) {
-      List lineItems = inv. getLineItems();
-      assertEquals("number of items", lineItems. size(), 1);
-      LineItem actual= (LineItem) lineItems. get(0);
-      assertLineItemsEqual("item", expItem, actual);
-   }
+//   void assertInvoiceContainsOnlyThisLineItem(
+//                                     Invoice inv,
+//                                     LineItem expItem) {
+//      List lineItems = inv. getLineItems();
+//      assertEquals("number of items", lineItems. size(), 1);
+//      LineItem actual= (LineItem) lineItems. get(0);
+//      assertLineItemsEqual("item", expItem, actual);
+//   }
 
-This example chose to forgo passing a message to the Domain Assertion to save 
-a bit of space. In real life, we would typically include a message string in the 
-parameter list and concatenate the messages of the individual assertions to one 
-passed in. See Assertion Message (page 370) for more details.
+This example chose to forgo passing a message to the Domain Assertion
+to save a bit of space. In real life, we would typically include a
+message string in the parameter list and concatenate the messages of
+the individual assertions to one passed in. See Assertion Message
+(page 370) for more details.
 
-!!! Example: verification Method 
 
-If the exercise SUT and result verification phases of several tests are pretty much 
-identical, we can incorporate both phases into our reusable Custom Assertion.
-Because this approach changes the semantics of the Custom Assertion from being 
-just a function free of side effects to an operation that changes the state of the 
-SUT, we usually give it a more distinctive name starting with “verify”. 
+!!! Example: verification Method
+
+If the exercise SUT and result verification phases of several tests
+are pretty much identical, we can incorporate both phases into our
+reusable Custom Assertion.  Because this approach changes the
+semantics of the Custom Assertion from being just a function free of
+side effects to an operation that changes the state of the SUT, we
+usually give it a more distinctive name starting with “verify”.
+
+*SUT の exercise フェーズと結果検証フェーズが独立している
+**両方のフェーズをカスタムアサーション(再利用可)に組込むことができる
+*カスタムアサーションのセマンティクスを変える
+**前:副作用のない関数
+**後:SUTの状態を変えるオペレーション
+*名前
+**"verify"から始まる名前にするのが通例
 
 This version of the test merely sets up the test fixture before
 calling a verification Method that incorporates both the exercise SUT
@@ -516,29 +574,34 @@ the lack of a distinct “exercise” phase in the calling test and the
 presence of calls to methods that modify the state of one of the
 objects passed as a parameter of the verification Method.
 
-   public void testAddOneLineItem_quantity2() {
-      Invoice inv = createAnonInvoice();
-      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
-      // Exercise & Verify
-      verifyOneLineItemCanBeAdded(inv, product, QUANTITY, expItem);
-   }
+*今回のテストコード
+**フィクスチャのセットアップと verification Method の呼び出しだけしかない
+**verification Method が exercise フェーズを内包しているから
 
-The Verification Method for this example looks like this: 
+//   public void testAddOneLineItem_quantity2() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem expItem = new LineItem(inv, product, QUANTITY) ;
+//      // Exercise & Verify
+//      verifyOneLineItemCanBeAdded(inv, product, QUANTITY, expItem);
+//   }
 
-   public void verifyOneLineItemCanBeAdded(
-                  Invoice inv, Product product,
-                  int QUANTITY, LineItem expItem) {
-      // Exercise
-      inv.addItemQuantity(product, QUANTITY);
-      // Verify
-      assertInvoiceContainsOnlyThisLineItem(inv, expItem) ;
-   }
+//   public void verifyOneLineItemCanBeAdded(
+//                  Invoice inv, Product product,
+//                  int QUANTITY, LineItem expItem) {
+//      // Exercise
+//      inv.addItemQuantity(product, QUANTITY);
+//      // Verify
+//      assertInvoiceContainsOnlyThisLineItem(inv, expItem) ;
+//   }
 
 This verification Method calls the “pure” Custom Assertion, although
 it could just as easily have included all the assertion logic if we
 didn’t have the other Custom Assertion to call. Note the call to
 addItemQuantity on the parameter inv; this is what changes if from a
 Custom Assertion to a verification Method.
+
+*単なるカスタムアサーションの呼び出しだけ
+*引数の inv の addItemQuantity メソッドを呼び出しているところに注目
 
 !!! Example: Custom Assertion Test 
 
@@ -547,48 +610,58 @@ comfortable without having any automated tests for it. If there is
 anything complex about it, however, we may find it worthwhile to write
 tests like these:
 
-   public void testassertLineItemsEqual_equivalent() {
-      Invoice inv = createAnonInvoice();
-      LineItem item1 = new LineItem(inv, product, QUANTITY1);
-      LineItem item2 = new LineItem(inv, product, QUANTITY1);
-      // exercise/verify
-      assertLineItemsEqual("This should not fail", item1, item2) ;
-   }
-   public void testassertLineItemsEqual_differentInvoice() {
-      Invoice inv1 = createAnonInvoice();
-      Invoice inv2 = createAnonInvoice();
-      LineItem item1 = new LineItem(inv1, product, QUANTITY1) ;
-      LineItem item2 = new LineItem(inv2, product, QUANTITY1) ;
-      // exercise/verify
-      try {
-         assertLineItemsEqual("Msg", item1, item2) ; 
-      } catch (AssertionFailedError e) {
-         assertEquals("e. getMsg",
-                      "Invoice-expected: <123> but was <124>",
-                      e. getMessage());
-         return;
-      }
-      fail("Should have thrown exception");
-   }
-   public void testassertLineItemsEqual_differentQuantity() {
-      Invoice inv = createAnonInvoice();
-      LineItem item1 = new LineItem(inv, product, QUANTITY1);
-      LineItem item2 = new LineItem(inv, product, QUANTITY2);
-      // exercise/verify
-      try {
-         assertLineItemsEqual("Msg", item1, item2) ; 
-      } catch (AssertionFailedError e) {
-         pass();  // to indicate that no assertion is needed
-         return;
-      }
-      fail("Should have thrown exception");
-   }
+//   public void testassertLineItemsEqual_equivalent() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem item1 = new LineItem(inv, product, QUANTITY1);
+//      LineItem item2 = new LineItem(inv, product, QUANTITY1);
+//      // exercise/verify
+//      assertLineItemsEqual("This should not fail", item1, item2) ;
+//   }
+//   public void testassertLineItemsEqual_differentInvoice() {
+//      Invoice inv1 = createAnonInvoice();
+//      Invoice inv2 = createAnonInvoice();
+//      LineItem item1 = new LineItem(inv1, product, QUANTITY1) ;
+//      LineItem item2 = new LineItem(inv2, product, QUANTITY1) ;
+//      // exercise/verify
+//      try {
+//         assertLineItemsEqual("Msg", item1, item2) ; 
+//      } catch (AssertionFailedError e) {
+//         assertEquals("e. getMsg",
+//                      "Invoice-expected: <123> but was <124>",
+//                      e. getMessage());
+//         return;
+//      }
+//      fail("Should have thrown exception");
+//   }
+//   public void testassertLineItemsEqual_differentQuantity() {
+//      Invoice inv = createAnonInvoice();
+//      LineItem item1 = new LineItem(inv, product, QUANTITY1);
+//      LineItem item2 = new LineItem(inv, product, QUANTITY2);
+//      // exercise/verify
+//      try {
+//         assertLineItemsEqual("Msg", item1, item2) ; 
+//      } catch (AssertionFailedError e) {
+//         pass();  // to indicate that no assertion is needed
+//         return;
+//      }
+//      fail("Should have thrown exception");
+//   }
 
-This example includes a few of the Custom Assertion Tests needed for this Custom 
-Assertion. Note that the code includes one “equivalent” and several “different” 
-tests (one for each attribute whose difference should cause the test to fail). We have 
-to use the second form of the Expected Exception Test template in those cases 
-where the assertion was expected to fail, because fail throws the same exception as 
-our assertion method. In one of the “different” tests, we have included sample logic 
-for asserting on the exception message. (Although I’ve abridged it to save space, the 
-example here should give you an idea of where to assert on the message.) 
+This example includes a few of the Custom Assertion Tests needed for
+this Custom Assertion. Note that the code includes one “equivalent”
+and several “different” tests (one for each attribute whose
+difference should cause the test to fail). We have to use the second
+form of the Expected Exception Test template in those cases where the
+assertion was expected to fail, because fail throws the same exception
+as our assertion method. In one of the “different” tests, we have
+included sample logic for asserting on the exception
+message. (Although I’ve abridged it to save space, the example here
+should give you an idea of where to assert on the message.)
+
+*この例にはカスタムアサーションテストに必要なものが含まれている
+**1 つの "equivalent" テスト
+**いくつかの "diffrent" テスト
+***テストを失敗させるために必要な属性について
+*Expected Exception Testの雛形として 2 番目を使っている
+** アサーションメソッドが例外をスローするから
+*メッセージは要約してる
