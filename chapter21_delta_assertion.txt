@@ -89,5 +89,58 @@
 ** Delta Assertion を実装してる
 ** メモリリークの検出が同じように出来た
 
+!! Motivating Example
 
+Shared Fixture を使っているため、他のテストを実行すると失敗してしまうかもしれないテスト。
 
+// public void testGetFlightsByOriginAirport_OneOutboundFlight()
+//          throws Exception {
+// FlightDto expectedFlightDto =
+//    createNewFlightBetweenexistingAirports();
+// // Exercise System
+// facade.createFlight(
+//            expectedFlightDto.getOriginAirportId(),
+//            expectedFlightDto.getDestinationAirportId());
+// // Veirfy Outcome
+// List flightsAtOrigin = facade.getFlightsByOriginAirport(
+//                   expectedFlightDto.getOriginAirportId());
+// assertOnlyFlightInDtoList( "Outbound flight at origin",
+//                            expectedFlightDto,
+//                            flightsAtOrigin);
+// }
+
+!! Refactoring Notes
+
+* Delta Assertion を使うようにテストを変更する
+** 後で検証するデータ(もしくはオブジェクト集合) のスナップショットを取得する
+** アサーションの内容を、事前データと事後データの差異を検証するものに変更する
+* Conditional Test Logic にならないように、カスタムアサーションを導入する
+** 事前データを引数に取れるようにしたもの
+
+!!! Example: Delta Assertion
+
+// public void testCrateFlight_Delta()
+// throws Exception {
+// FlightDto expectedFlightDto =
+//    createNewFlightBetweenexistingAirports();
+// // Remember prior state
+// List flightsBeforeCreate =
+//   facade.getFlightsByOriginAirport(
+//                  expectedFlightDto.getOriginAirportId());
+// // Exercise system
+// facade.createFlight(
+//               expectedFlightDto.getOriginAirportId(),
+//               expectedFlightDto.getDestinationAirportId());
+// // Verify outcome relative to prior state
+// List flightsAfterCreate =
+//    fasace.getFlightsByOriginAirport(
+//                  expectedFlightDto.getOriginAirportId());
+// assertFlightIncludedInDtoList( "new flight ",
+//                                expectedFlightDto,
+//                                flightsAfterCreate);
+// assertAllFlightsIncludedInDtoList( "previous flights",
+//                                    flightsBeforeCreate,
+//                                    flightsAfterCreate);
+// assertEquals( "Number of flights after create",
+//               flightsBeforeCreate.size()+1,
+//               flightsAfterCreate.size());
