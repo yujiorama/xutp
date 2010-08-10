@@ -1,0 +1,89 @@
+{{toc}}
+
+!! Named Test Suite (pp.592)
+
+!!! 前書き
+''恣意的なテストのグループがあるとき、どうやってテストを実行したらいいの?''
+
+'''グループとして実行させたいテストの集合を含んだ、適切な名前のテストスイートを定義します。'''
+
+!! How It Works (pp.592)
+
+!! When to Use It (pp.593)
+
+!!! Variation: AllTests Suite (pp.593)
+
+!!! Variation: Subset Suite (pp.593)
+
+!!! Variation: Single Test Suite (pp.593)
+
+!! Implementation Notes (pp.594)
+
+!! Refactoring Notes (pp.594)
+
+!!! Examples: AllTests Suite (pp.594)
+
+	public clas AllTests {
+	    public static Test suite() {
+	        TestSuite suite = new TestSuite("Test for allJunitTests");
+	        //$JUnit-BEGIN$
+	        suite.addTestSuite(
+	            com.clrstream.camug.example.test.InvoiceTest.class);
+	        suite.addTest(com.clrstream.ex7.test.AllTests.suite());
+	        suite.addTest(com.clrstream.ex8.test.AllTests.suite());
+	        suite.addTestSuite(
+	            com.xunitpatterns.guardassertion.Example.class);
+	        //$JUnit-END$
+	        return suite;
+	    }
+	}
+
+
+!!! Example: Special-Purpose Suite (pp.595)
+
+* All tests
+* All database tests
+* All in-memory tests
+
+
+!!! Example: Single Test Suite (pp.596)
+
+	public class LostTests extends TestCase {
+	    public LostTests(String name) {
+	        super(name);
+	    }
+	    
+	    public void xtestOne() throws Exception {
+	        fail("test not implemented");
+	    }
+	    /*
+	    public void testTow() throws Exception {
+	        fail("test not implemented");
+	    }
+	    */
+	    public void testSeventeen() throws Exception {
+	        assertTrue(true);
+	    }
+	}
+
+
+	public class MyTest extends TestCase {
+	    public static Test suite() {
+	        return new LostTests("testSeventeen");
+	    }
+	}
+
+!!! Example: Smoke Test Suite (pp.597)
+
+	public class SmokeTestSuite extends TestCase {
+	    public static Test suite() {
+	        TestSuite mySuite = new TestSuite("Smoke Tests");
+	
+	        mySuite.addTest( new LostTests("testSeventeen") );
+	        mySuite.addTest( new SampleTests("testOne") );
+	        mySuite.addTest( new FlightManagementFacadeTest(
+	           "testGetFlightsByOriginAirports_TwoOutboundFlights"));
+	        // add additional tests here as needed...
+	        return mySuite;
+	    }
+	}
