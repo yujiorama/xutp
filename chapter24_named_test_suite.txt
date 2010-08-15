@@ -64,6 +64,13 @@ https://cacoo.com/diagrams/2iXo4LSsCvd7qDFQ
 
 !!! Variation: Single Test Suite (pp.593)
 
+* ''Subset Suite'' を退化させたもの
+** 1 つの ``Test Method`` を実行するために 1 つの ``TestCase Object`` をインスタンス化しているような状況
+* 次のようなケースでは便利
+** ``Test Tree Explorer`(pp.377 の ``Test Runner`` を参照) が使えない
+** ``Test Method`` が正常に動作するために、いろんな ``Setup Decorator`` (pp. 447) が必要
+* 大抵のテスト自動化フレームワークでは、同じワークスペース中で ``Testcase Class`` をオープンにしている
+
 !! Implementation Notes (pp.594)
 
 !! Refactoring Notes (pp.594)
