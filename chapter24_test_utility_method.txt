@@ -1,0 +1,82 @@
+!Test Utility Method
+
+'テストコードの重複を防ぎたい'
+''再利用できるテストロジックは適切な名前を付けたユーティリティメソッドにしてその詳細を隠蔽します''
+
+!! がいよう
+
+* テストを書くとき、同じようなロジックを毎回書いている
+* 初めはコピペ( clone and twiddle ) してた
+* コピペされたテストコードの重複が問題になりつつある
+* 'Test Utility Method' を考えましょう
+
+!! How It Works
+* 一番手軽なロジックの再利用は、サブルーチンや関数
+* 'Test Utility Method' は同じ原則を OO のテストコードに適用する
+* いくつものテストで使われてる同じロジック
+* 1 つのテスト内で何度も使われてる同じロジック
+
+!! When to Use It
+* 'Test Utility Method' の使いどころ
+** 同じロジックが何度も現れる
+** すでにあるロジックを再利用したい
+* 'Test Utility Method' は使うべき
+** すでにあるロジックはおそらく期待したとおりに動く
+** 確実性の恩恵を受けるのはセルフチェックテストの実装
+* テストメソッドのテストもやりやすくなる
+
+* テスト作成のために知っておかないといけない情報が増えてしまうという欠点
+** 名前付けでいくらか救われる (Intent-Revealing Names)
+
+!!! Variation: Creation Method
+* setup フェーズにおける使用可能オブジェクトの生成
+* 生成の複雑さと依存関係を隠蔽
+
+!!! Variation: Attachment Method
+* setup フェーズにおける既オブジェクトの修正
+
+!!! Variation: Finder Method
+* 'Shared Fixture' からオブジェクトを取得するあらゆるロジック
+* Intent-Revealing Name
+* テストコードを読んだ人が理解しやすいようにしている
+
+* 'Finder Method を使うべき
+** 'Shared Fixture' のオブジェクトを見つけるために何らかの criteria がある
+** 'Fragile Fixture' を無くしたい
+** 'High Test Maintenance Cost' を回避したい
+* 'Finder Method はフィクスチャの戦略に依存しない'
+** 'Shared Fixture'
+** 'Immutable Shared Fixture' (hybrid)
+* テストのドキュメント化を実現
+** オブジェクトをどうやって取得してくるかを隠蔽
+** prevent 'Obscure Test'
+
+* たいていの 'Finder Method' は 1 つのオブジェクト参照を返す
+** ツリーのルートオブジェクト (送り状オブジェクトは顧客オブジェクト、アドレスリストを参照してる)
+* 'Finder Method' が Collection を返すようにすることもある
+* 'Finder Method' がテストコードに返すオブジェクトを更新することもある
+** intent-revealing ではないのでお勧めしない
+
+* 'Finder Method' は 'Shared Fixture' のオブジェクトをいろんな方法で返す
+** インスタンス変数やクラス変数に参照
+** 既知のキーによる参照
+
+!!! Variation: SUT Enscapsulation Method
+* 'Test utility Method' を使う別の理由
+** SUT の API を隠蔽する
+** テストコードから SUT のメソッドを呼ぶと、テストコードと SUT の間に新たな結合が生じてしまう
+* 'Creation Method' や 'Custom Assertion' は 'SUT Ensapsulation Method' の例として妥当
+* 希少な例
+** exercise や verify のために使う、シグネチャが大変複雑な SUT のメソッドがあるとする
+** テストコードを書くとメンテナンスが大変になっていく
+** こういった SUT のメソッド呼び出しを隠蔽する
+
+!!! Variation: Custom Assertion
+* テストよく使われるテスト用の等価性判定
+
+!!! Variation: Verification Method
+
+!!! Variation: Parameterized Test
+
+!!! Variation: Cleanup Method
+
