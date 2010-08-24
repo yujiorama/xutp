@@ -21,10 +21,8 @@ public class Chapter24Test1 extends TestCase {
             shippingAddress = new Address("1333 1st St SW",
                                           "Calgary", "Alberta",
                                           "T2N 2V2", "Canada");
-            customer = new Customer( 99, "John", "Doe",
-                                     new BigDecimal("30"),
-                                     billingAddress,
-                                     shippingAddress);
+            customer =
+                findActiveCustomerWithDiscount(new BigDecimal("30"));
             product = new Product( 88, "SomeWidget",
                                    new BigDecimal("19.99"));
             invoice = new Invoice( customer );
