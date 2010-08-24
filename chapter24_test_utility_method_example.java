@@ -50,6 +50,22 @@ public class Chapter24Test1 extends TestCase {
                                       BigDecimal extendedPrice, Product product, Invoice invoice) {
         return new LineItem(quantity, discountPercentage, extendedPrice, product.getName(), invoice.getName());
     }
+    
+    protected void assertLineItemsEqual(String message, LineItem expected, LineItem actual) {
+        // assertMessage(message)
+        assertEquals("inv", expected.getInv(), actual.getInv());
+        assertEquals("prod", expected.getProd(), actual.getProd());
+        assertEquals("quant", expected.getQuantity(), actual.getQuantity());
+        assertEquals("discount",
+                     expected.getPercentDiscount(),
+                     actual.getPercentDiscount());
+        assertEquals("unit price",
+                     expected.getUnitPrice(),
+                     actual.getUnitPrice());
+        assertEquals("extended",
+                     expected.getExtendedPrice(),
+                     actual.getExtendedPrice());
+    }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final int QUANTITY = 5;
