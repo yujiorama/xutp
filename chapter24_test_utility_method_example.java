@@ -17,6 +17,10 @@ public class Chapter24Test1 extends TestCase {
         return new Product( 88, "SomeWidget",
                             new BigDecimal("19.99"));
     }
+    
+    protected Invoice createInvoice(Customer customer) {
+        return new Invoice(customer);
+    }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final BigDecimal CUSTOMER_DISCOUNT = new BigDecimal("30");
