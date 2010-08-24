@@ -1,4 +1,12 @@
 public class Chapter24Test1 extends TestCase {
+    proteted Customer findActiveCustomerWithDiscount(
+                                                     BigDecimal percentDiscount) {
+        return new Customer( 99, "John", "Doe",
+                             new BigDecimal("30"),
+                             billingAddress,
+                             shippingAddress);
+    }
+
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         Address billingAddress = null;
         Address shippingAddress = null;
