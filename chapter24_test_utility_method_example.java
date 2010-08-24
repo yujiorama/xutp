@@ -28,6 +28,18 @@ public class Chapter24Test1 extends TestCase {
     protected void registerTestObject(Object testObject) {
         testObjects.add(testObject);
     }
+    
+    private void deleteTestObjects() {
+        Iterator i = testObjects.iterator();
+        while (i.hasNext()) {
+            try {
+                deleteObject(i.next());
+            } catch (RuntimeException e) {
+                // Nothing to do; we just want to make sure
+                // we continue on to the next object in the list.
+            }
+        }
+    }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final int QUANTITY = 5;
