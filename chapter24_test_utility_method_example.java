@@ -19,7 +19,14 @@ public class Chapter24Test1 extends TestCase {
     }
     
     protected Invoice createInvoice(Customer customer) {
-        return new Invoice(customer);
+        Invoice newInvoice = new Invoice(customer);
+        registerTestObject(newInvoice);
+        return newInvoice;
+    }
+    
+    List testObjects;
+    protected void registerTestObject(Object testObject) {
+        testObjects.add(testObject);
     }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
