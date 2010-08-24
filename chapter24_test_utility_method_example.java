@@ -2,7 +2,7 @@ public class Chapter24Test1 extends TestCase {
     proteted Customer findActiveCustomerWithDiscount(
                                                      BigDecimal percentDiscount) {
         return new Customer( 99, "John", "Doe",
-                             new BigDecimal("30"),
+                             percentDiscount,
                              billingAddress,
                              shippingAddress);
     }
