@@ -66,6 +66,14 @@ public class Chapter24Test1 extends TestCase {
                      expected.getExtendedPrice(),
                      actual.getExtendedPrice());
     }
+    
+    protected void assertContainsExactlyOneLineItem(Invoice invoice,
+                                                    LineItem expected) {
+        List lineItems = invoice.getLineItems();
+        assertEquals("number of items", lineItems.size(), 1);
+        LineItem actItem = (LineItem) lineItem.get(0);
+        assertLineItemsEqual("", expected, actItem);
+    }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final int QUANTITY = 5;
