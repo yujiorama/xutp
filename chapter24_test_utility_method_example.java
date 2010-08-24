@@ -45,6 +45,11 @@ public class Chapter24Test1 extends TestCase {
             }
         }
     }
+    
+    protected LineItem createLineItem(int quantity, BigDecimal discountPercentage,
+                                      BigDecimal extendedPrice, Product product, Invoice invoice) {
+        return new LineItem(quantity, discountPercentage, extendedPrice, product.getName(), invoice.getName());
+    }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final int QUANTITY = 5;
@@ -66,20 +71,23 @@ public class Chapter24Test1 extends TestCase {
             final BigDecimal EXTENDED_PRICE =
                 BASE_PRICE.subtract(BASE_PRICE.multiply(
                                  CUSTOMER_DISCOUNT.movePointLeft(2)));
+            LineItem expected =
+                createLineItem(QUANTITY, CUSTOMER_DISCOUNT,
+                               EXTENDED_PRICE, product, invoice);
             List lineItems = invoice.getLineItems();
             if (lineItems.size() == 1) {
                 LineItem actItem = (LineItem) lineItem.get(0);
-                assertEquals("inv", invoice, actItem.getInv());
-                assertEquals("prod", product, actItem.getProd());
-                assertEquals("quant", QUANTITY, actItem.getQuantity());
+                assertEquals("inv", expected.getInv(), actItem.getInv());
+                assertEquals("prod", expected.getProd(), actItem.getProd());
+                assertEquals("quant", expected.getQuantity(), actItem.getQuantity());
                 assertEquals("discount",
-                             CUSTOMER_DISCOUNT,
+                             expected.getPercentDiscount(),
                              actItem.getPercentDiscount());
                 assertEquals("unit price",
-                             product.getUnitPrice(),
+                             expected.getUnitPrice(),
                              actItem.getUnitPrice());
                 assertEquals("extended",
-                             EXTENDED_PRICE,
+                             expected.getExtendedPrice(),
                              actItem.getExtendedPrice());
             } else {
                 assertTrue("Invoice should have 1 item", false);
