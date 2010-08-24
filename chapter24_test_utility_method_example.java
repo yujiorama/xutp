@@ -32,7 +32,7 @@ public class Chapter24Test1 extends TestCase {
             customer =
                 findActiveCustomerWithDiscount(CUSTOMER_DISCOUNT);
             product = findCurrentProductWith3DigitPrice();
-            invoice = new Invoice( customer );
+            invoice = createInvoice(customer);
             // Exercise SUT
             invoice.addItemQuantity( product, 5 );
             // Verify Outcome
