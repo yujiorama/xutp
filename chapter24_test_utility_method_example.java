@@ -27,8 +27,7 @@ public class Chapter24Test1 extends TestCase {
             // Fixture Setup
             customer =
                 findActiveCustomerWithDiscount(CUSTOMER_DISCOUNT);
-            product = new Product( 88, "SomeWidget",
-                                   new BigDecimal("19.99"));
+            product = findCurrentProductWith3DigitPrice();
             invoice = new Invoice( customer );
             // Exercise SUT
             invoice.addItemQuantity( product, 5 );
