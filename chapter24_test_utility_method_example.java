@@ -1,4 +1,9 @@
 public class Chapter24Test1 extends TestCase {
+    
+    public void tearDown() {
+        deleteTestObjects();
+    }
+
     protected Customer findActiveCustomerWithDiscount(
                                                      BigDecimal percentDiscount) {
         Address billingAddress = new Address("1222 1st St SW",
@@ -76,7 +81,6 @@ public class Chapter24Test1 extends TestCase {
             }
         } finally {
             // Teardown
-            deleteTestObjects();
         }
     }
 }
