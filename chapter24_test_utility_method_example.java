@@ -76,11 +76,7 @@ public class Chapter24Test1 extends TestCase {
             }
         } finally {
             // Teardown
-            deleteObject(invoice);
-            deleteObject(product);
-            deleteObject(customer);
-            deleteObject(billingAddress);
-            deleteObject(shippingAddress);
+            deleteTestObjects();
         }
     }
 }
