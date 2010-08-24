@@ -1,5 +1,8 @@
 public class Chapter24Test1 extends TestCase {
     
+    public void setUp() {
+    }
+
     public void tearDown() {
         deleteTestObjects();
     }
@@ -48,7 +51,8 @@ public class Chapter24Test1 extends TestCase {
     
     protected LineItem createLineItem(int quantity, BigDecimal discountPercentage,
                                       BigDecimal extendedPrice, Product product, Invoice invoice) {
-        return new LineItem(quantity, discountPercentage, extendedPrice, product.getName(), invoice.getName());
+        return new LineItem(quantity, discountPercentage,
+                            extendedPrice, product.getName(), invoice.getName());
     }
     
     protected void assertLineItemsEqual(String message, LineItem expected, LineItem actual) {
@@ -78,29 +82,22 @@ public class Chapter24Test1 extends TestCase {
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final int QUANTITY = 5;
         final BigDecimal CUSTOMER_DISCOUNT = new BigDecimal("30");
-        Customer customer = null;
-        Product product = null;
-        Invoice invoice = null;
-        try {
-            // Fixture Setup
-            customer =
-                findActiveCustomerWithDiscount(CUSTOMER_DISCOUNT);
-            product = findCurrentProductWith3DigitPrice();
-            invoice = createInvoice(customer);
-            // Exercise SUT
-            invoice.addItemQuantity(product, QUANTITY);
-            // Verify Outcome
-            final BigDecimal BASE_PRICE = product.getUnitPrice().
-                multiply(new BigDecimal(QUANTITY));
-            final BigDecimal EXTENDED_PRICE =
-                BASE_PRICE.subtract(BASE_PRICE.multiply(
-                                 CUSTOMER_DISCOUNT.movePointLeft(2)));
-            LineItem expected =
-                createLineItem(QUANTITY, CUSTOMER_DISCOUNT,
-                               EXTENDED_PRICE, product, invoice);
-            assertContainsExactlyOneLineItem(invoice, expected);
-        } finally {
-            // Teardown
-        }
+        // Fixture Setup
+        Customer customer =
+            findActiveCustomerWithDiscount(CUSTOMER_DISCOUNT);
+        Product product = findCurrentProductWith3DigitPrice();
+        Invoice invoice = createInvoice(customer);
+        // Exercise SUT
+        invoice.addItemQuantity(product, QUANTITY);
+        // Verify Outcome
+        final BigDecimal BASE_PRICE = product.getUnitPrice().
+            multiply(new BigDecimal(QUANTITY));
+        final BigDecimal EXTENDED_PRICE =
+            BASE_PRICE.subtract(BASE_PRICE.multiply(
+                 CUSTOMER_DISCOUNT.movePointLeft(2)));
+        LineItem expected =
+            createLineItem(QUANTITY, CUSTOMER_DISCOUNT,
+                 EXTENDED_PRICE, product, invoice);
+        assertContainsExactlyOneLineItem(invoice, expected);
     }
 }
