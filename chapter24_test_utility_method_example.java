@@ -98,13 +98,7 @@ public class Chapter24Test1 extends TestCase {
             LineItem expected =
                 createLineItem(QUANTITY, CUSTOMER_DISCOUNT,
                                EXTENDED_PRICE, product, invoice);
-            List lineItems = invoice.getLineItems();
-            if (lineItems.size() == 1) {
-                LineItem actItem = (LineItem) lineItem.get(0);
-                assertLineItemsEqual("", expected, actItem);
-            } else {
-                assertTrue("Invoice should have 1 item", false);
-            }
+            assertContainsExactlyOneLineItem(invoice, expected);
         } finally {
             // Teardown
         }
