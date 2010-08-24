@@ -8,6 +8,7 @@ public class Chapter24Test1 extends TestCase {
     }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
+        final BigDecimal CUSTOMER_DISCOUNT = new BigDecimal("30");
         Address billingAddress = null;
         Address shippingAddress = null;
         Customer customer = null;
@@ -22,7 +23,7 @@ public class Chapter24Test1 extends TestCase {
                                           "Calgary", "Alberta",
                                           "T2N 2V2", "Canada");
             customer =
-                findActiveCustomerWithDiscount(new BigDecimal("30"));
+                findActiveCustomerWithDiscount(CUSTOMER_DISCOUNT);
             product = new Product( 88, "SomeWidget",
                                    new BigDecimal("19.99"));
             invoice = new Invoice( customer );
