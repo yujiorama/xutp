@@ -12,6 +12,11 @@ public class Chapter24Test1 extends TestCase {
                              billingAddress,
                              shippingAddress);
     }
+    
+    protected Product findCurrentProductWith3DigitPrice() {
+        return new Product( 88, "SomeWidget",
+                            new BigDecimal("19.99"));
+    }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final BigDecimal CUSTOMER_DISCOUNT = new BigDecimal("30");
