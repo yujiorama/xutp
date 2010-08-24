@@ -1,6 +1,12 @@
 public class Chapter24Test1 extends TestCase {
     proteted Customer findActiveCustomerWithDiscount(
                                                      BigDecimal percentDiscount) {
+        Address billingAddress = new Address("1222 1st St SW",
+                                     "Calgary", "Alberta",
+                                     "T2N 2V2", "Canada");
+        Address shippingAddress = new Address("1333 1st St SW",
+                                      "Calgary", "Alberta",
+                                      "T2N 2V2", "Canada");
         return new Customer( 99, "John", "Doe",
                              percentDiscount,
                              billingAddress,
@@ -9,19 +15,11 @@ public class Chapter24Test1 extends TestCase {
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
         final BigDecimal CUSTOMER_DISCOUNT = new BigDecimal("30");
-        Address billingAddress = null;
-        Address shippingAddress = null;
         Customer customer = null;
         Product product = null;
         Invoice invoice = null;
         try {
             // Fixture Setup
-            billingAddress = new Address("1222 1st St SW",
-                                         "Calgary", "Alberta",
-                                         "T2N 2V2", "Canada");
-            shippingAddress = new Address("1333 1st St SW",
-                                          "Calgary", "Alberta",
-                                          "T2N 2V2", "Canada");
             customer =
                 findActiveCustomerWithDiscount(CUSTOMER_DISCOUNT);
             product = new Product( 88, "SomeWidget",
