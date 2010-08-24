@@ -93,18 +93,7 @@ public class Chapter24Test1 extends TestCase {
             List lineItems = invoice.getLineItems();
             if (lineItems.size() == 1) {
                 LineItem actItem = (LineItem) lineItem.get(0);
-                assertEquals("inv", expected.getInv(), actItem.getInv());
-                assertEquals("prod", expected.getProd(), actItem.getProd());
-                assertEquals("quant", expected.getQuantity(), actItem.getQuantity());
-                assertEquals("discount",
-                             expected.getPercentDiscount(),
-                             actItem.getPercentDiscount());
-                assertEquals("unit price",
-                             expected.getUnitPrice(),
-                             actItem.getUnitPrice());
-                assertEquals("extended",
-                             expected.getExtendedPrice(),
-                             actItem.getExtendedPrice());
+                assertLineItemsEqual("", expected, actItem);
             } else {
                 assertTrue("Invoice should have 1 item", false);
             }
