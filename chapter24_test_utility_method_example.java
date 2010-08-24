@@ -30,6 +30,7 @@ public class Chapter24Test1 extends TestCase {
     }
 
     public void testAddItemQuantity_sevelhralQuantity_v1(){
+        final int QUANTITY = 5;
         final BigDecimal CUSTOMER_DISCOUNT = new BigDecimal("30");
         Customer customer = null;
         Product product = null;
@@ -41,7 +42,7 @@ public class Chapter24Test1 extends TestCase {
             product = findCurrentProductWith3DigitPrice();
             invoice = createInvoice(customer);
             // Exercise SUT
-            invoice.addItemQuantity( product, 5 );
+            invoice.addItemQuantity(product, QUANTITY);
             // Verify Outcome
             List lineItems = invoice.getLineItems();
             if (lineItems.size() == 1) {
