@@ -61,20 +61,25 @@ public class Chapter24Test1 extends TestCase {
             // Exercise SUT
             invoice.addItemQuantity(product, QUANTITY);
             // Verify Outcome
+            final BigDecimal BASE_PRICE = product.getUnitPrice().
+                multiply(new BigDecimal(QUANTITY));
+            final BigDecimal EXTENDED_PRICE =
+                BASE_PRICE.subtract(BASE_PRICE.multiply(
+                                 CUSTOMER_DISCOUNT.movePointLeft(2)));
             List lineItems = invoice.getLineItems();
             if (lineItems.size() == 1) {
                 LineItem actItem = (LineItem) lineItem.get(0);
                 assertEquals("inv", invoice, actItem.getInv());
                 assertEquals("prod", product, actItem.getProd());
-                assertEquals("quant", 5, actItem.getQuantity());
+                assertEquals("quant", QUANTITY, actItem.getQuantity());
                 assertEquals("discount",
-                             new BigDecimal("30"),
+                             CUSTOMER_DISCOUNT,
                              actItem.getPercentDiscount());
                 assertEquals("unit price",
-                             new BigDecimal("19.99"),
+                             product.getUnitPrice(),
                              actItem.getUnitPrice());
                 assertEquals("extended",
-                             new BigDecimal("69.96"),
+                             EXTENDED_PRICE,
                              actItem.getExtendedPrice());
             } else {
                 assertTrue("Invoice should have 1 item", false);
