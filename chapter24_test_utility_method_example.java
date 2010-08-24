@@ -1,5 +1,5 @@
 public class Chapter24Test1 extends TestCase {
-    proteted Customer findActiveCustomerWithDiscount(
+    protected Customer findActiveCustomerWithDiscount(
                                                      BigDecimal percentDiscount) {
         Address billingAddress = new Address("1222 1st St SW",
                                      "Calgary", "Alberta",
