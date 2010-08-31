@@ -25,6 +25,21 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !! How It Works (pp. 608)
 
+* 共通的なロジックを括り出してユーティリティメソッドにする
+** このメソッドが  ''Four-Phase Test'' (pp. 358) を含んでいたら、結果として ''Parameterized Test'' になる
+*** fixture setup、exercise、SUT、result verification、fixture teardown
+** 最小のコードで、最良のカバレッジが得られる
+** メンテナンスもしやすい
+
+* 良いユーティリティメソッドはテストコードを小さくさせる
+** 一連の複雑な処理を、1 行の単純な処理にできる
+
+* テストコードに似通ったところを見つけた場合
+** 共通部分を括り出して ''Test Utility Method'' (pp.599) にする
+** テストによって異なる情報をパラメタとして受け取るようにする
+** ''Test Method'' は、''Parameterized Test'' が動作するために必要なテストによって変わる情報をパラメタとして引き渡す
+
+
 !! When to Use It (pp. 608)
 
 !! Implementation Notes (pp. 608)
