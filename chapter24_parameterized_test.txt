@@ -62,6 +62,39 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !! Implementation Notes (pp. 608)
 
+* ''Parameterized Test'' の名前は ''Intention Revealing Name'' であるべき
+** 読み手が、このテストが何をしているかをすぐに理解できる
+
+* テストメソッドの名前は、テストの全てのライフサイクルを包含することを示すような名前にするべき
+** 無用な誤解を防ぐため
+
+* ただ 1 つの規約「先頭か最後に "test" を付けること」
+** 引数の存在感でパラメタライズドテストであることは伝わるでしょう
+** ''Test Discovery'' (pp.393) を提供しているような xUnit ファミリーの場合
+*** 引数無しで "test" から始まる名前のテストメソッドを持った''Testcase Objects' (pp.382) を生成することが多い
+*** 別に "test" から始まる名前の ''Parameterized Test'' を作ることの妨げにはならない
+
+* ''MbUnit'' (http://www.mbunit.com/)
+** .Net ソフトウェアのための テスティングフレームワーク
+** ''Test Automation Framework'' (pp.298) のレベルで ''Parameterized Test'' を実装している
+
+* '''DDSteps''' (http://www.ddsteps.org/)
+** Java のテスティングツールを統合したテスティングツール
+** この方面ではこれが最初?
+
+* テストに熱狂する人は ''Parameterized Test'' を検証するための ''Self-Checking Test'' を書くように主張する
+** テストの信頼が上がるのは明らかなメリット
+* ほとんどの場合はとても大変な仕事になる
+** SUT とのやりとりがあるから、''Custom Assertion'' のユニットテストを書くよりも大変
+** 多分 ''Test Double'' で SUT (注) を置き換えることになる
+
+ 注:
+ ここでいう SUT はこの場合分かりづらい。それが本物の SUT であるなら、Test Double では置き換えできないから。
+ 厳密に言うならば、私達はこのテストにおいて SUT となるオブジェクトを置き換えることになる。
+ 本当に検証したいのは、Parameterized Test の振る舞いであるからだ。
+ どんなものでも、このテストにおける SUT の役割を担うものは DOC となる。
+ (このことを説明しようとすると頭が痛くなる。本当に複雑なことではないし、実際にやろうとするときいろいろな気付きが得られる)
+
 !!! Variation: Tabular Test (pp. 609)
 Row Test
 
