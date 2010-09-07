@@ -96,7 +96,33 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
  (このことを説明しようとすると頭が痛くなる。本当に複雑なことではないし、実際にやろうとするときいろいろな気付きが得られる)
 
 !!! Variation: Tabular Test (pp. 609)
-Row Test
+
+* さまざまなこの本のレビューアが ''Parameterized Test'' の変形として書くべきだと勧めてきた
+** 彼らがよく使うという ''Tabular Test''
+
+* 本質的には ''Parameterized Test'' と同じ
+** 違いはテーブルデータがすべて 1 つのテストメソッドに入っていることくらい
+
+* 残念ながら ''Eager Test'' (pp.224) なアプローチ
+** 多くの条件の検証をしすぎてる
+
+* すべてのテストが通ってるうちはよい
+** 1 行の失敗が ''Defect Localication'' (pp.22) 効果の減少を招く
+
+* "行テスト" の潜在的な問題
+** 目的、または、偶然の出来事に対する依存
+** 全部同じ ''Testcase Object'' が実行しているから
+** ''Incremental Tabular Test'' にその振る舞いの例を示す
+
+* 潜在的な問題はあるけど効果的なテスト手法ではある
+
+* '''MbUnit'''
+** フレームワークレベルで ''Tabular Test'' を実装している
+** attribute [RowTest]
+*** テストが ''Parameterized Test'' であることを示す
+** attribute [Row(x,y,...)]
+*** 引数を指定
+** 他の xUnit ファミリーにはポーティングされてないの?
 
 !!! Variation: Incremental Tabular Test (pp. 609)
 
