@@ -41,6 +41,24 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 
 !! When to Use It (pp. 608)
+* ''Test Code Duplication'' になっているときはいつでも
+** 同じアルゴリズムのテストにちょっとだけ違うデータを使っている
+
+* データの違いは ''Parameterized Test'' の引数の違いになる
+
+* ロジックはユーティリティメソッドに隠蔽される
+
+* ''Obscure Test'' (pp.186) を無くす
+** 同じロジックを繰り返し書く回数が減る
+** ''Testcas Class'' (pp. 373) がよりコンパクトに
+
+* ''Data-Driven Test'' (pp.288) への足がかり
+** ''Parameterized Test'' は ''Data-Driven Test'' における動詞 (動作語)
+** 引数は属性
+
+* fixture setup をしないユーティリティメソッドは ''Verification Method''
+** ''Custom Assertion'' (pp.474) を参照
+** SUT の exercise もしないなら、それは ''Custom Assertion'' と呼ばれる
 
 !! Implementation Notes (pp. 608)
 
