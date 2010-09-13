@@ -254,6 +254,22 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !!! Example: Independent Tabular Test
 
+* テスト条件をコンパクトに表現できているでしょう ?
+** generateAndVerify メソッドの引数にある sourceXml と expextedHtml について「一時変数のインライン化」を実施
+** 各テストメソッドはひとまとめに
+
+* 実用的にはやらなくていいこともやっている
+** 表の配置をページ幅に合わせるとか
+** row メソッドを作った
+
+* ''Test Runner'' (pp. 377) からの見え方ではこれは 1 つのテストになってしまう
+** 最終行以外での失敗は、テストの情報を損なうことになる
+
+* この例は ''Interacting Test'' にはならない
+** generateAndVerify メソッドは毎回新しいフィクスチャーを生成するから
+** 実世界では忘れてはいけない可能性
+
+
 !!! Example: Incremental Tabular Test
 
 !!! Example: Tabular Test with Framework Support (MbUnit)
