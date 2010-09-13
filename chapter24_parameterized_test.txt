@@ -203,6 +203,10 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !! Refactoring Notes
 
+* ''Parameterized Test'' へのリファクタリングは ''Custom Assertion'' へのそれに似てる
+* 違うのは、「メソッドの抽出」をする部分である exercise フェーズのコードに SUT の呼び出しが含まれているところ
+** これらのテストは論理的に独立しているから、フィクスチャーと関連する期待値を定義できれば、後は ''Parameterized Test'' として抽出できる
+
 !!! Example: Parameterized Test
 
 !!! Example: Independent Tabular Test
