@@ -209,6 +209,49 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !!! Example: Parameterized Test
 
+* これらのテストは 2 つのステップに変えることができる
+** 2 つの変数の初期化
+** 実際に仕事をするユーティリティメソッドの呼び出し
+* このユーティリティメソッドが ''Parameterized Test''
+
+ def test_extref
+   sourceXml = "<extref id='abc' />"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   generateAndVerifyHtml(sourceXml, expectedHtml, "<extref>")
+ end
+ 
+ def test_testterm_normal
+   sourceXml = "<testterm id='abc' />"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   generateAndVerifyHtml(sourceXml, expectedHtml, "<testterm>")
+ end
+ 
+ def test_testterm_plural
+   sourceXml = "<testterms id='abc' />"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   generateAndVerifyHtml(sourceXml, expectedHtml, "<plural>")
+ end
+ 
+ def generateAndVerifyHtml( sourceXml, expectedHtml,
+                            message, &block)
+   mockFile = MockFile.new
+   sourceXml.delete!("\t")
+   @handler = setupHandler(sourceXml, mockFile)
+   block.call unless block == nil
+   @handler.printBodyContents
+   actual_html = mockFile.output
+   assert_equals_html( expectedHtml,
+                       actual_html,
+                       message + "html output")
+   actual_html
+ end
+
+* ''Verification Method'' との相違点
+** ''Four Phase Test'' の最初の 3 つ (setup から verify) を含んでいる
+* ''Verification Method'' では SUT の exercise と結果検証フェーズだけ
+* teardown フェーズはいらない
+** ''Garbage-Collected Teardown'' (pp.500) を使っているから
+
 !!! Example: Independent Tabular Test
 
 !!! Example: Incremental Tabular Test
