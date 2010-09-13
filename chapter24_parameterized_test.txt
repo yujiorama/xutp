@@ -151,9 +151,55 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 * ''Tabular Test'' と同じような問題に苦しむことになる
 ** 1 つのテストメソッドに複数のテストを隠してる、とか
 
-
 !! Motivation Example
 
+* この本を書くときに使った Ruby による Web 出版インフラから持ってきた runit のテストコード
+* クロスリファレンスタグに関するいずれの ''Simple Success Test'' も同じ処理順になっている
+** 入力値として XML を定義
+** 期待値として HTML を定義
+** 出力先ファイルのスタブ化
+** XML を処理するハンドラの準備
+** 出力 HTML の取り出し
+** 期待値の HTML との比較
+
+ def test_extref
+   # setup
+   sourceXml = "<extref id='abc'/>"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   mocFile = MockFile.new
+   @handler = setupHandler(sourceXml, mockFile)
+   # execute
+   @handler.printBodyContents
+   # verify
+   assert_equals_html( expectedHtml, mockFile.output,
+                       "extref: html output")
+ end
+ 
+ def testTestterm_normal
+   sourceXml = "<testterm id='abc'/>"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   mockFile = Mockfile.new
+   @handler = setupHandler(sourceXml, mockFile)
+   @handler.printBodyContents
+   assert_equals_html( expectedHtml, mockFile.output,
+                       "testterm: html output")
+ end
+ 
+ def testTestterm_plural
+   sourceXml = "<testterms id='abc'/>"
+   expectedHtml = "<a href='abc.html'>abcs</a>"
+   mockFile = Mockfile.new
+   @handler = setupHandler(sourceXml, mocFile)
+   @handler.printBodyContents
+   assert_equals_html( expectedHtml, mocFile.output,
+                       "testterms: html output")
+ end
+
+* すでにほとんどの共通するロジックは `setupHandler` メソッドに抽出してしまっている
+** ''Test Code Duplication'' がちょっと残ってる
+
+* あと 20 パターンくらいの同じようなテストがある
+** テストを書きやすくすることに価値があると感じている
 
 !! Refactoring Notes
 
