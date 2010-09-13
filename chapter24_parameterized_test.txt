@@ -125,6 +125,16 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 ** 他の xUnit ファミリーにはポーティングされてないの?
 
 !!! Variation: Incremental Tabular Test (pp. 609)
+* ''Tabular Test'' の変形
+
+* 前の行を引き継いでフィクスチャーを構築していく
+
+* 手の込んだ ''Interacting Test'' (''Errastic Test'' pp.288) である ''Chained Tests'' (pp.454) と同じ
+** ただし、テストコードが同じテストメソッドにあるところが違っている
+
+* テストメソッドの中のあるステップは、Fit の "DoFixture" と同じような振る舞い
+** 個々のステップの失敗はレポートされない
+** たいていの xUnit は最初のアサーションが失敗したらテストメソッドを中断するから
 
 !!! Variation: Loop-Driven Test (pp. 610)
 
