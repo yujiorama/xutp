@@ -138,6 +138,20 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !!! Variation: Loop-Driven Test (pp. 610)
 
+* 特定のリストやある範囲の全ての値について SUT をテストしたい
+** リストをループしながら ''Parameterized Test'' を呼ぶ
+
+* ループをネスト
+** 入力値の組み合わせに対する SUT の振る舞いを検証できる
+
+* 必要なもの
+** 全ての入力値またはその組み合わせに対する期待値を数え上げること
+** ''Production Logic in Test'' (''Conditional Test Logic'', pp.200) を避けながら ''Calculated Value'' (''Derived Value'', pp.718) を使うこと
+
+* ''Tabular Test'' と同じような問題に苦しむことになる
+** 1 つのテストメソッドに複数のテストを隠してる、とか
+
+
 !! Motivation Example
 
 
