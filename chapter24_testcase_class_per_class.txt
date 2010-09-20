@@ -1,0 +1,20 @@
+{{toc}}
+
+! Testcase Class per Class
+
+''How do we orgnize our Test Methods onto Testcase Classes?''
+'''We put all the Test Methods for one SUT class onto a single Testcase Class.'''
+
+* ''Test Methods'' (pp.348) が成長するにつれて、どの ''Testcase Class'' (pp.373) に入れるかを決める必要がある
+* 私達が選ぶ戦略は、テストの "big picture" をどれだけ確かに得られるか、という点に影響する
+* ''Testcase Class per Class'' パターンは、私達のテストの組織化を初めるための単純な方法です
+
+!! How It Works
+
+* 
+
+!! When to Use It
+
+!! Implementation Notes
+
+!!! Example: Testcase Class per Class
