@@ -3,6 +3,7 @@
 ! Testcase Class per Class
 
 ''How do we orgnize our Test Methods onto Testcase Classes?''
+
 '''We put all the Test Methods for one SUT class onto a single Testcase Class.'''
 
 * ''Test Methods'' (pp.348) が成長するにつれて、どの ''Testcase Class'' (pp.373) に入れるかを決める必要がある
