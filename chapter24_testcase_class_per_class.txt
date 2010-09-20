@@ -32,5 +32,22 @@
 
 !! Implementation Notes
 
+* ''Testcase Class'' のクラス名
+** SUT であるクラス名を元にする
+** "Test" を前に付けたり、後ろに付けたり
+* メソッド名
+** なるべく SUT の初期状態 (fixture) とメソッド名 (feature) が入るようにする
+** また、SUT へ渡されるパラメータのサマリも入れる
+* 落穂拾い
+** メソッド名に期待出力を入れる余裕はなさそう
+** テストの読み手は、期待出力がどういったものかを知るためにはテスト本体を読まなければいけない
+
+* ''Testcase Class per Class'' では、フィクスチャの作成は第一級の実装の関心事
+** 必要なフィクスチャの衝突は必然的に発生する
+** ''Implicit Setup'' (pp.424) の利用が難しくなるので、''In-line Setup'' (pp.408) または ''Delegated Setup'' (pp.411) を使わざるをえない
+
+* 各々のテストメソッドにおいてフィクスチャが見えるようにする方法
+** ''Obscure Test'' (pp.186) を避けたい
+** ''In-line Setup'' がごく単純にならなければ、''Creation Method'' (pp.415) を使った ''Delegated Setup'' は読み易いテストにしやすい
 
 !!! Example: Testcase Class per Class
