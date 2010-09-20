@@ -16,8 +16,21 @@
 
 !! When to Use It
 
-* 
+* 自分達がまだそれほど多くの ''Test Methods'' を持っていない
+* SUT のテストを書き始めたばかり
+
+* テストが増えたり、フィクスチャの理解が進んできた場合、''Testcase Class'' を複数のクラスに分割したくなるかも
+
+* ''Testcase Class per Fixture'' (pp.631) による方法でも同じ結果に
+** よく使われるあまり多くない数の初期コードがある場合
+
+* ''Testcase Class per Future'' (pp.624) による方法でも同じ結果に
+** いくつかのまったく異なる機能テストがある場合
+
+* "Let the code tell you what to do!"
+** Kent Beck
 
 !! Implementation Notes
+
 
 !!! Example: Testcase Class per Class
