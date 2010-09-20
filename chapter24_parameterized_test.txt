@@ -272,11 +272,109 @@ https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
 
 !!! Example: Incremental Tabular Test
 
+* ''Tabular Test'' は 1 つのテストメソッドとして定義する
+* 一連のアクションを構築する、という可能性を広げるものです
+
+ public class TabularTest extends TestCase {
+     private Order order = new Order();
+     private static final double tolerance = 0.001;
+     public void testGetTotal() {
+         assertEquals("initial", 0.00, order.getTotal(), tolerance);
+         testAddItemAndGetTotal("first", 1, 3.00, 3.00);
+         testAddItemAndGetTotal("second", 3, 5.00, 18.00);
+         // etc.
+     }
+
+     private void testAddItemAndGetTotal( String msg,
+                                          int lineItemQuantity,
+                                          double lineItemPrice,
+                                          double expectedTotal) {
+         // setup
+         LineItem item = new LineItem( lineItemQuantity, lineItemPrice );
+         // exercise SUT
+         order.addItem(item);
+         // verify total
+         assertEquals(msg, expectedTotal, order.getTotal(), tolerance);
+     }
+ }
+
+
 !!! Example: Tabular Test with Framework Support (MbUnit)
+
+* MbUnit のドキュメントにある RowTest アトリビュートの解説
+* ''Defect Localization'' による被害はなさそう
+* 1 行ごとに別のテストケースになる
+* 前述のテストケースへの書き換えも容易
+
+ [RowTest()]
+ [Row(1,2,3)]
+ [Row(2,3,5)]
+ [Row(3,4,8)]
+ [Row(4,5,9)]
+ public void tAdd(Int32 x, Int32 y, Int32 expectedSum)
+ {
+     Int32 Sum;
+     Sum = this.Subject.Add(x,y);
+     Assert.AAreEqual(expectedSum, Sum);
+ }
+
 
 !!! Example: Loop-Driven Test (Enumerated Values)
 
+ public void testMultipleValueSets() {
+     // Set up fixture
+     Calculator sut = new Calculator();
+     TestValues[] testValues = {
+                   new TestValues(1,2,3),
+                   new TestValues(2,3,5),
+                   new TestValues(3,4,8), // special case!
+                   new TestValues(4,5,9),
+                              };
+ 
+     for (int i = 0; i < testValues.length; i++) {
+         TestValues values = testValues[i];
+         // Exercise SUT
+         int actual = sut.calculate( values.a, values.b );
+         // Verity result
+         assertEquals(message(i), values.expectedSum, actual);
+     }
+ }
+ 
+ private String message(int i) {
+     return "Row " + String.valueOf(i);
+ }
+
+* それぞれの入力値に対する期待値がハードコーディング
+** ''Production Logic in Test'' を解消している
+
 !!! Example: Loop-Driven Test (Calculated Values)
+
+* ''special case'' が ''Production Logic in Test'' になってる
+ public void testCombinationsOfInputValues() {
+     // Set up fixture
+     Calculator sut = new Calculator();
+     int expected; // TBD inside loops
+ 
+     for (int i = 0; i < 10; i++) {
+         for (int j = 0; j < 10; j++) {
+             // Exercise SUT
+             int actual = sut.calculate( i, j );
+             // Verity result
+             if (i==3 && j==4) // Special case
+                 expected = 8;
+             else
+                 expected = i+j;
+
+             assertEquals(message(i,j), expected, actual);
+         }
+     }
+ }
+ 
+ private String message(int i, int j) {
+     return "Cell( " + String.valueOf(i)+ ","
+                     + String.valueOf(j)+ ")"
+ }
+
 
 !! Furthre Reading
 
