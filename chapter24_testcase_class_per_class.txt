@@ -11,9 +11,12 @@
 
 !! How It Works
 
-* 
+* 私達はテスト対象のクラスごとに別々の ''Testcase Class'' を作る
+* 各 ''Testcase Class'' は、SUT class の振る舞いを検証するための ''Test Methods' の家となる
 
 !! When to Use It
+
+* 
 
 !! Implementation Notes
 
