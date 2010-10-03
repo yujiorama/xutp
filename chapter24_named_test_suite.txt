@@ -1,0 +1,224 @@
+{{toc}}
+
+!! Named Test Suite (pp.592)
+
+!!! 前書き
+''恣意的なテストのグループがあるとき、どうやってテストを実行したらいいの?''
+
+'''グループとして実行させたいテストの集合を含んだ、適切な名前のテストスイートを定義します。'''
+
+https://cacoo.com/diagrams/2iXo4LSsCvd7qDFQ
+
+!! How It Works (pp.592)
+
+* 無数のテストがある
+** 系統だった方法で組織化したい
+* テストスイート
+** お互いによく似た機能を持つテストをグループにできる
+* こんなふうにテストを実行できるようにしたい
+** アプリケーションまたはコンポーネントに対するすべてのテストを実行
+** 機能単位で実行
+** サブコンポーネント単位で実行
+** 部分的に実行
+* Named Test Suite
+** 定義されたサブセットから実行したいテストの選択を可能にする
+
+!! When to Use It (pp.593)
+
+* Intent-Revealing Name による特別な ''Test Suite Factory'' を定義する
+** 関連したテストからなる一緒に実行したいそれぞれのグループに適用する
+** [[担当割当表/PARTIII/Test Enumeration]](pp.399)を参照
+
+* Factory Method によるテストスイートの生成
+** 目的の Test Suite Object を生成
+
+!!! Variation: AllTests Suite (pp.593)
+
+* 一見矛盾した要求
+** コマンド 1 つで全てのテストを実行したい
+** サブセットだけ実行したい
+
+* 一番の問題は実行時間
+** 特別なコンテキストのための AllTests Suite を実行するのがベスト
+
+* 次のような場合は Subset Suite を使う
+** 使っている xUnit がテストセレクションをサポートしていない
+** 実行したいテストが複数のコンテキストにばらついている
+** あるコンテキストには実行したくないテストが含まれている
+
+!!! Variation: Subset Suite (pp.593)
+
+* 開発者はスローテスト (pp.253) を実行したがらない
+** データベースにアクセスするコンポーネントを exercise するテスト
+** メモリアクセスだけのテストに比べて必然的に遅くなる
+* 名前から簡単に選択できるようにする
+** データベースにアクセスするテストの Named Test Suite を定義
+** メモリアクセスだけのテストの Named Test Suite を定義
+
+* テストを実行しない別の動機
+** テストの実行に必要なコンテキストが利用できないこと
+** 例: Web サーバを必要とするコンポーネントのテストを実行したくない
+*** 開発 PC で Web サーバが動いてない
+*** Web サーバにデプロイする時間がすごくかかる
+** 失敗することは分かってる and グリーンバーを維持するチャンスを失ってしまう
+
+!!! Variation: Single Test Suite (pp.593)
+
+* ''Subset Suite'' を退化させたもの
+** 1 つの ''Test Method'' を実行するために 1 つの ''TestCase Object'' をインスタンス化しているような状況
+* 次のようなケースでは便利
+** ''Test Tree Explorer`(pp.377 の ''Test Runner'' を参照) が使えない
+** ''Test Method'' が正常に動作するために、いろんな ''Setup Decorator'' (pp. 447) が必要
+* 大抵のテスト自動化フレームワークでは、同じワークスペース中で ''Testcase Class'' をオープンにしている
+
+!! Implementation Notes (pp.594)
+
+* 概念とその実現方法は独立している
+** 「名前付けられた集合としてテストを実行する」、という考え方
+** ''Named Test Suites'' の構築方法
+* 例
+** ''Test Enumeration'' によって明示的にテストスイートを構築する
+** ''Test Discovery'' によって特定の場所( namespace や assembly )にあるテストを検出する
+** より小さいスイートを動的に構成する ''Test Selection'' (pp.403)
+* いくつかの xUnit ファミリーではテストパッケージごと、または、サブシステムごとに ''AllTests Suite'' を定義する必要がある
+* ''NUnit'' は namespace 毎に ''Test Suite Object'' を自動で生成する
+
+* いくつかのサブセットごとに ''Named Test Suites'' がある状態で ''Test Enumeration'' を使っている場合
+** サブセットの語彙を使った ''AllTests Suite'' を定義したほうがよい
+
+* `AllTests Suite` を `Suite of Suites` として実装している場合
+** 新しいテストケースクラスは、''single Named Test Suite'' にのみ追加する
+** this collection of tests is then rolled up into the ''AllTests Suite' for the local context as well as the 'Named Test Suite'' and the next higner context.
+
+!! Refactoring Notes (pp.594)
+
+''Named Test Suite'' へのリファクタリングの手順は、その variant に依存したものになる。
+
+!!! Examples: AllTests Suite (pp.594)
+
+* ''AllTests Suite'' は、機能によって分類した異なる部分集合であるテストをすべて実行する。
+* java のパッケージなどの単位(サブコンポーネント、コンテキスト)ごとに、`AllTests` と呼ばれる特別なテストスイートと、対応するテストスイートファクトリを定義する。
+* このファクトリの ''suite'' ファクトリメソッドでは、そのコンテキストおよびネストされたコンテキストについて、すべてのテスト、''Named Test Suites'' を追加する。
+
+	public clas AllTests {
+	    public static Test suite() {
+	        TestSuite suite = new TestSuite("Test for allJunitTests");
+	        //$JUnit-BEGIN$
+	        suite.addTestSuite(
+	            com.clrstream.camug.example.test.InvoiceTest.class);
+	        suite.addTest(com.clrstream.ex7.test.AllTests.suite());
+	        suite.addTest(com.clrstream.ex8.test.AllTests.suite());
+	        suite.addTestSuite(
+	            com.xunitpatterns.guardassertion.Example.class);
+	        //$JUnit-END$
+	        return suite;
+	    }
+	}
+
+* トップレベルの ''Named Test Suites'' を実行した際は、ネストされたコンテキストのすべての ''Named Test Suites'' も実行されるようにするべき。
+* 単一の ''Testcase Class'' としての ''Test Suite Object'' に他の ''Named Test Suites'' を追加するため、2つのメソッド(suite.addTest, suite.addTestSuite) を使っている。
+** ''JUnit'' ではこうだが、他の xUnit ファミリーでは同じメソッド名が使えるだろう。
+
+* このコードサンプルでは、''JUnit-start'' や ''Junit-end'' といったコメントに注意して欲しい。
+* IDE (この場合は Eclipse) は、これらのコメントの間に半自動的な ''Test Discovery'' によってコードを再生成する。
+
+!!! Example: Special-Purpose Suite (pp.595)
+* 業務ロジックを実装したクラスを含む 3 つのパッケージ (A, B, C) があるとする。
+* それぞれのパッケージには、インメモリオブジェクトとデータベースへのアクセスを行うクラスがある。
+* こういった状況だと、3 つのパッケージに対応するテストパッケージを作ることになるでしょう。
+
+* 各パッケージのテストでは、データベースが必要だったりインメモリだけで実行できたりする。
+* そこで、次のような観点のテストを、システム全体に対して、また、各パッケージ(A,B,C)に対して実行したい。
+** All tests
+** All database tests
+** All in-memory tests
+** 合計で 12 のテスト集合になる
+
+*各パッケージ(A,B,C)について、次のような ''Named Test Suites'' を定義する。
+**''AllDbTests''
+***データベースに関するテストを全て含む
+**''AllInMemoryTests''
+***インメモリオブジェクトに関するテストを全て含む
+**''AllTests''
+***''AllDbTests'' と ''AllInMemoryTests'' を含む
+
+*トップレベルのテストとして、次のような ''Named Test Suites'' を定義する。
+**''AllDbTests''
+*** A,B,C それぞれのパッケージの''AllDbTests'' を含む
+**''AllInMemoryTests''
+*** A,B,C それぞれのパッケージの''AllInMemoryTests'' を含む
+**''AllTests''
+*** A,B,C それぞれのパッケージの ''AllTests'' を含む
+*** これは普通の ''AllTests Suite''
+
+*単一の ''Testcase Class'' からそれぞれの ''Named Test Suites'' に取り込むべきテストを見つけた場合
+**テストクラスを分割する
+**データベーステストやインメモリテストといったコンテキストごとにテストクラスを追加する
+
+!!! Example: Single Test Suite (pp.596)
+
+*デバッガを使っているなどの特殊な状況
+**''Testcase Class'' の全てのテストを実行されないことが望ましい
+* 特定の部分テスト集合だけを実行する方法
+** GUI テストランナーのテストツリーエクスプローラを使う
+**テストメソッドをコメントアウトする
+**全体をコピーして実行したくないテストメソッドを削除する
+**''Test Discovery'' アルゴリズムによる検索対象とならないようにテストメソッド名を変更する
+
+	public class LostTests extends TestCase {
+	    public LostTests(String name) {
+	        super(name);
+	    }
+	    
+	    public void xtestOne() throws Exception {
+	        fail("test not implemented");
+	    }
+	    /*
+	    public void testTow() throws Exception {
+	        fail("test not implemented");
+	    }
+	    */
+	    public void testSeventeen() throws Exception {
+	        assertTrue(true);
+	    }
+	}
+
+
+	public class MyTest extends TestCase {
+	    public static Test suite() {
+	        return new LostTests("testSeventeen");
+	    }
+	}
+
+* 上記の方法の問題点
+**''Lost Test''(pp.268, Production Bugs を参照) を避けることはできない。
+* ''Single Test Suite''
+**''Testcase Class'' を変更することなく、特定のテストだけを実行できるようになります。
+**たいていの xUnit で ''Testcase Class'' のコンストラクタが 1 つの引数を取るということを利用します。
+**引数としてテストメソッド名を指定されたテストクラスのインスタンスは、リフレクションにより指定されたテストメソッドを実行します。
+**この 1 引数のコンストラクタは、テストメソッドごとに実行され、その結果の ''Testcase Object'' は、''Test Suite Object'' に追加されます。
+
+*''Single Test Suite'' の使用
+** 専用の ''Test Suite Factory'' クラスを定義
+** ある ''Testcase Class'' の実行したいテストメソッド名を引数としてインスタンスを生成する ''suite'' メソッドを定義
+** 結果は他の ''Named Test Suites'' と同じように扱える
+
+!!! Example: Smoke Test Suite (pp.597)
+*''Special-Purpose Suite'' の考え方と ''Single Test Suite'' の方法によって構築する。
+**システムの主要な領域を代表するテストをピックアップ
+**1 つの ''Test Suite Object'' を構築
+* システムを完全にテストしない
+* コアとなる機能が壊れないことを確認できる
+
+	public class SmokeTestSuite extends TestCase {
+	    public static Test suite() {
+	        TestSuite mySuite = new TestSuite("Smoke Tests");
+	
+	        mySuite.addTest( new LostTests("testSeventeen") );
+	        mySuite.addTest( new SampleTests("testOne") );
+	        mySuite.addTest( new FlightManagementFacadeTest(
+	           "testGetFlightsByOriginAirports_TwoOutboundFlights"));
+	        // add additional tests here as needed...
+	        return mySuite;
+	    }
+	}

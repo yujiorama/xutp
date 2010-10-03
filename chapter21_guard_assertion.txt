@@ -1,0 +1,101 @@
+! Guard Assertion
+
+* How do we avoid Conditional Test Logic ?
+** We replace an if statement in a test with an assertion that fails that test if not ssatisfied
+
+* 検証ロジックが失敗するとはどういうことか ?
+** SUT からの返却値が期待した通りになっていない
+* テストの途中で予期しない問題が発生した場合
+** テストエラーではなくテスト失敗となりがち
+* テストランナー (377ページ)
+** できるかぎりの診断情報を出力しようとする
+* 自動化テスト
+** 部分的に状態を調べた結果のレポートを出力する
+
+!! How It Works
+
+* テストには通過するか失敗するかしかない
+* テストは Assertion Method (362ページ) によって失敗する
+* Conditional Test Logic をアサーションで置き換える
+** テストエラーが起きる場合をテスト失敗にすることができる
+* このパターンのメリット
+** Guard Assertion の条件が真になることをドキュメント化する
+** conditional logic の結果から推測していた事実が、Guard Assertion の成功/失敗として明らかになる
+
+!! When To Use It
+
+* 条件によってテストをエラー終了させてしまうような式を置き換えるために使うパターン
+* if then else fail コードを導入する代わり
+* exercise フェーズと verify フェーズの間に導入する
+
+!!! Variation: Shared Fixture State Assertion
+
+* Shared Fixture を使っている場合
+* exercise フェーズの前に、fixture がテストの事前条件を満たしているかどうかを検証できる
+* テストの読者に、どの fixture を使うのかを示すことができる
+* Tests as Documentation (23ページ) を促進する
+
+!! Implementation Notes
+
+* assertNotNil
+** Outcome Assertions
+* assertEquals
+** Equality Assertions
+
+!! Motivating Example
+
+// public void testWithConditionals() throws Exception {
+//     String expectedLastname = "smith";
+//     List foundPeople = PeopleFinder.
+//         findPeopleWithLastname(expectedLastname);
+//     if (foundPeople != null) {
+//         if (foundPeople.size() == 1) {
+//             Persion solePerson = (Person) foundPeople.get(0);
+//             assertEquals(expectedLastname, solePerson.getName());
+//         } else {
+//             fail("list should have exactly one element");
+//         }
+//     } else {
+//         fail("list is null");
+//     }
+// }
+
+!! Refactoring Notes
+
+* Replace Nested Conditinal with Guard Clauses を使う
+** 蜘蛛の巣コードをまっすぐのシーケンスに直します
+** テストコードでは、条件分岐 1 つでも多すぎる
+* 次のように変更
+** オブジェクトの null チェック
+*** Stated Outcome Assertion で置き換え
+** コレクション中のオブジェクト数のチェック
+*** Equality Assertion で置き換え
+
+!!! Example: Simple Guard Assertion
+
+// public void testWithConditionals() throws Exception {
+//     String expectedLastname = "smith";
+//     List foundPeople = PeopleFinder.
+//         findPeopleWithLastname(expectedLastname);
+//     assertNotNull("found people list", foundPeople);
+//     assertEquals("number of people", 1, foundPeople.size());
+//     Persion solePerson = (Person) foundPeople.get(0);
+//     assertEquals(expectedLastname, solePerson.getName());
+// }
+
+!!! Example: Shared Fixture Guard Assertion
+
+// public void testAddFlightsByFromAirport_OneOutboundFlight_GA() throws Exception {
+//     // Fixture Lookup
+//     List flights = facade.getFlightsByOrigiAirport(ONE_OUTBOUND_FLIGHT_AIRPORT_ID);
+//     // Guard Assertion on Fixture Contents
+//     assertEquals("# flights precondition", 1, flights.size());
+//     FlightDto firstFlight = (FlightDto) flights.get(0);
+//     // Exercise System
+//     BigDecimal flightNum = facade.createFlight(firstFlight.getOriginAirportId(), firstFlight.getDestAirportId());
+//     // Verify Outcome
+//     FlightDto expFlight  (FlightDto) firstFlight.clone();
+//     expFlight.setFlightNumber( flightNum );
+//     List actual = facade.getFlightsByOrigiAirport(firstFlight.getOriginAirportId());
+//     assertExactly2FlightsInDtoList("Flights at origin", firstFlight, expFlight, actual);
+// }

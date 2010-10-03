@@ -1,0 +1,63 @@
+{{toc}}
+
+! Testcase Class per Class
+
+''How do we orgnize our Test Methods onto Testcase Classes?''
+
+'''We put all the Test Methods for one SUT class onto a single Testcase Class.'''
+
+* ''Test Methods'' (pp.348) が成長するにつれて、どの ''Testcase Class'' (pp.373) に入れるかを決める必要がある
+* 私達が選ぶ戦略は、テストの "big picture" をどれだけ確かに得られるか、という点に影響する
+* ''Testcase Class per Class'' パターンは、私達のテストの組織化を初めるための単純な方法です
+
+!! How It Works
+
+* 私達はテスト対象のクラスごとに別々の ''Testcase Class'' を作る
+* 各 ''Testcase Class'' は、SUT class の振る舞いを検証するための ''Test Methods' の家となる
+
+!! When to Use It
+
+* 自分達がまだそれほど多くの ''Test Methods'' を持っていない
+* SUT のテストを書き始めたばかり
+
+* テストが増えたり、フィクスチャの理解が進んできた場合、''Testcase Class'' を複数のクラスに分割したくなるかも
+
+* ''Testcase Class per Fixture'' (pp.631) による方法でも同じ結果に
+** よく使われるあまり多くない数の初期コードがある場合
+
+* ''Testcase Class per Future'' (pp.624) による方法でも同じ結果に
+** いくつかのまったく異なる機能テストがある場合
+
+* "Let the code tell you what to do!"
+** Kent Beck
+
+!! Implementation Notes
+
+* ''Testcase Class'' のクラス名
+** SUT であるクラス名を元にする
+** "Test" を前に付けたり、後ろに付けたり
+* メソッド名
+** なるべく SUT の初期状態 (fixture) とメソッド名 (feature) が入るようにする
+** また、SUT へ渡されるパラメータのサマリも入れる
+* 落穂拾い
+** メソッド名に期待出力を入れる余裕はなさそう
+** テストの読み手は、期待出力がどういったものかを知るためにはテスト本体を読まなければいけない
+
+* ''Testcase Class per Class'' では、フィクスチャの作成は第一級の実装の関心事
+** 必要なフィクスチャの衝突は必然的に発生する
+** ''Implicit Setup'' (pp.424) の利用が難しくなるので、''In-line Setup'' (pp.408) または ''Delegated Setup'' (pp.411) を使わざるをえない
+
+* 各々のテストメソッドにおいてフィクスチャが見えるようにする方法
+** ''Obscure Test'' (pp.186) を避けたい
+** ''In-line Setup'' がごく単純にならなければ、''Creation Method'' (pp.415) を使った ''Delegated Setup'' は読み易いテストにしやすい
+
+!!! Example: Testcase Class per Class
+
+* サンプルコードでは ''Fresh Fixture'' を ''Delegated Setup'' で書いてます
+** もっと宣言的にしたい
+
+* ちょっと長くなってきた
+
+* IDE で見れるテストの "big picture" もパッとしない
+** テストの条件は分かるけど、期待出力が分からない
+

@@ -1,0 +1,146 @@
+{{toc}}
+
+! Delta Assertion
+
+*フィクスチャの初期状態は操作できない環境でセルフチェックテストを実行する
+*exerciseの前後における差異を元にしたアサーションを作成する
+
+*Delta Assertion
+**Shared Fixture に存在するデータに対する依存性を軽減する
+*テストデータベースとして shared fixture (317ページ) を使っている
+**SUTのexercise後のfixtureのコンテンツ状態に依存したアサーションを書くのは大変
+**他のテストでfixtureに作られたオブジェクトがアサーションを失敗させてしまうかも
+*Database Partitioning Scheme (Database Sandbox, 650ページ) を使えば他のテストから独立できる
+**その選択肢が選べないときはどうする?
+
+!! How it Works
+
+* exercise の前にやること
+**Shared Fixture の適当なスナップショットを取得する
+* exercise の後にやること
+**取得したスナップショットに相対的なアサーションを定義する
+
+*Delta Assertion の例
+**変更されたオブジェクトの数は正しいか
+**SUTから返されるオブジェクトの集合のコンテンツは期待通りに増えているか
+
+!! When Use It
+
+*使いどき
+**test fixture のコントロールが無い
+**Interacting Test(Erratic Test, 228ページ) を無くしたい
+**同じテストランナーで複数のテストを実行する
+**SUTとフィクスチャを変更するのが私たちのテストだけである
+
+*メリット
+**テストコードに、フィクスチャに対する柔軟性ができる
+**メモリ/データリークの検出ができる
+***Implicit Teardown(516ページ)と合わせて使う
+***詳しくは 487 ページのコラムを参照
+
+*できないこと
+**複数プロセスが並行して実行するような Test Run War は防げない
+
+!! Implementation Notes
+
+*exercise前にできることは 1 つ
+**スナップショットを取得した後で、SUT がスナップショットの状態を変更できないようにする
+*例:スナップショットがオブジェクトの集合のとき
+**ディープコピー
+**シャローコピーでは、コレクションが参照してるオブジェクトをSUTから変更できてしまう
+*exercise後にできることは複数
+**何もしない
+***(1)個数を数えて、(2)スナップショットに含まれてるオブジェクトが存在することを確認し、(3)新たなExpected Object(462ページ)が存在することを確認する
+**スナップショットに含まれるものは全部削除
+***新たなExpected Objectsが存在することを確認する
+**実現方法
+***Custom Assertion(474ページ)
+***Verification Method
+
+
+!! Using Delta Assertions to Detect Data Leakage
+* カスタマーテスト実行後のテストフィクスチャの初期化方法について実験していた
+* 私達のテストはデータベースにアクセスして、いくつかのオブジェクトを残していた
+* このとき問題になっていたこと
+** Unrepeatable Test
+** Interacting Test
+** Slow Test
+* Automated Tear down で、テスト中に作られたオブジェクトを記録するようにした
+** データベースをスタブ化できることが分かった (Fake Database (551ページ))
+* データベースがフェイクでもリアルでも同じテストを実行できるようにした
+** 相互作用に起因する問題は解決した
+** テストはオブジェクトを残し続けていた
+** どのテストが悪いのかつきとめる必要がある
+
+* 解決方法はシンプル
+** フェイクデータベースの中を見た
+*** 実装はハッシュテーブルにオブジェクト数を返すメソッドを追加したもの
+
+* 全てのオブジェクトを初期化できていることを検証した
+** setup メソッドでデータベースのオブジェクト数を取得してインスタンス変数に記録
+** 記録したオブジェクト数を Equality Assertion の期待値とする
+* どのテストメソッドがデータをリークしているかすぐに分かった
+
+* 私達の気付き
+** 同じテストを繰り返し実行できることの有用性
+** データベースをインメモリで持つことの有用性
+
+* 社内のテストケーススーパークラスを使ってたら teardown で落ちた
+** Delta Assertion を実装してる
+** メモリリークの検出が同じように出来た
+
+!! Motivating Example
+
+Shared Fixture を使っているため、他のテストを実行すると失敗してしまうかもしれないテスト。
+
+// public void testGetFlightsByOriginAirport_OneOutboundFlight()
+//          throws Exception {
+// FlightDto expectedFlightDto =
+//    createNewFlightBetweenexistingAirports();
+// // Exercise System
+// facade.createFlight(
+//            expectedFlightDto.getOriginAirportId(),
+//            expectedFlightDto.getDestinationAirportId());
+// // Veirfy Outcome
+// List flightsAtOrigin = facade.getFlightsByOriginAirport(
+//                   expectedFlightDto.getOriginAirportId());
+// assertOnlyFlightInDtoList( "Outbound flight at origin",
+//                            expectedFlightDto,
+//                            flightsAtOrigin);
+// }
+
+!! Refactoring Notes
+
+* Delta Assertion を使うようにテストを変更する
+** 後で検証するデータ(もしくはオブジェクト集合) のスナップショットを取得する
+** アサーションの内容を、事前データと事後データの差異を検証するものに変更する
+* Conditional Test Logic にならないように、カスタムアサーションを導入する
+** 事前データを引数に取れるようにしたもの
+
+!!! Example: Delta Assertion
+
+// public void testCrateFlight_Delta()
+// throws Exception {
+// FlightDto expectedFlightDto =
+//    createNewFlightBetweenexistingAirports();
+// // Remember prior state
+// List flightsBeforeCreate =
+//   facade.getFlightsByOriginAirport(
+//                  expectedFlightDto.getOriginAirportId());
+// // Exercise system
+// facade.createFlight(
+//               expectedFlightDto.getOriginAirportId(),
+//               expectedFlightDto.getDestinationAirportId());
+// // Verify outcome relative to prior state
+// List flightsAfterCreate =
+//    fasace.getFlightsByOriginAirport(
+//                  expectedFlightDto.getOriginAirportId());
+// assertFlightIncludedInDtoList( "new flight ",
+//                                expectedFlightDto,
+//                                flightsAfterCreate);
+// assertAllFlightsIncludedInDtoList( "previous flights",
+//                                    flightsBeforeCreate,
+//                                    flightsAfterCreate);
+// assertEquals( "Number of flights after create",
+//               flightsBeforeCreate.size()+1,
+//               flightsAfterCreate.size());

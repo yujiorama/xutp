@@ -1,0 +1,384 @@
+{{toc}}
+
+!! Parameterized Test (pp.607)
+
+!!! 前書き
+''同じロジックがいくつものテストコードに現われる場合、どうやって Test Code Duplication を減らせばよいか''
+
+'''フィクスチャーのセットアップと結果の検証に必要なパラメータを、テストの完全なライフサイクルを実装したユーティリティメソッドに渡しましょう。'''
+
+https://cacoo.com/diagrams/pI0cKecU9ipqOrrr-CAD5E.png
+
+* テスティングはくどくなりやすい
+** 同じテストを何度も実行する
+** 同じようだけどちょっと違うテストがたくさんある
+* 例
+** システムへの入力値とシステムの出力の検証値がほとんど同じで、本質的に同じようなテスト
+** こういったテストはほとんど同じ処理手順になっている
+* 良いコードカバレッジを維持するために
+** 膨大なテストを用意しておくのは優れた手段
+* 膨大なテスト
+** メンテナンス性の点からは魅力に欠ける
+** 1 つのテストにおけるアルゴリズムの変更が他の似たようなテストすべてに影響する
+* ''A Parameterized Test''
+** たくさんの ''Test Method'' において同じテストロジックを再利用するための手段を提供する
+
+!! How It Works (pp. 608)
+
+* 共通的なロジックを括り出してユーティリティメソッドにする
+** このメソッドが  ''Four-Phase Test'' (pp. 358) を含んでいたら、結果として ''Parameterized Test'' になる
+*** fixture setup、exercise、SUT、result verification、fixture teardown
+** 最小のコードで、最良のカバレッジが得られる
+** メンテナンスもしやすい
+
+* 良いユーティリティメソッドはテストコードを小さくさせる
+** 一連の複雑な処理を、1 行の単純な処理にできる
+
+* テストコードに似通ったところを見つけた場合
+** 共通部分を括り出して ''Test Utility Method'' (pp.599) にする
+** テストによって異なる情報をパラメタとして受け取るようにする
+** ''Test Method'' は、''Parameterized Test'' が動作するために必要なテストによって変わる情報をパラメタとして引き渡す
+
+
+!! When to Use It (pp. 608)
+* ''Test Code Duplication'' になっているときはいつでも
+** 同じアルゴリズムのテストにちょっとだけ違うデータを使っている
+
+* データの違いは ''Parameterized Test'' の引数の違いになる
+
+* ロジックはユーティリティメソッドに隠蔽される
+
+* ''Obscure Test'' (pp.186) を無くす
+** 同じロジックを繰り返し書く回数が減る
+** ''Testcas Class'' (pp. 373) がよりコンパクトに
+
+* ''Data-Driven Test'' (pp.288) への足がかり
+** ''Parameterized Test'' は ''Data-Driven Test'' における動詞 (動作語)
+** 引数は属性
+
+* fixture setup をしないユーティリティメソッドは ''Verification Method''
+** ''Custom Assertion'' (pp.474) を参照
+** SUT の exercise もしないなら、それは ''Custom Assertion'' と呼ばれる
+
+!! Implementation Notes (pp. 608)
+
+* ''Parameterized Test'' の名前は ''Intention Revealing Name'' であるべき
+** 読み手が、このテストが何をしているかをすぐに理解できる
+
+* テストメソッドの名前は、テストの全てのライフサイクルを包含することを示すような名前にするべき
+** 無用な誤解を防ぐため
+
+* ただ 1 つの規約「先頭か最後に "test" を付けること」
+** 引数の存在感でパラメタライズドテストであることは伝わるでしょう
+** ''Test Discovery'' (pp.393) を提供しているような xUnit ファミリーの場合
+*** 引数無しで "test" から始まる名前のテストメソッドを持った''Testcase Objects' (pp.382) を生成することが多い
+*** 別に "test" から始まる名前の ''Parameterized Test'' を作ることの妨げにはならない
+
+* ''MbUnit'' (http://www.mbunit.com/)
+** .Net ソフトウェアのための テスティングフレームワーク
+** ''Test Automation Framework'' (pp.298) のレベルで ''Parameterized Test'' を実装している
+
+* '''DDSteps''' (http://www.ddsteps.org/)
+** Java のテスティングツールを統合したテスティングツール
+** この方面ではこれが最初?
+
+* テストに熱狂する人は ''Parameterized Test'' を検証するための ''Self-Checking Test'' を書くように主張する
+** テストの信頼が上がるのは明らかなメリット
+* ほとんどの場合はとても大変な仕事になる
+** SUT とのやりとりがあるから、''Custom Assertion'' のユニットテストを書くよりも大変
+** 多分 ''Test Double'' で SUT (注) を置き換えることになる
+
+ 注:
+ ここでいう SUT はこの場合分かりづらい。それが本物の SUT であるなら、Test Double では置き換えできないから。
+ 厳密に言うならば、私達はこのテストにおいて SUT となるオブジェクトを置き換えることになる。
+ 本当に検証したいのは、Parameterized Test の振る舞いであるからだ。
+ どんなものでも、このテストにおける SUT の役割を担うものは DOC となる。
+ (このことを説明しようとすると頭が痛くなる。本当に複雑なことではないし、実際にやろうとするときいろいろな気付きが得られる)
+
+!!! Variation: Tabular Test (pp. 609)
+
+* さまざまなこの本のレビューアが ''Parameterized Test'' の変形として書くべきだと勧めてきた
+** 彼らがよく使うという ''Tabular Test''
+
+* 本質的には ''Parameterized Test'' と同じ
+** 違いはテーブルデータがすべて 1 つのテストメソッドに入っていることくらい
+
+* 残念ながら ''Eager Test'' (pp.224) なアプローチ
+** 多くの条件の検証をしすぎてる
+
+* すべてのテストが通ってるうちはよい
+** 1 行の失敗が ''Defect Localication'' (pp.22) 効果の減少を招く
+
+* "行テスト" の潜在的な問題
+** 目的、または、偶然の出来事に対する依存
+** 全部同じ ''Testcase Object'' が実行しているから
+** ''Incremental Tabular Test'' にその振る舞いの例を示す
+
+* 潜在的な問題はあるけど効果的なテスト手法ではある
+
+* '''MbUnit'''
+** フレームワークレベルで ''Tabular Test'' を実装している
+** attribute [RowTest]
+*** テストが ''Parameterized Test'' であることを示す
+** attribute [Row(x,y,...)]
+*** 引数を指定
+** 他の xUnit ファミリーにはポーティングされてないの?
+
+!!! Variation: Incremental Tabular Test (pp. 609)
+* ''Tabular Test'' の変形
+
+* 前の行を引き継いでフィクスチャーを構築していく
+
+* 手の込んだ ''Interacting Test'' (''Errastic Test'' pp.288) である ''Chained Tests'' (pp.454) と同じ
+** ただし、テストコードが同じテストメソッドにあるところが違っている
+
+* テストメソッドの中のあるステップは、Fit の "DoFixture" と同じような振る舞い
+** 個々のステップの失敗はレポートされない
+** たいていの xUnit は最初のアサーションが失敗したらテストメソッドを中断するから
+
+!!! Variation: Loop-Driven Test (pp. 610)
+
+* 特定のリストやある範囲の全ての値について SUT をテストしたい
+** リストをループしながら ''Parameterized Test'' を呼ぶ
+
+* ループをネスト
+** 入力値の組み合わせに対する SUT の振る舞いを検証できる
+
+* 必要なもの
+** 全ての入力値またはその組み合わせに対する期待値を数え上げること
+** ''Production Logic in Test'' (''Conditional Test Logic'', pp.200) を避けながら ''Calculated Value'' (''Derived Value'', pp.718) を使うこと
+
+* ''Tabular Test'' と同じような問題に苦しむことになる
+** 1 つのテストメソッドに複数のテストを隠してる、とか
+
+!! Motivation Example
+
+* この本を書くときに使った Ruby による Web 出版インフラから持ってきた runit のテストコード
+* クロスリファレンスタグに関するいずれの ''Simple Success Test'' も同じ処理順になっている
+** 入力値として XML を定義
+** 期待値として HTML を定義
+** 出力先ファイルのスタブ化
+** XML を処理するハンドラの準備
+** 出力 HTML の取り出し
+** 期待値の HTML との比較
+
+ def test_extref
+   # setup
+   sourceXml = "<extref id='abc'/>"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   mocFile = MockFile.new
+   @handler = setupHandler(sourceXml, mockFile)
+   # execute
+   @handler.printBodyContents
+   # verify
+   assert_equals_html( expectedHtml, mockFile.output,
+                       "extref: html output")
+ end
+ 
+ def testTestterm_normal
+   sourceXml = "<testterm id='abc'/>"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   mockFile = Mockfile.new
+   @handler = setupHandler(sourceXml, mockFile)
+   @handler.printBodyContents
+   assert_equals_html( expectedHtml, mockFile.output,
+                       "testterm: html output")
+ end
+ 
+ def testTestterm_plural
+   sourceXml = "<testterms id='abc'/>"
+   expectedHtml = "<a href='abc.html'>abcs</a>"
+   mockFile = Mockfile.new
+   @handler = setupHandler(sourceXml, mocFile)
+   @handler.printBodyContents
+   assert_equals_html( expectedHtml, mocFile.output,
+                       "testterms: html output")
+ end
+
+* すでにほとんどの共通するロジックは `setupHandler` メソッドに抽出してしまっている
+** ''Test Code Duplication'' がちょっと残ってる
+
+* あと 20 パターンくらいの同じようなテストがある
+** テストを書きやすくすることに価値があると感じている
+
+!! Refactoring Notes
+
+* ''Parameterized Test'' へのリファクタリングは ''Custom Assertion'' へのそれに似てる
+* 違うのは、「メソッドの抽出」をする部分である exercise フェーズのコードに SUT の呼び出しが含まれているところ
+** これらのテストは論理的に独立しているから、フィクスチャーと関連する期待値を定義できれば、後は ''Parameterized Test'' として抽出できる
+
+!!! Example: Parameterized Test
+
+* これらのテストは 2 つのステップに変えることができる
+** 2 つの変数の初期化
+** 実際に仕事をするユーティリティメソッドの呼び出し
+* このユーティリティメソッドが ''Parameterized Test''
+
+ def test_extref
+   sourceXml = "<extref id='abc' />"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   generateAndVerifyHtml(sourceXml, expectedHtml, "<extref>")
+ end
+ 
+ def test_testterm_normal
+   sourceXml = "<testterm id='abc' />"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   generateAndVerifyHtml(sourceXml, expectedHtml, "<testterm>")
+ end
+ 
+ def test_testterm_plural
+   sourceXml = "<testterms id='abc' />"
+   expectedHtml = "<a href='abc.html'>abc</a>"
+   generateAndVerifyHtml(sourceXml, expectedHtml, "<plural>")
+ end
+ 
+ def generateAndVerifyHtml( sourceXml, expectedHtml,
+                            message, &block)
+   mockFile = MockFile.new
+   sourceXml.delete!("\t")
+   @handler = setupHandler(sourceXml, mockFile)
+   block.call unless block == nil
+   @handler.printBodyContents
+   actual_html = mockFile.output
+   assert_equals_html( expectedHtml,
+                       actual_html,
+                       message + "html output")
+   actual_html
+ end
+
+* ''Verification Method'' との相違点
+** ''Four Phase Test'' の最初の 3 つ (setup から verify) を含んでいる
+* ''Verification Method'' では SUT の exercise と結果検証フェーズだけ
+* teardown フェーズはいらない
+** ''Garbage-Collected Teardown'' (pp.500) を使っているから
+
+!!! Example: Independent Tabular Test
+
+* テスト条件をコンパクトに表現できているでしょう ?
+** generateAndVerify メソッドの引数にある sourceXml と expextedHtml について「一時変数のインライン化」を実施
+** 各テストメソッドはひとまとめに
+
+* 実用的にはやらなくていいこともやっている
+** 表の配置をページ幅に合わせるとか
+** row メソッドを作った
+
+* ''Test Runner'' (pp. 377) からの見え方ではこれは 1 つのテストになってしまう
+** 最終行以外での失敗は、テストの情報を損なうことになる
+
+* この例は ''Interacting Test'' にはならない
+** generateAndVerify メソッドは毎回新しいフィクスチャーを生成するから
+** 実世界では忘れてはいけない可能性
+
+
+!!! Example: Incremental Tabular Test
+
+* ''Tabular Test'' は 1 つのテストメソッドとして定義する
+* 一連のアクションを構築する、という可能性を広げるものです
+
+ public class TabularTest extends TestCase {
+     private Order order = new Order();
+     private static final double tolerance = 0.001;
+     public void testGetTotal() {
+         assertEquals("initial", 0.00, order.getTotal(), tolerance);
+         testAddItemAndGetTotal("first", 1, 3.00, 3.00);
+         testAddItemAndGetTotal("second", 3, 5.00, 18.00);
+         // etc.
+     }
+
+     private void testAddItemAndGetTotal( String msg,
+                                          int lineItemQuantity,
+                                          double lineItemPrice,
+                                          double expectedTotal) {
+         // setup
+         LineItem item = new LineItem( lineItemQuantity, lineItemPrice );
+         // exercise SUT
+         order.addItem(item);
+         // verify total
+         assertEquals(msg, expectedTotal, order.getTotal(), tolerance);
+     }
+ }
+
+
+!!! Example: Tabular Test with Framework Support (MbUnit)
+
+* MbUnit のドキュメントにある RowTest アトリビュートの解説
+* ''Defect Localization'' による被害はなさそう
+* 1 行ごとに別のテストケースになる
+* 前述のテストケースへの書き換えも容易
+
+ [RowTest()]
+ [Row(1,2,3)]
+ [Row(2,3,5)]
+ [Row(3,4,8)]
+ [Row(4,5,9)]
+ public void tAdd(Int32 x, Int32 y, Int32 expectedSum)
+ {
+     Int32 Sum;
+     Sum = this.Subject.Add(x,y);
+     Assert.AAreEqual(expectedSum, Sum);
+ }
+
+
+!!! Example: Loop-Driven Test (Enumerated Values)
+
+ public void testMultipleValueSets() {
+     // Set up fixture
+     Calculator sut = new Calculator();
+     TestValues[] testValues = {
+                   new TestValues(1,2,3),
+                   new TestValues(2,3,5),
+                   new TestValues(3,4,8), // special case!
+                   new TestValues(4,5,9),
+                              };
+ 
+     for (int i = 0; i < testValues.length; i++) {
+         TestValues values = testValues[i];
+         // Exercise SUT
+         int actual = sut.calculate( values.a, values.b );
+         // Verity result
+         assertEquals(message(i), values.expectedSum, actual);
+     }
+ }
+ 
+ private String message(int i) {
+     return "Row " + String.valueOf(i);
+ }
+
+* それぞれの入力値に対する期待値がハードコーディング
+** ''Production Logic in Test'' を解消している
+
+!!! Example: Loop-Driven Test (Calculated Values)
+
+* ''special case'' が ''Production Logic in Test'' になってる
+ public void testCombinationsOfInputValues() {
+     // Set up fixture
+     Calculator sut = new Calculator();
+     int expected; // TBD inside loops
+ 
+     for (int i = 0; i < 10; i++) {
+         for (int j = 0; j < 10; j++) {
+             // Exercise SUT
+             int actual = sut.calculate( i, j );
+             // Verity result
+             if (i==3 && j==4) // Special case
+                 expected = 8;
+             else
+                 expected = i+j;
+
+             assertEquals(message(i,j), expected, actual);
+         }
+     }
+ }
+ 
+ private String message(int i, int j) {
+     return "Cell( " + String.valueOf(i)+ ","
+                     + String.valueOf(j)+ ")"
+ }
+
+
+!! Furthre Reading
+
+* DDSteps extension for JUnit
+** http://www.ddsteps.org
+* Tabular Test (Clint Shank)
+** http://clintshank.javadevelopersjournal.com/tabulartests.htm
