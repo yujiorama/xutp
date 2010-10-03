@@ -1,31 +1,26 @@
-{{toc}}
+!Test Utility Method
 
-!!Test Utility Method
+'テストコードの重複を防ぎたい'
+''再利用できるテストロジックは適切な名前を付けたユーティリティメソッドにしてその詳細を隠蔽します''
 
-''テストコードの重複を防ぎたい''
-
-'''再利用できるテストロジックは適切な名前を付けたユーティリティメソッドにしてその詳細を隠蔽します'''
-
-https://cacoo.com/diagrams/awyLtNWGKlQ1HkkZ-FAF27.png
-
-!!! がいよう
+!! がいよう
 
 * テストを書くとき、同じようなロジックを毎回書いている
 * 初めはコピペ( clone and twiddle ) してた
 * コピペされたテストコードの重複が問題になりつつある
-* ''Test Utility Method'' を考えましょう
+* 'Test Utility Method' を考えましょう
 
 !! How It Works
 * 一番手軽なロジックの再利用は、サブルーチンや関数
-* ''Test Utility Method'' は同じ原則を OO のテストコードに適用する
+* 'Test Utility Method' は同じ原則を OO のテストコードに適用する
 * いくつものテストで使われてる同じロジック
 * 1 つのテスト内で何度も使われてる同じロジック
 
 !! When to Use It
-* ''Test Utility Method'' の使いどころ
+* 'Test Utility Method' の使いどころ
 ** 同じロジックが何度も現れる
 ** すでにあるロジックを再利用したい
-* ''Test Utility Method'' は使うべき
+* 'Test Utility Method' は使うべき
 ** すでにあるロジックはおそらく期待したとおりに動く
 ** 確実性の恩恵を受けるのはセルフチェックテストの実装
 * テストメソッドのテストもやりやすくなる
@@ -41,142 +36,47 @@ https://cacoo.com/diagrams/awyLtNWGKlQ1HkkZ-FAF27.png
 * setup フェーズにおける既オブジェクトの修正
 
 !!! Variation: Finder Method
-* ''Shared Fixture'' からオブジェクトを取得するあらゆるロジック
+* 'Shared Fixture' からオブジェクトを取得するあらゆるロジック
 * Intent-Revealing Name
 * テストコードを読んだ人が理解しやすいようにしている
 
-* ''Finder Method'' を使うべき
-** ''Shared Fixture'' のオブジェクトを見つけるために何らかの criteria がある
-** ''Fragile Fixture'' を無くしたい
-** ''High Test Maintenance Cost'' を回避したい
-* ''Finder Method'' はフィクスチャの戦略に依存しない
-** ''Shared Fixture''
-** ''Immutable Shared Fixture'' (hybrid)
+* 'Finder Method を使うべき
+** 'Shared Fixture' のオブジェクトを見つけるために何らかの criteria がある
+** 'Fragile Fixture' を無くしたい
+** 'High Test Maintenance Cost' を回避したい
+* 'Finder Method はフィクスチャの戦略に依存しない'
+** 'Shared Fixture'
+** 'Immutable Shared Fixture' (hybrid)
 * テストのドキュメント化を実現
 ** オブジェクトをどうやって取得してくるかを隠蔽
-** prevent ''Obscure Test''
+** prevent 'Obscure Test'
 
-* たいていの ''Finder Method'' は 1 つのオブジェクト参照を返す
+* たいていの 'Finder Method' は 1 つのオブジェクト参照を返す
 ** ツリーのルートオブジェクト (送り状オブジェクトは顧客オブジェクト、アドレスリストを参照してる)
-* ''Finder Method'' が Collection を返すようにすることもある
-* ''Finder Method'' がテストコードに返すオブジェクトを更新することもある
+* 'Finder Method' が Collection を返すようにすることもある
+* 'Finder Method' がテストコードに返すオブジェクトを更新することもある
 ** intent-revealing ではないのでお勧めしない
 
-* ''Finder Method'' は ''Shared Fixture'' のオブジェクトをいろんな方法で返す
+* 'Finder Method' は 'Shared Fixture' のオブジェクトをいろんな方法で返す
 ** インスタンス変数やクラス変数に参照
 ** 既知のキーによる参照
 
 !!! Variation: SUT Enscapsulation Method
-* ''Test utility Method'' を使う別の理由
+* 'Test utility Method' を使う別の理由
 ** SUT の API を隠蔽する
 ** テストコードから SUT のメソッドを呼ぶと、テストコードと SUT の間に新たな結合が生じてしまう
-* ''Creation Method'' や ''Custom Assertion'' は ''SUT Ensapsulation Method'' の例として妥当
+* 'Creation Method' や 'Custom Assertion' は 'SUT Ensapsulation Method' の例として妥当
 * 希少な例
 ** exercise や verify のために使う、シグネチャが大変複雑な SUT のメソッドがあるとする
 ** テストコードを書くとメンテナンスが大変になっていく
 ** こういった SUT のメソッド呼び出しを隠蔽する
 
 !!! Variation: Custom Assertion
-* よく使われるテスト用の等価性判定
-* 期待値と結果値の比較における複雑性を隠蔽する
-* SUT とやりとりしないので副作用がない
-** 結果値の取得は ''Custom Assertion'' の利用者側の責任
+* テストよく使われるテスト用の等価性判定
 
 !!! Variation: Verification Method
-* SUT とのやりとりをする ''Custom Assertion''
-** 結果値の取得など
 
 !!! Variation: Parameterized Test
-* ''Test Utility Method'' の典型的な例 (pp. 607)
-* 利用者側ではパラメタを指定するだけ
 
 !!! Variation: Cleanup Method
-* ''Teardown Method'' という名前は紛らわしいので使わない
-* teardown フェーズで実行する、各種リソースを開放するためのメソッド
-* 詳細は ''Automated Teardown'' (pp. 503) を参照
 
-!! Immplementation Notes
-* ''Test Utility Methods'' を使うべきだという主張の根拠
-** テストコードの理解を難しくするロジックを、テストコードから消すことができる
-* 意図の分かりやすい名前
-** 理解しやすいテスト
-** ''Higher Level Language'' の定義につながる
-* 必要な情報はすべて引数渡しで
-** ''Test Utiilty Methods'' 自体を小さく保つため
-** インスタンス変数は避ける
-* 返り値
-** テストコードが必要とする具体的な値
-** 何か更新された値
-
-* ''Intent-Revealing Name'' であるために
-** すでにある実装から抽出するのではなく、後に必要になりそうなメソッドを考える
-** ''outside-in'' アプローチ
-** 明日のトラブルの前借り (''borrowing tomorrow's trouble'') を無くす
-** 最小のソリューション
-
-* 再利用可能な ''Test Utility Methods'' の書き方は比較的簡単
-* 「どこにメソッドを置くか」というのは扱いにくい問題
-* ''single Testcase Class'' のテストメソッドでのみ必要な場合
-** そのテストクラスに置けばよい
-* 複数のテストクラスで必要な場合
-** 型の可視性 (''type visibiity'') がキーになる
-** クライアントクラスが依存しているクラスは、''Test Utility Method'' からも見えたほうがよい
-** 依存先があまり多くない、かつ、それらを全て見える箇所 (パッケージ?) がある
-*** 共通する ''Testcase Superclass'' に置く
-** クライアントクラスが依存しているクラスが全て見える箇所がない
-*** 適切なテストパッケージかサブシステムに置かれた''Test Helper'' に置く
-*** 関連するドメインオブジェクトについて、パッケージごとに ''Test Helper'' を置くのは一般的なプラクティスです
-
-!!! Variation: Test Utility Test
-* ''Test Utility Methods'' のセルフチェックテストを書けるのは大きなメリット
-** ''Untestable Test Code''
-** ''Hard-to-Test Code'' (pp.209)
-* テスト済みの ''Test Utility Method'' を基礎として変化していく性質
-** ''Custom Assertion Test'' がよい例
-
-!! Motivating Example
-
-* 自動化テストの初学者が初めて書いたであろうテストを例に使います。
-
- [code]
-
-* 理解しづらいテストコードで、いろんなコードスメルがします。
-** ''Obscure Test''
-** 'Hard-Coded Test Data''
-
-!! Refactoring Notes
-
-* 新しいテストコードを書くときに、既存のテストコードから再利用可能なロジックを探して ''Test Utility Methods' を作る
-* テストコードからメソッドを抽出 (Extract Method) し、''Testcase Class'' に挿入する
-* スーパークラスへ引き上げる (Pull Up Method)
-* 他のクラスへ移動する (Move Method)
-
-!!! Example: Test Utility Method
-
-* リファクタリングバージョン
-* 元のバージョンに比べてなんと分かりやすいことでしょう
-* ''Test Utility Methods'' によって実現される 1 例にすぎないのです
-
- [code]
-
-* 順を追って変更の様子を確認していく
-* ''Customer'' と ''Product'' のオブジェクト生成
-** ''Finder Methods'' によって置き換え
-** ''Immmutable Shared Fixture'' からオブジェクトを取得する
-** これらのオブジェクトはテストを通じて変更する気がないから
-
- [code]
-
-* 後で使う ''LineItem'' のために、''Invoice'' のオブジェクト生成を ''Creation Method'' に変更
-
- [code]
-
-* ''In-line Teardown'' (pp.509) を ''Automated Teardown'' に変更
-** 作成したオブジェクトは記録しておく
-** ''tearDown'' メソッドで削除する
-
- [code]
-
-* ''Invoice'' の追加された ''LineItem'' の検証ロジックを、''Custom Assertion'' で置き換え
-
- [code]

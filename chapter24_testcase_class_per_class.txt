@@ -52,3 +52,12 @@
 ** ''In-line Setup'' がごく単純にならなければ、''Creation Method'' (pp.415) を使った ''Delegated Setup'' は読み易いテストにしやすい
 
 !!! Example: Testcase Class per Class
+
+* サンプルコードでは ''Fresh Fixture'' を ''Delegated Setup'' で書いてます
+** もっと宣言的にしたい
+
+* ちょっと長くなってきた
+
+* IDE で見れるテストの "big picture" もパッとしない
+** テストの条件は分かるけど、期待出力が分からない
+

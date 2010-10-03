@@ -63,3 +63,4 @@ def generateAndVerifyHtml( sourceXml, expectedHtml,
                       message + "html output")
   actual_html
 end
+
