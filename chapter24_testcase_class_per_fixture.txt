@@ -1,0 +1,44 @@
+{{toc}}
+
+! Testcase Class per Fixture
+
+''How do we organize our Test Methods onto Testcase Classes?''
+
+'''フィクスチャーの共通性を元にテストメソッドをまとめる'''
+
+* ''Test Methods'' (pp.348) が増加するにつれて、どの ''Testcase Class'' (pp.373) に配置するかを決めなければいけなくなる
+* ''Testcase Class per Fixture''
+** 私達が「テストの全体像を容易に理解できるようになる」ことに作用するテスト組織化の戦略
+** フィクスチャーセットアップの方法にも影響する
+** ''Test Automation Framework'' (pp.298) が提供する ''Implicit Setup'' (pp.424) の仕組みが効果的に使えるようになります
+
+!! How It Works
+
+* 必要とするテストフィクスチャーを元にテストメソッドを集めます
+* ''Implicit Setup'' のようなフィクスチャーを生成するロジックを setUp メソッドに移動することができます
+* 4 フェーズテスト (pp.358) における exercise、および verify フェーズに集中することができます
+
+!! When to Use It
+
+* 同じフィクスチャーを使うテストメソッドのグループがあり、それらを単純にしたいときのためのパターンです
+* 個々のフィクスチャーが必要な場合はあんまり意味がありません
+** テストメソッドが 1 つだけの大量のテストクラスが作成されるからです
+** ''Testcase Class per Feature (pp.624) か ''Testcase Class per Class'' (pp.617) を使うべきです
+
+* テストの実行が始まる状態を容易に把握できるようになります
+* テストケースクラスごとのテストメソッドが同じ並び方になります
+** IDE の "メソッドブラウザ" や "アウトラインビュー" で一瞥できます
+** だいぶ前に商用リリースしたコードの ''Missing Unit Tests'' (Production Bugs, pp.268) を見つけるのに便利です
+
+* 振る舞い駆動開発におけるテスティング、仕様決定の重要なポイントです
+* アサーションが 1 つだけのようなとても短いテストメソッドを書くようになります
+* テストの期待結果の要約を含むような命名規約と組み合せることで、''Tests as Documentation'' (pp.23) を推進します
+
+!! Implementation Notes
+
+!! Motivating Example
+
+!! Refactoring Notes
+
+!!! Example: Testcase Class per Fixture
+
