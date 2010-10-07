@@ -36,7 +36,39 @@
 
 !! Implementation Notes
 
+* フィクスチャの生成は ''Test Automation Framework'' が setUp メソッドで行う
+* フィクスチャへの参照はインスタンス変数に持たなければなりません
+* クラス変数を使わないように注意
+** ''Shared Fixture'' (pp.317) になりやすい
+** ひきずられて ''Erratic Test'' (pp.228) になりやすい
+
+* コラム "There's Always an Exception" (pp.384)
+** インスタンス変数を使っているからといって ''Independent Test'' (pp.42) にならない xUnit ファミリーを紹介
+** NUnit2.0、TestNG
+** NUnit の作者は「失敗だった」と言っている
+
+* 各テストケースクラスには 1 つのテストフィクスチャ
+* テストケースクラスの名前はそのフィクスチャを元にしたものになるのが当然
+
+* 同様に、テストメソッドの名前は exercise する SUT を元にしたものになる
+** SUT メソッドの引数の特徴やメソッド呼び出しの期待結果とか
+
+* 副作用: 1 つの SUT クラスを検証するためにたくさんのテストケースクラスが作られてしまう
+** ネストしたフォルダ/パッケージ/名前空間を使ってまとめる
+** ''Test Enumeration'' (pp.399) を使っているなら、''AllTests Suite'' (Named Test Suite, pp.592) によって 1 つのテストスイートにまとめる
+
+* 副作用: SUT の 1 つの機能に対するテストがたくさんのテストケースにちらばる
+** 機能間の相互依存性を際立たせるのでよいことかもしれない
+
+* 機能間の関連がほとんどなくては不安になったときの処置
+** テストを ''Testcase Class per Feature'' にリファクタリングする
+** SUT が責務を持ちすぎていることを意味するので SUT をリファクタリングする
+
 !! Motivating Example
+
+* ''Testcase Class per Class'' パターンで構成された Flight クラスのテスト
+** 3 つの状態 (Unscheduled, Schedule, AwaitingApproval)
+** 4 つのメソッド (schedule, requestApproval, deSchedule, approve)
 
 !! Refactoring Notes
 
