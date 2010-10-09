@@ -1,0 +1,77 @@
+{{toc}}
+
+! Testcase Sueprclass
+
+''Where do we put our test code when it is in reusable Test Utility Methods?''
+
+'''We inherit reusable test-specific logic from an abstract Testcase Super class.'''
+
+* テストを書いていると、必ず同じロジックが必要になることがある
+* 最初のうちは、コピペしてしまうものです
+* 最終的には、''Test Utility Methods'' (pp.599) パターンにするが、どこに置いたらいいのか ?
+* ''Testcase Superclass'' パターンは、''Test Utility Methods'' の置き場所として 1 つの選択肢になります。
+
+!! How It Works
+
+* さまざまなテストケースクラスで再利用可能なテストユーティリティメソッドを、抽象基底クラスに定義します
+* メソッドは、Java なら protected のように、サブクラスから見えるようにします
+* この抽象基底クラスを親クラスとして使用します
+
+!! When to Use It
+
+* さまざまなテストケースクラスで ''Test Utility Methods'' を再利用したいとき
+
+* 使用してる言語が継承をサポートしている
+* このパターンと衝突するような目的で継承を使ってない
+* テストユーティリティメソッドが基底クラスから見えない型を参照しなくてもよい
+
+* ''Testcase Superclass'' と ''Test Helper'' (pp.643) を使い分ける基準は、型の可視性
+
+* クライアントクラスがテストユーティリティメソッドを見れなければいけない
+* テストユーティリティメソッドは依存している型やクラスを見れなければいけない
+
+* テストユーティリティメソッドが、あまり多くの型/クラスに依存していなかったり、依存してるすべての型/クラスが single place からしか見えない
+** 社内やプロジェクト内の共通テストケース基底クラスに入れる
+
+* テストユーティリティメソッドが、すべてのクライアントからアクセスできる single place から見れない型/クラスに依存している
+** 適切なパッケージ、サブシステムに配置される ''Test Helper'' に入れる
+
+!!! Variation: Test Helper Mixin
+
+* Mix-in をサポートしてる言語ではもっともよい方法です
+* 単一継承の制約なしに、Mix-in する ''Test Helper'' を選択できます
+
+* ''Test Helper Object'' の場合
+** テスト特有の状態は Mix-in に保持されるが、インスタンス化や委譲は不要です
+
+* ''Testcase Superclass'' の場合
+** すべてにおいてメソッド呼び出しや自分の属性としてアクセスできます
+
+!! Implementation Notes
+
+* テスティングフレームワークが、フレームワークの提供する ''Testcase Superclass'' を基底クラスとすることを要求する場合
+** すべてのテストケースクラスは、その基底クラスのサブクラスになります
+
+* テスティングフレームワークが、テストメソッドを特定するためにアノテーションやメソッドの属性を使う場合
+** テストケースクラスは、私達が便利だと思うクラスのサブクラスにできます
+
+* ''Testcase Superclass'' パターンでは、クラスメソッドとインスタンスメソッドのどちらでも実装できます
+** 状態を持たない ''Test Utility Methods'' は、クラスメソッドでいいでしょう
+** なんかの理由があればインスタンスメソッドにすればいいでしょう
+
+* どちらにしても、それらを継承したテストケースクラスからは、自身のメソッドのようにアクセスすることができます
+
+* メソッドの可視性を管理できる言語を使っているなら、少しくらい余計に見えるようにしておきましょう
+** Java なら protected
+
+!! Motivating Example
+
+!! Refactoring Notes
+
+!!! Example: Testcase Superclass
+
+!!! Example: Test Helper Mixin
+
+* ''Test Code Duplication'' (pp.213) が見あたります
+* ''メソッドの抽出'' により、テストユーティリティメソッドを作成します
+* 再利用性のため、''Pull Up Method'' により、Test Helper Mixin に移動します
