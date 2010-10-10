@@ -1,0 +1,110 @@
+{{toc}}
+
+! Test Helper
+
+''Where do we put our test code when it is in reusable Test Utility Methods?''
+
+'''We define a helper class to hold any Test Utility Methods we want to reuse in several tests.'''
+
+
+* テストを書いていると (ry
+* テストユーティリティメソッドを置いておく (ry
+
+!! How It Works
+
+* さまざまなテストケースクラスから利用できるテストユーティリティメソッドを置いておくためのクラスを定義します
+* テストコードは、スタティックメソッドやインスタンスメソッドからアクセスします
+
+!! When to Use It
+
+* さまざまなテストケースクラスで共有したいロジックや変数があるけど、''Testcase Superclass'' (pp.638) が利用できない
+
+* 想定される状況
+** 言語が継承をサポートしてない
+*** Visual Basic 5, 6
+** すでに別の目的で基底クラスを使っている
+** テストユーティリティメソッドが、基底クラスから見えない型/クラスにアクセスしなければならない
+
+* ''Testcase Superclass'' と ''Test Helper'' (pp.643) を使い分ける基準は、型の可視性
+
+* クライアントクラスがテストユーティリティメソッドを見れなければいけない
+* テストユーティリティメソッドは依存している型やクラスを見れなければいけない
+
+* テストユーティリティメソッドが、あまり多くの型/クラスに依存していなかったり、依存してるすべての型/クラスが single place からしか見えない
+** 社内やプロジェクト内の共通テストケース基底クラスに入れる
+
+* テストユーティリティメソッドが、すべてのクライアントからアクセスできる single place から見れない型/クラスに依存している
+** 適切なパッケージ、サブシステムに配置される ''Test Helper'' に入れる
+
+* たくさんのドメインオブジェクトのグループがある大規模システムでの一般的なプラクティス
+** 関連するドメインオブジェクトのまとめられたパッケージごとに ''Test Helper'' を持つこと
+
+!!! Variation: Test Fixture Registry
+
+* ''Registry'' (PoEAA)
+** プログラムのどこからでもアクセスできるオブジェクトとしてよく知られています
+** 別のパーツやテストからオブジェクトを保存したり取得したりするのに利用できます
+** ''Singleton'' (GOF)  と混同されがちです
+** ''Test Fixture Registry'' によって、いっしょに実行している他のテストから同じフィクスチャーへアクセスすることができるようになります
+
+* ''Test Runner'' (pp.377) ごとに異なる ''Test Fixture Registry'' のインスタンスを提供するかどうか
+** ''Test Helper'' の実装方法に依存します
+** ''Test Runner'' (pp.377) による ''テストの競合'' (Erratic Test ,pp.228) を防ぐため
+
+* 一般的なのは ''Database Sandbox'' (pp.650)
+
+* ''Setup Decorator'' (pp.447) や ''Lazy Setup'' (pp.435) と組み合わせて使われます
+** 同じテストケースクラスだけがフィクスチャーを共有できればいいので、''Suite Fixture Setup'' (pp.441) はいりません
+
+* このケースではフィクスチャーはクラス変数に持つのがよいですね
+
+!!! Variation: Object Mother
+
+* 簡単に言うと、テストのフィクスチャーの生成と管理のためにいくつかのパターンをまとめたパターンです
+
+* ''Object Mother'' は、1 つ以上の ''Test Helper'' (''Creation Methods'' (pp.415) と ''Attachment Methods'' を提供する) で構成されます
+** インスタンスをいろんな初期状態で生成するための、さまざまな ''Creation Method'' を提供します
+*** ''Named State Reaching Method''
+
+* ''Object Mother'' によって生成したオブジェクトは自動的に削除されます
+** ''Automated Teardown'' (pp.503)
+
+* ''Object Mother'' にははっきりした定義がありません
+* その性質を知りたいときは、個々のパターンを参照したほうがよいでしょう
+
+!! Implementation Notes
+
+* ''Test Helper'' において、テストユーティリティメソッドをどうやって実装するか
+** クラスメソッド or インスタンスメソッド
+** テストの相互作用を維持したいかどうかによって決まるでしょう
+
+!!! Variation: Test Helper Class
+
+* 状態を持たないテストユーティリティメソッドはクラスメソッドとして実装するのが簡単です
+* フィクスチャーのオブジェクト参照は、クラス変数に持ちます
+* 考え無しに ''Shared Fixture'' (pp.317) を作らないようにすべきです
+** ''Test Fixture Registry'' を作るようにしましょう
+
+!!! Variation: Test Helper Object
+
+* クラスメソッドが使えない場合は、インスタンスメソッドでなんとかしましょう
+
+* ''Test Helper'' オブジェクトを、テストケースクラスのインスタンス変数に持たせます
+
+* ''Test Helper'' オブジェクトにフィクスチャーや SUT オブジェクトへの参照を持たせるのはよい方針です
+* ''Shared Fixture'' にならないように注意しましょう
+
+* ''Mock Objects'' (pp.544) のための期待結果も持つようにする
+* ''Mock Objects'' 自体の正しさと、交互に検証できて便利になります
+
+!! Moving Example
+
+!! Refactoring Notes
+
+* ''Move Method'' だけで済むでしょう
+* グローバル変数のように使われていたインスタンス変数は、メソッド引数として渡すようにしましょう
+
+!!! Example: Test Helper with Class Methods
+
+!!! Example: Test Helper with Instance Methods
+
