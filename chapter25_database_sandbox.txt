@@ -1,0 +1,96 @@
+{{toc}}
+
+! Database Sandbox
+
+''How do we develop and test software that depends on a database?''
+
+'''We provide a separate test database for each developer or tester.'''
+
+* 多くのアプリケーションは永続的な状態を保存するためにデータベースを使います
+* 従って、そのアプリケーションのテストもデータベースにアクセスしなければなりません
+* テストごとのデータが永続化されてしまうことが ''Erratic Test'' (pp.228) となる一番の要因です
+* 対話テストにならないようにするためには、それぞれのテストが使用するフィクスチャーが重ならないことを保証するようにします
+** 同じデータベースで複数の開発者がすべてのテストを実行するような環境では困難なことです
+
+!! How It Works
+
+* ユーザごとに独立したサンドボックスを提供します
+* サンドボックスには、ユーザ自身のコードのコピーと、データベースのコピー (これが一番重要) を含みます
+* ユーザのやりたいようにデータベースを変更できるようになります
+* テストでアプリケーションを動かしても、他のユーザへの影響を気にする必要が無くなります
+
+!! When to Use It
+
+* データベースが、アプリケーションの機能における重要な部品となっている場合
+
+* ''Shared Fixture'' (pp.317) を使うなら特に必要
+
+* ユーザ間の ''Test Run Wars'' を避けたい場合
+
+* ''Database Sandbox'' をどうやって実装したかによって、異なるユーザがデータベースの構造を変えられるかどうかが決まります
+
+* ''Unrepeatable Tests'' や ''Interacting Tests'' は防げません
+** ユーザごとの環境を独立するだけなので、1 つのテストが実行される間はフィクスチャーは共有されます
+
+!! Implementation Notes
+
+* テストを実施するときは、データベースを設定によって変更できるようにしなければなりません
+** プロパティファイルから設定情報を読み取るようにすることが多いです
+
+* 実装方法は無数にあります
+** ユーザごとにデータベースインスタンスを提供 (推奨)
+*** ベンダーによってはライセンスごとのコストがはんぱない
+** 1 つのインスタンスで複数のインスタンスのふりをする
+
+!!! Variation: Dedicated Database Sandbox
+
+* ユーザごとにデータベースインスタンスを提供するパターンです
+
+* ユーザごとのテスト環境に、軽量データベースをインストールすることで実現しています
+* 軽量データベース
+** MySQL
+** Personal Oracle
+* データベースインスタンスのインストール先
+** ユーザの開発環境
+** 共有のテストサーバ
+** 共有サーバハード上で稼動している、専用の仮想マシン
+
+!!! Variation: DB Schema per Test Runner
+
+* 複数スキーマをサポートしたデータベースによって、ユーザごとに独立したデータベースインスタンスを提供する
+
+* ''Dedicated Database Sandbox'' に対するメリット
+** 共通スキーマに ''Immutable Shared Fixture'' を定義し、各ユーザのプライベートスキーマには変更されるフィクスチャーを定義することができます
+** 全てのユーザにおいて、プライベートスキーマとはいえ、構造を変えることは許されません
+** データベースの構造が変更されるときはちょっとした問題になります
+
+!!! Variation: Database Partitioning Scheme
+
+
+We give each developer, tester, or test user a separate set of data
+within a single Database Sandbox. Each user can modify that data as he
+or she sees fit but is not allowed to modify the data assigned to
+other users.
+
+This approach requires less database administration overhead but more
+data administration overhead than with the other ways to implement a
+Database Sandbox. Because it does not allow developers to modify the
+database schema, a Database Partitioning Scheme is not appropriate for
+evolutionary database development. It is, however, appropriate for
+preventing Interacting Tests when applied to different tests run from
+the same Test Runner. That is, we give each test a unique key such as
+a CustomerNumber that it uses for all data. As a conse- quence, other
+tests within the same test run use different data. This pattern can be
+combined with many of the other variations of Database Sandbox to
+prevent Interacting Tests when using a Shared Fixture. Note that this
+pattern does not prevent Unrepeatable Tests unless we also use
+Distinct Generated Values (see Generated Value on page 723).
+
+
+
+!! Motivating Example
+
+
+
+!! Refactoring Notes
+
