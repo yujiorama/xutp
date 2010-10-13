@@ -15,7 +15,7 @@
 !! How It Works
 
 * アプリケーションとは独立して、ストアドプロシージャのためのユニットテストを書きます
-** レイヤー交差テスト、ラウンドトリップテストになります
+** レイヤー交差テスト、回帰テストになります
 ** テスト対象のストアドプロシージャの性質によって変わります
 
 !! When to Use it
@@ -36,21 +36,69 @@
 
 !! Implementation Notes
 
-# ストアドプロシージャと同じ言語でテストを書ける
+# ストアドプロシージャと同じ言語でテストを書いて、データベース側で実行する
+# アプリケーションの言語でテストを書いて、''Remote Proxy''[GOF] でストアドプロシージャにアクセスする
 
-There are two fundamentally different ways to implement Stored
-Procedure Tests: (1) We can write the tests in the same programming
-language as the stored proce- dure and run them in the database or (2)
-we can write the tests in our application programming language and
-access the stored procedure via a Remote Proxy [GOF].
+* どちらの方法でもテストは書けます
+* ストアドプロシージャの開発担当者は (1) の方法でユニットテストを書くでしょう
+* アプリケーションの開発担当は (2) の方法で受け入れテストを書くでしょう
+** そしてアプリケーションのビルド時に実行するでしょう
 
-We might even write tests both ways. For example, the stored-procedure
-developers might write unit tests in the database programming
-language, whereas the applica- tion developers might prepare some
-acceptance tests in the application programming language to run as
-part of the application build.
+* どちらにしても、フィクスチャーの生成や、期待結果の検証をどうするか決めなければなりません
+** "before": テスト前のデータベース
+** "after": cascading delete などの期待する振る舞いの後のデータベース
 
-Either way, we need to decide how the test will set up the fixture (the “before” state of the database) and verify the expected outcome (the “after” state of the database as well as any expected actions such as cascading deletes). The test may interact directly with the database to insert/verify the data (a form of Back Door Manipulation; see page 327) or it could use another stored procedure (a form of round-trip test).
+* テストは、データの insert や verify をするために直接データベースとやりとりすることになるでしょう
+** ''Back Door Manipulation'' (pp.327)
+** 他のストアドプロシージャも使えるでしょう (回帰テストの一種)
+
+!!! Variation: In-Database Stored Procedure Test
+
+テスト自動化に xUnit を使う利点は、テスト対象のコードと同じ言語でテストを書けることです
+
+開発者に自動テストを学んでもらうために、新たな言語やデバッガを学習することなく、
+
+One advantage of the xUnit approach to automated testing is that the
+tests are written in the same language as the code we are
+testing. This makes it easier for the developers to learn how to
+automate the tests without learning a new program- ming language,
+debugger, and so on. Extending this idea to its logical conclusion, it
+makes sense to test stored procedures using tests that are written in
+the stored- procedure programming language. Naturally, we will need to
+run these tests inside the database. Unfortunately, that requirement
+may make it hard to run them as part of the Integration Build [SCM].
+
+This variation on the Stored Procedure Test pattern is appropriate
+when we have more experience writing code in the stored-procedure
+language and/or environment than in the application environment and it
+is not essential that all tests be run from a single place. For
+example, a database or data services team that is writing stored
+procedures for use by other teams would find this approach
+attractive. Another circumstance in which it would be appropriate to
+use In-Database Stored Procedure Tests arises when the procedures are
+stored in a different source code repository than the application
+logic. Using In-Database Stored Procedure Test allows us to store the
+tests in the same repository as the SUT (in this case, the stored
+procedures).
+
+In-Database Stored Procedure Tests may allow somewhat more thorough
+unit testing (and test-driven development) of the stored procedures
+because we may have better access to implementation details of the
+stored procedure from our tests. Of course, this violation of
+encapsulation could result in Overspecified Software (see Fragile Test
+on page 239). If the client code uses a data access layer, we must
+still write unit tests for that software in the application
+programming language to ensure that we handle errors correctly (e.g.,
+failure to connect).
+
+Some databases support several programming languages. In such a case,
+we can choose to use the more test-friendly programming language for
+our tests but write the stored procedures in the more traditional
+stored-procedure programming language. For example, Oracle databases
+support both PLSQL and Java, so we could use JUnit tests to verify our
+PLSQL stored procedures. Likewise, Microsoft’s SQL Server supports
+C#, so we could use NUnit tests written in C# to verify the stored
+procedures written in Transact-SQL.
 
 !! Motivating Example
 
