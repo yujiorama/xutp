@@ -85,7 +85,30 @@
 
 !! Motivating Example
 
+* 元のテストは Product のコンストラクタ引数に即値リテラルを使ってます
+* Product は複数の開発者の共有するデータベースインスタンスに永続化されるものです
+* Product の名前はユニークでなければなりません
 
+[code]
+
+* テストの後にどれだけ Product を綺麗に teardown したとしても、このテストは ''Test Run War'' になってしまいます
+* 同じタイミングで他のテストランナーによって実行した同じテストが、同じ Product を作ろうとするからです
 
 !! Refactoring Notes
 
+* ユーザごとの ''Dedicated Database Sandbox'' を使っているなら修正はいりません
+** テストは他のテストランナーから完全に独立して実行されます
+
+* SUT には、設定によって異なるデータベースインスタンスに接続できるようなちょっとした改修が必要です
+** やりかたは使用しているテクノロジーによって違ってくるし、この本の範疇を越えています
+
+* 即値リテラルを getUnique メソッド呼び出しによって置き換えることができます
+
+!!! Example: Database Partitioning Scheme
+
+
+* ''Database Partitioning Scheme'' を使う例です
+** テストが異なる product を使うことを保証します
+** getUniqueString の引数には、コンピュータの MAC アドレスを渡しています
+
+[code]
