@@ -1,0 +1,57 @@
+{{toc}}
+
+! Stored Procedure Test
+
+''How can we verify logic independently when we have stored procedures?''
+
+'''We write Fully Automated Tests for each stored procedure.'''
+
+
+* アプリケーションには、その状態を永続化するためにデータベースを使用するものがあります
+** 中には、ストアドプロシージャやトリガーを使ってパフォーマンスを稼いだり、更新処理を共通化したりしてます
+
+* このパターンは、データベースの中に置いてあるコードについて、テスト自動化のプラクティスを適用します
+
+!! How It Works
+
+* アプリケーションとは独立して、ストアドプロシージャのためのユニットテストを書きます
+** レイヤー交差テスト、ラウンドトリップテストになります
+** テスト対象のストアドプロシージャの性質によって変わります
+
+!! When to Use it
+
+* 重要なロジックをストアドプロシージャに置いてるなら、テストを書くべきです
+** ストアドプロシージャが SUT になります
+** アプリケーションとは独立して検証できるようになります
+
+* ''Stored Procedure Tests'' が重要なテストになるケース
+** 1 つ以上のアプリケーションから利用されるような場合
+** 他のチームによって開発される場合
+** アプリケーションのテストによって適切にテストされることが保証できない場合
+*** Indirect Testing のようなテスト
+
+* ストアドプロシージャが呼ばれるような全ての状況を列挙し、その振る舞いを確認できます
+** 状況をよく検討することで、設計を進歩できます
+** TDD の普遍的な成果です
+
+!! Implementation Notes
+
+# ストアドプロシージャと同じ言語でテストを書ける
+
+There are two fundamentally different ways to implement Stored
+Procedure Tests: (1) We can write the tests in the same programming
+language as the stored proce- dure and run them in the database or (2)
+we can write the tests in our application programming language and
+access the stored procedure via a Remote Proxy [GOF].
+
+We might even write tests both ways. For example, the stored-procedure
+developers might write unit tests in the database programming
+language, whereas the applica- tion developers might prepare some
+acceptance tests in the application programming language to run as
+part of the application build.
+
+Either way, we need to decide how the test will set up the fixture (the “before” state of the database) and verify the expected outcome (the “after” state of the database as well as any expected actions such as cascading deletes). The test may interact directly with the database to insert/verify the data (a form of Back Door Manipulation; see page 327) or it could use another stored procedure (a form of round-trip test).
+
+!! Motivating Example
+
+!! Refactoring Notes
