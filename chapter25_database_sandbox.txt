@@ -66,26 +66,21 @@
 
 !!! Variation: Database Partitioning Scheme
 
+* 1 つの ''Database Sandbox'' で、開発者、テスター、ユーザーそれぞれに分離されたデータを提供します
+* ユーザは自分のデータは変更できるが、他のユーザのデータは変更できません
 
-We give each developer, tester, or test user a separate set of data
-within a single Database Sandbox. Each user can modify that data as he
-or she sees fit but is not allowed to modify the data assigned to
-other users.
+* データベース管理の手間があまりかかりませんが、他の方法に比べてデータ管理の手間がかかります
 
-This approach requires less database administration overhead but more
-data administration overhead than with the other ways to implement a
-Database Sandbox. Because it does not allow developers to modify the
-database schema, a Database Partitioning Scheme is not appropriate for
-evolutionary database development. It is, however, appropriate for
-preventing Interacting Tests when applied to different tests run from
-the same Test Runner. That is, we give each test a unique key such as
-a CustomerNumber that it uses for all data. As a conse- quence, other
-tests within the same test run use different data. This pattern can be
-combined with many of the other variations of Database Sandbox to
-prevent Interacting Tests when using a Shared Fixture. Note that this
-pattern does not prevent Unrepeatable Tests unless we also use
-Distinct Generated Values (see Generated Value on page 723).
+* 開発者にデータベーススキーマを変更させないので、進化的なデータベース開発には向きません
 
+* ''Interacting Test'' の回避に向いています
+** 同じテストランナーによる異なるテストの実行に応用
+** 全てのデータを使用していたテストについて、ユニークな顧客番号を指定します
+** 他のユーザが同じテストを実行しても、使用するデータが別になります
+
+* このパターンは他の ''Database Sandbox'' のバリエーションと組み合わせて ''Shared Fixture'' にすることで、''Interacting Test'' を回避できます
+
+* このパターンを使っても、''Distinct Generated Values'' (pp.723) を使っていない限り、''Unrepetable Test'' は回避できません
 
 
 !! Motivating Example
