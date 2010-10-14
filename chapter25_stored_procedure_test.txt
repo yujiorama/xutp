@@ -54,51 +54,58 @@
 
 !!! Variation: In-Database Stored Procedure Test
 
-テスト自動化に xUnit を使う利点は、テスト対象のコードと同じ言語でテストを書けることです
+* テスト自動化に xUnit を使う利点は、テスト対象のコードと同じ言語でテストを書けることです
 
-開発者に自動テストを学んでもらうために、新たな言語やデバッガを学習することなく、
+* 新たな言語やデバッガの学習をしなくてもよいので、開発者に自動テストを学んでもらいやすくなります
 
-One advantage of the xUnit approach to automated testing is that the
-tests are written in the same language as the code we are
-testing. This makes it easier for the developers to learn how to
-automate the tests without learning a new program- ming language,
-debugger, and so on. Extending this idea to its logical conclusion, it
-makes sense to test stored procedures using tests that are written in
-the stored- procedure programming language. Naturally, we will need to
-run these tests inside the database. Unfortunately, that requirement
-may make it hard to run them as part of the Integration Build [SCM].
+* 突き詰めると、ストアドプロシージャのテストはストアドプロシージャで書いてもらえばよいということになります
 
-This variation on the Stored Procedure Test pattern is appropriate
-when we have more experience writing code in the stored-procedure
-language and/or environment than in the application environment and it
-is not essential that all tests be run from a single place. For
-example, a database or data services team that is writing stored
-procedures for use by other teams would find this approach
-attractive. Another circumstance in which it would be appropriate to
-use In-Database Stored Procedure Tests arises when the procedures are
-stored in a different source code repository than the application
-logic. Using In-Database Stored Procedure Test allows us to store the
-tests in the same repository as the SUT (in this case, the stored
-procedures).
+* この場合、テストはデータベースの内部で実行されることになるため、''Integration Build'' と一緒に実行するのは厳しいです
 
-In-Database Stored Procedure Tests may allow somewhat more thorough
-unit testing (and test-driven development) of the stored procedures
-because we may have better access to implementation details of the
-stored procedure from our tests. Of course, this violation of
-encapsulation could result in Overspecified Software (see Fragile Test
-on page 239). If the client code uses a data access layer, we must
-still write unit tests for that software in the application
-programming language to ensure that we handle errors correctly (e.g.,
-failure to connect).
+* ''In-Database Stored Procedure Test'' は、次のような場合に有効です
+** 開発者が、ストアドプロシージャ言語やその環境について、アプリケーションのそれよりも詳しい
+** 1 つの環境ですべてのテストを実行する必要が無い
 
-Some databases support several programming languages. In such a case,
-we can choose to use the more test-friendly programming language for
-our tests but write the stored procedures in the more traditional
-stored-procedure programming language. For example, Oracle databases
-support both PLSQL and Java, so we could use JUnit tests to verify our
-PLSQL stored procedures. Likewise, Microsoft’s SQL Server supports
-C#, so we could use NUnit tests written in C# to verify the stored
-procedures written in Transact-SQL.
+* ストアドプロシージャの担当になったチームには魅力的な方法でしょう
+
+* ストアドプロシージャが、アプリケーションコードとは異なるリポジトリに保存されている場合も、このパターンが有効かもしれません
+** テストコードを SUT と同じリポジトリに置くことができるからです
+
+* ユニットテスト、およびテスト駆動開発において、テストコードから実装の詳細へアクセスしやすいという点もあります
+** カプセル化を破るので、''Overspecified Software'' (pp.239) になってしまうかもしれません
+
+* クライアントコードにデータアクセスレイヤがある場合
+** エラー (接続異常など) を正しく扱っていることを保証するために、アプリケーションのプログラミング言語でユニットテストを書きましょう
+
+* データベースソフトウェアの中には、いくつかのプログラミング言語をサポートしているものもあります
+** テストは、テストの書きやすい言語で書きましょう
+** ストアドプロシージャは、できるだけ伝統的なストアドプロシージャ言語で書きましょう
+
+* Oracle は PL/SQL と Java の両方をサポートしています
+** PL/SQL のストアドプロシージャをテストするために JUnit が使えます
+
+* MS SQL Server は C# をサポートしています
+** Transact-SQL のストアドプロシージャをテストするために NUnit が使えます
+
+!!! Variation: Remoted Stored Procedure Test
+
+* テストを、クライアントアプリケーションのプログラミング言語で書けます
+* ストアドプロシージャのアクセスには ''Remote Proxy'' [GOF] を使って、詳細を隠蔽します
+* プロキシは ''Service Facade'' [CJ2EEP] や ''Command'' [GOF] として構成されます
+** Java の JdbcOdbcCallableStatement は ''Command'' に相当します
+
+* このパターンは、ストアドプロシージャを "ブラックボックス" としたコンポーネントテストになります
+** データベースの内部で実行しないからです
+
+* 回帰テストにするのがお勧めです
+** フィクスチャーの生成や結果の検証がが困難であれば、他のストアドプロシージャを使います
+** 他に必要なタスクがあればそれも実行します
+** xUnit ファミリーには、そういった機能を持たせるための拡張版があります
+*** Java なら DbUnit
+*** .NET なら NDbUnit
+
+* すべてのテストを 1 つの言語で統一するにはよい方法です
+** アプリケーションコードの変更をチェックインするたびにテストを実行するのが簡単になります
 
 !! Motivating Example
 
