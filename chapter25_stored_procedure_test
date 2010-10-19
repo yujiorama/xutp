@@ -107,6 +107,8 @@
 * すべてのテストを 1 つの言語で統一するにはよい方法です
 ** アプリケーションコードの変更をチェックインするたびにテストを実行するのが簡単になります
 
+[[担当割当表/PARTⅢ/Stored Procedure Test/Column]]
+
 !! Motivating Example
 
 !! Refactoring Notes
