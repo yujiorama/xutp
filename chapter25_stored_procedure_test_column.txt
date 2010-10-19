@@ -1,0 +1,33 @@
+Testing Stored Procedures with JUnit
+
+On an early XP project, our application was mandated to use stored
+procedures being developed by another group. It seemed that every time
+we integrated our Java with those developers’ PLSQL code, we found
+serious bugs in the fundamental behavior of their stored
+procedures. We were writing automated tests using JUnit for our
+code. Although we were sure that writing unit tests for the stored
+procedures would clarify the interface contract and improve the
+quality of the other group’s code, we couldn’t force the other team
+to write unit tests. Nor had utPLSQL even been invented at that point.
+
+We decided to try writing unit tests for the stored procedures in the
+xUnit family member we were comfortable with: JUnit. Because we had to
+write JDBC code to access the stored procedures anyway, we defined
+JUnit tests for each stored procedure via the JDBC PreparedStatement
+classes that we had built. The tests exercised the basic behavior of
+the stored behaviors and a few of the more obvious failure
+cases. Whenever we received a new version of the stored procedures, we
+would run the JUnit tests before we even tried to exercise the
+procedures from our application code. Needless to say, many of the
+tests failed.
+
+We sat down with the developers who were building the stored proce-
+dures and showed them our tests—including how they were failing left,
+right, and center. Needless to say, the developers were a bit
+embarrassed but they agreed that our tests were correct. They went off
+to fix the stored procedures and gave us a new version to test. The
+revision fared somewhat better but still produced some failures. Then
+a very important thing hap- pened: The members of the other group
+asked for a copy of the tests we had written and instructions on how
+to run them for themselves. Before long, these developers were writing
+their own PLSQL unit tests in JUnit!
