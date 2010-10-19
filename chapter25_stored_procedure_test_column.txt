@@ -1,33 +1,38 @@
-Testing Stored Procedures with JUnit
+! Testing Stored Procedures with JUnit
 
-On an early XP project, our application was mandated to use stored
-procedures being developed by another group. It seemed that every time
-we integrated our Java with those developers’ PLSQL code, we found
-serious bugs in the fundamental behavior of their stored
-procedures. We were writing automated tests using JUnit for our
-code. Although we were sure that writing unit tests for the stored
-procedures would clarify the interface contract and improve the
-quality of the other group’s code, we couldn’t force the other team
-to write unit tests. Nor had utPLSQL even been invented at that point.
+初期の XP を採用したプロジェクトの話です。私たちのアプリケーションに、
+他のグループで開発されたストアドプロシージャを使うように命令されました。
 
-We decided to try writing unit tests for the stored procedures in the
-xUnit family member we were comfortable with: JUnit. Because we had to
-write JDBC code to access the stored procedures anyway, we defined
-JUnit tests for each stored procedure via the JDBC PreparedStatement
-classes that we had built. The tests exercised the basic behavior of
-the stored behaviors and a few of the more obvious failure
-cases. Whenever we received a new version of the stored procedures, we
-would run the JUnit tests before we even tried to exercise the
-procedures from our application code. Needless to say, many of the
-tests failed.
+私たちの Java アプリケーションとそれらの開発者による PLSQL コードを結合
+するたびに、ストアドプロシージャの基本的な振る舞いについて重大なバグを
+見つけていたように思います。
 
-We sat down with the developers who were building the stored proce-
-dures and showed them our tests—including how they were failing left,
-right, and center. Needless to say, the developers were a bit
-embarrassed but they agreed that our tests were correct. They went off
-to fix the stored procedures and gave us a new version to test. The
-revision fared somewhat better but still produced some failures. Then
-a very important thing hap- pened: The members of the other group
-asked for a copy of the tests we had written and instructions on how
-to run them for themselves. Before long, these developers were writing
-their own PLSQL unit tests in JUnit!
+私たちは、自身のコードについて JUnit で自動化テストを書いていました。し
+かし、ストアドプロシージャのユニットテストも書くことで、インターフェー
+スの契約が明快になることや、他のグループのコードの品質が向上するだろう
+と思っていましたが、強制することはできませんでした。当時は utPLSTL のよ
+うなツールはなかったからです。
+
+私たちは、xUnit ファミリーの中でもよく慣れていた JUnit でストアドプロシー
+ジャのユニットテストを書いてみることにしました。
+
+ストアドプロシージャにアクセスするには JDBC のコードを書く必要があった
+ので、ストアドプロシージャごとに、自作の JDBC PreparedStatement クラス
+を使った JUnit テストを書きました。
+
+テストは、ストアドプロシージャの基本的な振る舞いと、いくつかの異常系を
+実行しました。ストアドプロシージャの新しいバージョンを受け取ったら、ア
+プリケーションコードから動かしてみる前に JUnit を実行したものです。言う
+までもなく、いくつかのテストは失敗しました
+
+私たちは、ストアドプロシージャの開発グループのメンバーに、私たちのテス
+トを見せました。成功したテスト、失敗したテスト、どちらでもないものも含
+めてです。
+
+彼らはばつの悪い思いをしたでしょうが、私たちのテストが正しいことを認め、
+ストアドプロシージャを修正しに行きました。そしてテストのために新しいバー
+ジョンを持ってきました。新しいバージョンのコードのいくつかはうまくいき
+ましたが、やはり失敗するものもありました。このとき、とても重要なことが
+起こりました。彼らは、私たちの書いたテストのコピーと、それを彼ら自身で
+実行するための説明がして欲しいと言ってきたのです。それ以来、彼らは
+PLSQL のユニットテストを JUnit で書くようになったのです !
