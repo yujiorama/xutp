@@ -1,0 +1,41 @@
+{{toc}}
+
+! Table Truncation Teardown
+
+''How do we tear down the Test Fixture when it is in a relational database?''
+
+'''We truncate the tables modified during the test to tear down the fixture.'''
+
+* 繰り返し実行可能で、しっかりしたテストを支えるもの
+** テストフィクスチャーがテストの最後に解体 (tear down) されることを保証していること
+** 不要なリソースを残しておけば、良くて性能劣化、悪くてテストの失敗やシステムクラッシュを引き起こす
+*** オブジェクト
+*** データベースのレコード
+*** ファイル
+*** コネクション
+** ガベージコレクションによって自動的に回収されるリソースもあるでしょう
+** 明示的に解体 (tear down) されないものは残ってしまうでしょう
+
+* あらゆる環境を適切に掃除することを期待された teardown コードを書く
+** とても挑戦的
+** 時間がかかる
+* テストの考えられる出力結果のうち、何を放置できるか理解し、それを扱うコードを書くということです
+
+* ''Complex Teardown'' (''Obscure Test'', pp.186) の末路
+** ちょっとした ''Conditional Test Logic'' (pp.200)
+** 最悪の場合 ''Untestable Test Code'' (''Hard-to-Test Code'', pp.209) になります
+
+* RDB を使ったシステムのテストには、''TRUNCATE'' コマンドというアドバンテージがあります
+
+!! How It Works
+
+!! When To Use It
+
+!! Implementation Notes
+
+!! Motivating Example
+
+!! Refactoring Notes
+
+ 
+
