@@ -131,4 +131,80 @@
 
 !! Motivating Example
 
+これだけのサンプルでも、どういうふうにテストをするのかはよく分かります。
+
+ CREATE OR REPLACE PROCEDURE calc_secs_between (
+     date1 IN DATE,
+     date2 IN DATE,
+     secs OUT NUMBER
+ )
+ IS
+ BEGIN
+     secs := (date2 - date1) * 24 * 60 * 60;
+ END;
+ /
+
 !! Refactoring Notes
+
+これからテストコードを紹介するのでリファクタリングはありません...
+
+!!! Example: In-Database Stored Procedure Test
+
+utPLSQL のサンプルコードです。
+
+* http://utplsql.sourceforge.net/
+* http://ssoft.web.fc2.com/utplsql_sourceforge.html
+
+ CREATE OR REPLACE PACKAGE BODY ut_calc_secs_between
+ IS
+     PROCEDURE ut_setup
+     IS
+     BEGIN
+         NULL;
+     END;
+     PROCEDURE ut_teardown
+     IS
+     BEGIN
+         NULL;
+     END;
+     -- For each program to test...
+     PROCEDURE ut_CALC_SECS_BETWEEN
+     IS
+         secs PLS_INTEGER;
+     BEGIN
+         CALC_SECS_BETWEEN (
+             DATE1 => SYSDATE
+             '
+             DATE2 => SYSDATE
+             '
+             SECS => secs
+         );
+ 
+         utAssert.eq (
+             'Same dates',
+             secs,
+             0
+             );
+     END ut_CALC_SECS_BETWEEN;
+ 
+ END ut_calc_secs_between;
+ /
+
+!!! Example: Remoted Stored Procedure Test
+
+ public class StoredProcedureTest extends TestCase {
+     public void testCalcSecsBetween_SameTime() {
+         // Setup
+         TimeCalculatorProxy SUT = new TimeCalculatorProxy();
+         Calendar cal = new GregorianCalendar();
+         long now = cal.getTimeInMillis();
+         // Exercise
+         long timeDifference = SUT.calc_secs_between(now,now);
+         // Verify
+         assertEquals( 0, timeDifference );
+     }
+ }
+
+* テストをシンプルにするため、''JdbcOdbcCallableStatement'' を ''Service Facade'' で隠蔽しています
+* このコードだけでは Java のメソッドのテストをしてるわけじゃないということを伝えるのが難しい
+* 異常系のテストでは、例外テスト (pp.348) を追加します
