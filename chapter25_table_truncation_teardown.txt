@@ -29,9 +29,69 @@
 
 !! How It Works
 
+* 永続的なフィクスチャーが不要なら、それぞれのテーブルに対して ''TRUNCATE'' コマンドを実行する
+
 !! When To Use It
 
+* ''Persistent Fresh Fixture'' を使っているときはたいていの場合 ''Table Truncation Teardown'' を使います
+** 1 番の選択肢です
+* ''Shared Fixture'' (pp.317) で使うのもよいでしょう
+** ''Transaction Rollback Teardown'' を使う場合は長いトランザクションが必要になります
+** 不可能ではないですが、トラブルの元になります
+
+* 満たすべき条件があります
+## 本当にテーブルのデータを全て消去したいということ
+## テストランナーが ''Database Sandbox'' (pp.650) を持ってること
+
+* ユーザやテストの実行を分けるために ''Database Partitioning Scheme'' を使っている場合はうまく機能しません
+** ''Immutable Shared Fixture'' の場合を除いて、''DB Schema per Test Runner'' での使用を想定してます
+
+* トランザクションのあるデータベースを使ってない場合の ''Automated Teardown'' (pp.503) に類似したパターンです
+** ''Delta Assertions'' (pp.485) によって teardown が必須ではなくなりました
+
 !! Implementation Notes
+
+* teardown のコードをどこに書けばいいか
+* 次の質問の答えで決めましょう
+** 実際にはどうやってデータを消すか (データベースで実行するコマンドは何か)
+** 外部キー制約やトリガーをどうするか
+** 使ってる ORM (OR マッパー) 一貫性をどうやって保つか
+
+* '''TRUNCATE''' コマンドが使えるデータベースならそれを使うのがよいでしょう
+** 無ければ '''DELETE * FROM table-name''' を使うしかありません
+
+* '''TRUNCATE''' や '''DELETE'''
+** ''In-line Teardown'' (pp.509) で使われることがあります
+** ''Implicit Teardown'' (pp.516) で使われることがあります
+
+* ''Lazy Teardown'' で使うことを推奨する人もいます
+** テストの前にテーブルが空になっていることを保証できるから
+
+* 外部キー制約
+** Oracle には関連する行を削除する '''ON DELETE CASCADE''' オプションがある
+** ''cascade delete'' のないデータベースもある
+*** schema に従って順番にデータが削除されるようにしないといけない
+*** schema が変わるとこの順番も変わってしまう ?
+
+* ''teardown'' コードの失敗
+** テスト失敗は ''teardown'' コードを調整しないといけないことを教えてくれる
+** 修正の仕方は直線的 ('''TRUNCATE''' コマンドの順番を変える)
+** '''TRUNCATE''' を実行する処理は ''Test Utility Method'' (pp.599) で隠蔽するとよいでしょう
+
+* '''TRUNCATE''' をサポートしてないデータベースで、トリガーの副作用を回避したい
+** テスト時は制約やトリガーを無効にすればよい
+
+* ORM を使ってるなら、ORM にデータ削除をさせる
+** データベースのデータだけでなく、ORM のキャッシュやオブジェクトも消去させるため
+
+
+!!! Variation: Lazy Teardown
+
+* ''Shared Fixture'' と一緒に使える数少ない teardown 戦略
+* フィクスチャーが任意の時点で削除可能でなければならない
+** 余計な記憶領域なしで「覚えておく」ことができなくなると困るので
+* ''Table Truncation Teardown'' は、いつ実行しても同じ処理をするところが目的に合っている
+** フィクスチャーの生成をする直前で、''trancation command'' を実行するだけでよいから
 
 !! Motivating Example
 
