@@ -1,0 +1,49 @@
+! Transaction Rollback Pain
+
+John Hurst から ''Transaction Rollback Teardown'' を使っていて遭遇した
+問題についてメールをもらいました。
+
+
+* 私達はデータベースの結合テストに ''Transaction Rollback Teardown'' を使っていました
+* [[http://www.serverside.com TheServerSide]] での議論で、Rod Johnson が支持していたからです
+
+* Rod Johnson の主張をまとめると、このパターンはパフォーマンスのために使うということでした
+** 次のテストのために新しくトランザクションを始めるよりロールバックするほうが早いとか
+
+* 実際に今までの方法より速くなりました
+
+* Spring の ''AbstractTransactionalData-SourceSpringContextTest'' にはこのパターンのための機能が備わっています
+
+* しかし、数ヶ月後このパターンの使用を諦めました
+* このパターンを使っていて発生した問題を紹介します
+
+ 1. You lose some test isolation.
+ 
+ テストはデータベースが初期状態であることを想定していました
+  そしてロールバックは元の状態に戻してくれるであろうと
+ それぞれのテストには、基底クラスの setUp メソッドを通じてデータベースを初期化する責任があります
+
+
+ 2. You can’t see what’s in the database when something goes wrong.
+ 
+ テストが失敗したときは、普通はデータベースの中身を確認したいと思うでしょう
+ ロールバックした後では確認ができないのでバグを見つけるのも大変です
+
+ 3. You have to be very careful not to inadvertently commit during your test.
+
+ テストされるコードが宣言的トランサクション管理をしていても驚くことではありません
+ しかし、テストのセットアップでテーブルを削除したり、シーケンスを初期化するために再作成したりすることは時々あります
+ こういった DDL 的なものは保留中のトランザクションをコミットしてしまい、プログラマーを混乱させてしまいます
+
+ 4. You can’t easily mix in tests that do need to commit changes.
+
+ 後半に PLSQL のストアドプロシージャとそのテストを追加しました
+  いくつかのストアドプロシージャは、明示的にコミットしてました
+ 同じ JUnit suite に含められないテストになりました
+
+* 言葉の使い方が書籍に書いてあるのと違ってたりしてすみません
+* 私の経験はごく限定されたものです (Spring で試してみただけです)
+* Spring では "Spring" のやり方に従うことをお勧めします
+
+* これまでに述べた制限にはいろんな回避策があるとは思います
+** 私達のチームにはその恩恵よりもトラブルの方が多く与えられました
