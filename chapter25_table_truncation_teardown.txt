@@ -95,7 +95,47 @@
 
 !! Motivating Example
 
+* ''Guaranteed In-line Teardown'' の例です
+* このコードは簡単に書けないし、正確でもないです
+
+ [Test]
+ public void TestGetFlightsByOrigin_NoInboundFlights() {
+     // Fixture Setup
+     long OutboundAirport = CreateTestAirport("1OF");
+     long InboundAirport = CreateTestAirport("1IF");
+     FlightDto ExpFlightDto = null;
+     try {
+         ExpFlightDto = CreateTestFlight(OutboundAirport, InboundAirport);
+         // Exercise System IList FlightsAtDestination1 =
+             Facade.GetFlightsByOriginAirport( InboundAirport);
+         // Verify Outcome Assert.AreEqual( 0, FlightsAtDestination1.Count );
+     } finally {
+         Facade.RemoveFlight( ExpFlightDto.FlightNumber );
+         Facade.RemoveAirport( OutboundAirport );
+         Facade.RemoveAirport( InboundAirport );
+     }
+ }
+
 !! Refactoring Notes
 
- 
+* 複数リソースの ''In-line Teardown'' における問題を、''Table Truncation Teardown'' で解消します
+* リファクタリングの要旨は、''finally'' 節のメソッド呼び出しを ''CleanDatabase'' だけにしたことです
 
+!!! Example: Table Truncation (Delegated) Teardown Test
+
+* ''finally'' 節のメソッド呼び出しを ''CleanDatabase'' に修正
+
+!!! Example:: Lazy Teardown Test
+
+* ''try'' 節の先頭で ''CleanDatabase'' を呼ぶように修正
+* データベースは必ず初期化されている
+
+!!! Example: Table Truncation Teardown Using SQL
+
+* SQL による ''CleanDatabase'' メソッドの実装です
+* ''SQL Server'' 用なので '''DELETE * FROM ...''' の SQL を実行しています
+
+!!! Example: Table Truncation Teardown Using ORM
+
+* NHibernate による ''CleanDatabase'' メソッドの実装です
+* 親オブジェクトの ''City'' や ''Airport'' を削除すると、子オブジェクトの ''Flight'' も削除されます
