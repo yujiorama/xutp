@@ -5,7 +5,7 @@ John Hurst から ''Transaction Rollback Teardown'' を使っていて遭遇し�
 
 
 * 私達はデータベースの結合テストに ''Transaction Rollback Teardown'' を使っていました
-* [[http://www.serverside.com TheServerSide]] での議論で、Rod Johnson が支持していたからです
+* [[TheServerSide|http://www.theserverside.com]] での議論で、Rod Johnson が支持していたからです
 
 * Rod Johnson の主張をまとめると、このパターンはパフォーマンスのために使うということでした
 ** 次のテストのために新しくトランザクションを始めるよりロールバックするほうが早いとか
