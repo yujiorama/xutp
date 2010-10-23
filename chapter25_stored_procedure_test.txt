@@ -46,7 +46,7 @@
 
 * どちらにしても、フィクスチャーの生成や、期待結果の検証をどうするか決めなければなりません
 ** "before": テスト前のデータベース
-** "after": cascading delete などの期待する振る舞いの後のデータベース
+** "after": cascading delete など期待される振る舞いの後のデータベース
 
 * テストは、データの insert や verify をするために直接データベースとやりとりすることになるでしょう
 ** ''Back Door Manipulation'' (pp.327)
@@ -107,6 +107,104 @@
 * すべてのテストを 1 つの言語で統一するにはよい方法です
 ** アプリケーションコードの変更をチェックインするたびにテストを実行するのが簡単になります
 
+* この性質は、クライアントコードとは別のチームによってストアドプロシージャが開発される場合は特に役立ちます
+
+* 他のチームの開発者が欠陥無しのコードを書いてくれるとは信じられない時もこのパターンを適用します
+** たぶん彼らは ''In-Database Stored Procedure Tests'' も書いてない
+** 受け入れテストとして使えるパターンです
+** 実際の例をコラムに書きました
+
+[[担当割当表/PARTⅢ/Stored Procedure Test/Column]]
+
+* 欠点はテストの実行に時間がかかることです
+** データの準備に時間がかかるからです
+* テストを ''Subset Suite'' (pp.592) に分割すれば、インメモリテストで全てを実行する必要はありません
+** だいぶ速くなります
+** ''Slow Test''(pp.253) は避けられます
+
+* このパターンは、アプリケーションの言語で書かれたすでにユニットテストのあるロジックを、データベースに移植するときも役立ちます
+** すでにユニットテストがあるので、書き直さなくてよいからです
+** お金と時間の節約になります
+*** 異なる言語
+*** 異なるテスト自動化フレームワーク (lpp.298)
+** 書き直しで生じる変換エラーも防ぐことができます
+
 !! Motivating Example
 
+これだけのサンプルでも、どういうふうにテストをするのかはよく分かります。
+
+ CREATE OR REPLACE PROCEDURE calc_secs_between (
+     date1 IN DATE,
+     date2 IN DATE,
+     secs OUT NUMBER
+ )
+ IS
+ BEGIN
+     secs := (date2 - date1) * 24 * 60 * 60;
+ END;
+ /
+
 !! Refactoring Notes
+
+これからテストコードを紹介するのでリファクタリングはありません...
+
+!!! Example: In-Database Stored Procedure Test
+
+utPLSQL のサンプルコードです。
+
+* http://utplsql.sourceforge.net/
+* http://ssoft.web.fc2.com/utplsql_sourceforge.html
+
+ CREATE OR REPLACE PACKAGE BODY ut_calc_secs_between
+ IS
+     PROCEDURE ut_setup
+     IS
+     BEGIN
+         NULL;
+     END;
+     PROCEDURE ut_teardown
+     IS
+     BEGIN
+         NULL;
+     END;
+     -- For each program to test...
+     PROCEDURE ut_CALC_SECS_BETWEEN
+     IS
+         secs PLS_INTEGER;
+     BEGIN
+         CALC_SECS_BETWEEN (
+             DATE1 => SYSDATE
+             '
+             DATE2 => SYSDATE
+             '
+             SECS => secs
+         );
+ 
+         utAssert.eq (
+             'Same dates',
+             secs,
+             0
+             );
+     END ut_CALC_SECS_BETWEEN;
+ 
+ END ut_calc_secs_between;
+ /
+
+!!! Example: Remoted Stored Procedure Test
+
+ public class StoredProcedureTest extends TestCase {
+     public void testCalcSecsBetween_SameTime() {
+         // Setup
+         TimeCalculatorProxy SUT = new TimeCalculatorProxy();
+         Calendar cal = new GregorianCalendar();
+         long now = cal.getTimeInMillis();
+         // Exercise
+         long timeDifference = SUT.calc_secs_between(now,now);
+         // Verify
+         assertEquals( 0, timeDifference );
+     }
+ }
+
+* テストをシンプルにするため、''JdbcOdbcCallableStatement'' を ''Service Facade'' で隠蔽しています
+* このコードだけでは Java のメソッドのテストをしてるわけじゃないということを伝えるのが難しい
+* 異常系のテストでは、例外テスト (pp.348) を追加します
