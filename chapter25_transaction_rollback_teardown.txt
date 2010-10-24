@@ -80,5 +80,156 @@
 
 !! Motivating Example
 
+* ''Guaranteed In-line Teardown'' の例です
+* このコードは簡単に書けないし、正確でもないです
+
+ [Test]
+ public void TestGetFlightsByOrigin_NoInboundFlights() {
+     // Fixture Setup
+     long OutboundAirport = CreateTestAirport("1OF");
+     long InboundAirport = CreateTestAirport("1IF");
+     FlightDto ExpFlightDto = null;
+     try {
+         ExpFlightDto = CreateTestFlight(OutboundAirport, InboundAirport);
+         // Exercise System IList FlightsAtDestination1 =
+             Facade.GetFlightsByOriginAirport( InboundAirport);
+         // Verify Outcome Assert.AreEqual( 0, FlightsAtDestination1.Count );
+     } finally {
+         Facade.RemoveFlight( ExpFlightDto.FlightNumber );
+         Facade.RemoveAirport( OutboundAirport );
+         Facade.RemoveAirport( InboundAirport );
+     }
+ }
+
 !! Refactoring Notes
 
+* setUp メソッドでフィクスチャーの生成をする前に ''beginTransaction'' を読んでおかなければなりません
+* ''Creation Method'' (pp.415) を使っているなら、トランザクションをコミットしないように修正しましょう
+
+!!! Example: Object Transaction Rollback Teardown
+
+ public void testGetFlightsByOrigin_NoInboundFlight_TRBTD()
+     throws Exception {
+     // Fixture Setup
+     TransactionManager.beginTransaction();
+     BigDecimal outboundAirport = createTestAirPort("10F");
+     BigDecimal inboundAirport = null;
+     FlightDto expectedFlightDto = null;
+     try {
+         inboundAirport = createTestAirPort("11F");
+         expectedFlightDto = createTestFlight(outboundAirport, inboundAirport);
+         // Exercise System
+         List flightsAtDestination1 = facade.getFlightsByOriginAirport(inboundAirport);
+         // Verify Outcome
+         assertEquals(0, flightsAtDestination1.size());
+     } finally {
+         TransactionManager.abortTransaction();
+     }
+ }
+
+* teardown コードを ''abortTransaction'' の呼び出しに変更しました
+* ''In-line Teardown'' なので、まだ ''finally'' ブロックは必要です
+** ''tearDown'' メソッドへ移動するのは簡単なことです
+
+* この例では生成されたフィクスチャーを元に戻していません
+* フィクスチャーのオブジェクトはデータベースにコミットされていないからです
+* ACID の "C" (consistent:一貫性) があるからです
+
+* ''creation method'' はトランザクション不要バージョンの facade メソッドを呼んでいます
+* ''Poor Mans Humble Object'' の一例になります
+* ''getFlighsFromAirport'' などのメソッドがトランザクションを開始したり終了したりするなら、同じように修正しないといけません
+
+ private BigDecimal createTestAirPort(String airPortName)
+     throws FlightBookingException {
+     BigDecimal newAirportId =
+           facade._createAirport(airportName,
+                                 " Airport" + airportName,
+                                 "City" + airportName);
+    return newAirportId;
+ }
+
+ public class Facade {
+ 
+     public BigDecimal createAirport(String airportCode,
+                                     String name,
+                                     String nearbyCity)
+              throws FlightBookingException {
+         TransactionManager.beginTransaction();
+         BigDecimal airportId = _createAirport(airportCode, name, nearbyCity);
+         TransactionManager.commitTransaction();
+         return airportId;
+     }
+     
+     // private, nontransactional version for use by tests
+     BigDecimal _createAirport(String airportCode,
+                               String name,
+                               String nearbyCity)
+              throws FlightBookingException, InavlidArgumentException {
+         Airport airport = dataAccess.createAirport(airportCode,name, nearbyCity);
+         logMessage("CreateFlight", airport.getCode());
+         rerutnr airport.getId();
+     }
+ 
+ }
+
+!!! Example: Database Transaction Rollback Teardown
+
+* 前の例ではデータベースの存在をデータアクセスレイヤのコードで隠蔽してました
+* ''Domain Model'' [PEAA] を使っている場合の一般的なプラクティスです
+
+* ''Transaction Rollback Teardown'' は、アプリケーションコードからデータベースを直接操作しているときでも使えます
+** ''Transaction Script''[PEAA] として知られています
+* .NET フレームワークの行セットを使っているときの例を示します
+
+ [TestFixture]
+ public class TransactionRollbackTearDownTest
+ {
+     private SqlConnection _Connection;
+     private SqlTransaction _Transaction;
+     
+     public TransactionRollbackTearDownTest()
+     {
+     }
+     
+     [SetUp]
+     public void Setup()
+     {
+         string dbConnectionString = ConfigurationSettings.AppSettings.Get("DbConnectionString");
+         _Connection = new SqlConnection(dbConnectionString);
+         _Connection.Open();
+         _Transaction = _Connection.BeginTransaction();
+     }
+     
+     [TearDow]
+     public void TearDown()
+     {
+         _Transaction.Rollback();
+         _Connection.CLose();
+         // Avoid NUnit "instance behavior" bug
+         _Transaction = null;
+         _Connection = null;
+     }
+     
+     [Test]
+     public void AnNUnitTest()
+     {
+         const string C_INSERT_SQL =
+             "INSERT INTO Invoice(Amount, Tax, CustomerId)" +
+             " Values({0}, {1}, {2})";
+         SqlCommand cmd = _Connection.CreateCommand();
+         cmd.Transaction = _Transaction;
+         cmd.CommandText = string.Format(
+             C_INSERT_SQL,
+             new object[]{"100.00", "7.00", 2001});
+         // Exercise SUT
+         cmd.ExecuteNonQuery();
+         // Verify result
+         // etc.
+     }
+ }
+
+* ''Implicit Setup'' (pp.424) でコネクションを確立し、トランザクションを開始します
+* テストメソッドが実行されます
+* ''Implicit Teardown'' (pp.516) でトランザクションのロールバックとコネクションの切断を行います
+** ''NUnit'' なのでインスタンス変数には null を代入します (テストオブジェクトが使い回されるから)
+** 詳しくは pp.384 のコラムを読んでください
