@@ -1,0 +1,19 @@
+{{toc}}
+
+! Literal Value
+
+''How do we specify the values to be used in tests?''
+
+'''We use literal constants for object attributes and assertions.'''
+
+''BigDecimal expectedTotal = new BigDecimal("99.95");''
+
+''Also known as: '''
+''Hard-Coded Value, Constant Value''
+
+* フィクスチャーや期待結果としてのオブジェクトの属性値は、要件に従ってお互いに関連していることがよくあります
+* SUT に対して正しく振る舞うためには、正しい値、または事前条件と事後条件の関係は決定的なものです
+
+!! How It Works
+
+!! When to Ues It
