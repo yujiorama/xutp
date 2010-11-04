@@ -1,6 +1,6 @@
 {{toc}}
 
-!! Parameterized Test (pp.607)
+! Parameterized Test (pp.607)
 
 !!! 前書き
 ''同じロジックがいくつものテストコードに現われる場合、どうやって Test Code Duplication を減らせばよいか''

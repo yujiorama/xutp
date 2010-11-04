@@ -1,6 +1,6 @@
 {{toc}}
 
-!! Named Test Suite (pp.592)
+! Named Test Suite (pp.592)
 
 !!! 前書き
 ''恣意的なテストのグループがあるとき、どうやってテストを実行したらいいの?''
