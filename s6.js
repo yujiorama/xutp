@@ -1079,7 +1079,7 @@ s6.attach = function(element, type, handler, priority, self) {
         handler = s6._keypressHandler;
     }
 
-    if (s6.uai.ie && type == 'keypress') {
+    if ((s6.uai.ie || s6.uai.applewebkit) && type == 'keypress') {
         type = 'keydown';
     }
 
