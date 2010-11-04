@@ -1,0 +1,554 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="s6.js"></script>
+<script type="text/javascript" src="s6setup.js"></script>
+</head>
+<body>
+<h1>Custom Assertion</h1>
+<address>yujiorama</address></div><div>
+<p>How do we make tests self-checking when we have test-speciﬁc equality logic?
+How do we reduce Test Code Duplication when the same assertion 
+logic appears in many tests?
+How do we avoid Conditional Test Logic?
+We create a purpose-built Assertion Method that compares only those 
+attributes of the object that deﬁne test-speciﬁc equality.</p>
+<ul>
+<li>テストに固有の等価性判定ロジックがある場合、セルフチェックテストを構築するにはどうすればよいか ?</li>
+<li>同一のアサーションロジックが複数のテストに使われている場合、テストコードの重複を避けるにはどうすればよいか ?</li>
+<li>条件依存のテストロジックを無くすにはどうすればよいか ?</li>
+<li>テストに固有の等価性判定で使われている属性だけを比較するような、目的に合わせたアサーションメソッドを作成する。</li>
+</ul>
+<p>Most members of the xUnit family provide a reasonably rich set of Assertion
+Methods (page 362). But sooner or later, we inevitably ﬁnd ourselves saying, 
+“This test would be so much easier to write if I just had an assertion that did . . . .” 
+So why not write it ourselves? 
+The reasons for writing a Custom Assertion are many, but the technique is 
+pretty much the same regardless of our goal. We hide the complexity of whatever 
+it takes to prove the system is behaving correctly behind an Assertion Method
+with an Intent-Revealing Name [SBPP]. </p>
+<ul>
+<li>たいていの xUnit ファミリーにはアサーションメソッドのための適度な道具立てがある</li>
+<li>しかしやがては次のような言葉を口にするでしょう。<ul>
+<li>「某のアサーションがあればこのテストはもっと簡単に書けるのに...」</li>
+</ul></li>
+<li>自分達で書いてはどうでしょうか?</li>
+<li>カスタムアサーションを書くにあたっての問題<ul>
+<li>その方法は目的に係らずほとんど同じです。</li>
+</ul></li>
+<li>Intent-Revealing Name (SBPP) によるアサーションメソッド<ul>
+<li>システムの検証による複雑さを隠蔽できる</li>
+</ul></li>
+</ul>
+</div>
+<h2>How It Works</h2>
+<p>We encapsulate the mechanics of verifying that something is true (an
+assertion) behind an Intent-Revealing Name. To do so, we factor out
+all the common assertion code within the tests into a Custom Assertion
+that implements the veriﬁcation logic. A Custom Equality Assertion
+takes two parameters: an Expected Object (see State Veriﬁcation on
+page 462) and the actual object.  A key characteristic of Custom
+Assertions is that they receive everything they need to pass or fail
+the test as parameters. Other than causing the test to fail, they have
+no side effects.</p>
+<ul>
+<li>Intent-Revealing Name により、真になるアサーションの検証の方法をカプセル化する</li>
+<li>すべてのアサーションから共通するコードを抽出し、カスタムアサーションとして検証ロジックを実装する</li>
+<li>Custom Equality Assertion は 2 つのパラメータを取る<ul>
+<li>期待値オブジェクト (State Verification 462ページ)</li>
+<li>結果値オブジェクト</li>
+</ul></li>
+<li>カスタムアサーションの要点<ul>
+<li>テスト結果の是非を判断するために必要な情報を、すべてパラメータとして渡すこと</li>
+</ul></li>
+<li>Other than causing the test to fail, they have no side effects.<ul>
+<li>what's the meaning of "Other" ?</li>
+</ul></li>
+</ul>
+<p>Typically, we create Custom Assertions through refactoring by identifying 
+common patterns of assertions in our tests. When test driving, we might just 
+go ahead and call a nonexistent Custom Assertion because it makes writing our 
+test easier; this tactic lets us focus on the part of the SUT that needs to be tested 
+rather than the mechanics of how the test would be carried out. </p>
+<ul>
+<li>カスタムアサーションは、テストコードのリファクタリングを通じて、共通するパターンを見出すことで作成する</li>
+<li>SUT のテスト対象部分について集中する方法<ul>
+<li>テストコードを書くとき、まだ書いてないしないカスタムアサーションを呼び出す</li>
+<li>この方法は、テストが実行された仕組みに依存しない</li>
+</ul></li>
+</ul>
+</div>
+<h2>When to Use It</h2>
+<p>We should consider creating a Custom Assertion whenever any of the following 
+statements are true: 
+• We ﬁnd ourselves writing (or cloning) the same assertion logic in test 
+after test (Test Code Duplication; see page 213). 
+• We ﬁnd ourselves writing Conditional Test Logic (page 200) in the result 
+veriﬁcation part of our tests. That is, our calls to Assertion Methods are 
+embedded in if statements or loops. 
+• The result veriﬁcation parts of our tests suffer from Obscure Test
+(page 186) because we use procedural rather than declarative result 
+veriﬁcation in the tests. 
+• We ﬁnd ourselves doing Frequent Debugging (page 248) whenever 
+assertions fail because they do not provide enough information. </p>
+<ul>
+<li>カスタムアサーションを作成にあたっての条件<ul>
+<li>Test Code Duplication (213ぺーじ) が発生している<ul>
+<li>同じアサーションロジックがあちこちに</li>
+</ul></li>
+<li>Conditional Test Logic (200ページ) が登場する<ul>
+<li>アサーションメソッドが if 文やループの中に埋め込まれている</li>
+</ul></li>
+<li>Obscure Test (186ページ) で悩んでいる<ul>
+<li>テストコード中の結果の検証が宣言的ではなく手続的になってる</li>
+</ul></li>
+<li>Frequent Debugging (248ページ) をよくやっている<ul>
+<li>アサーションが失敗したときに提供される情報が不十分</li>
+</ul></li>
+</ul></li>
+</ul>
+<p>A key reason for moving the assertion logic out of the tests and into
+Custom Assertions is to Minimize Untestable Code (see page 44). Once
+the verification logic has been moved into a Custom Assertion, we can
+write Custom Assertion Tests (see Custom Assertion on page 474) to
+prove the verification logic is working properly. Another important
+benefit of using Custom Assertions is that they help avoid Obscure
+Tests and make tests Communicate Intent (see page 41).  That, in turn,
+will help produce robust, easily maintained tests.  If the
+verification logic must interact with the SUT to determine the actual
+outcome, we can use a verification Method (see Custom Assertion)
+instead of a Custom Assertion. If the setup and exercise parts of the
+tests are also the same except for the values of the actual/expected
+objects, we should consider using a Parameterized Test (page 607). The
+primary advantage of Custom Assertions over both of these techniques
+is reusability; the same Custom Assertion can be reused in many
+different circumstances because it is independent of its context (its
+only contact with the outside world occurs through its parameter
+list).  We most commonly write Custom Assertions that are Equality
+Assertions (see Assertion Method), but there is no reason why we
+cannot write other kinds as well.</p>
+<ul>
+<li>テストコードからアサーションロジックを抽出してカスタムアサーションに移動する目的<ul>
+<li>Minimize Untestable Code (44ページ) のため</li>
+<li>カスタムアサーションのテストを書けるようになる<ul>
+<li>検証ロジックが正しく動作することを証明できる</li>
+</ul></li>
+</ul></li>
+<li>カスタムアサーションを使うことのメリット<ul>
+<li>再利用性<ul>
+<li>コンテキストに依存しないから、異なる環境でも再利用しやすい</li>
+</ul></li>
+<li>Obscure Test を回避する</li>
+<li>テストを Communicate Intent (41ページ) にする</li>
+<li>プロダクトを頑健にする</li>
+<li>テストのメンテナンスを容易にする</li>
+</ul></li>
+<li>Verification Method (後述) をお勧めするケース<ul>
+<li>検証ロジックが、本当の出力を得るために SUT とやりとりしなければならない</li>
+</ul></li>
+<li>Parameterized Test (607ページ) をお勧めするケース<ul>
+<li>setup や exercise の部分で SUT とやりとりしなければならない</li>
+</ul></li>
+<li>カスタムアサーションの再利用性<ul>
+<li>コンテキストに非依存</li>
+<li>外界とのインターフェースはパラメータリストだけ</li>
+<li>有名なのは Equality Assertions (assertEqual, assertThat, etc ...)</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: Custom Equality Assertion</h3>
+<p>For custom equality assertions, the Custom Assertion must be passed an
+Expected Object and the actual object to be verified. It should also
+take an Assertion Message (page 370) to avoid playing Assertion
+Roulette (page 224). Such an assertion is essentially an equals method
+implemented as a Foreign Method [Fowler].</p>
+</div>
+<h3>Variation: Object Attribute Equality Assertion</h3>
+<p>We often run across Custom Assertions that take one actual object and
+several different Expected Objects that need to be compared with
+specific attributes of the actual object. (The set of attributes to be
+compared is implied by the name of the Custom Assertion.) The key
+difference between these Custom Assertions and a verification Method
+is that the latter interacts with the SUT while the Object Attribute
+Equality Assertion looks only at the objects passed in as parameters.</p>
+<ul>
+<li>特定の属性を検証するアサーションメソッド<ul>
+<li>メソッド名に検証する属性を示す言葉が含まれている</li>
+</ul></li>
+<li>verification Method との違い<ul>
+<li>Object Attribute Equality Assertion はパラメータのオブジェクトしか見ない</li>
+<li>verification Method では SUT にアクセスする</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: Domain Assertion</h3>
+<p>All of the built-in Assertion Methods are domain independent. Custom
+Equality Assertions implement test-specific equality but still compare
+only two objects. Another style of Custom Assertion helps contribute
+to the definition of a “domain-specific” Higher-Level Language (see
+page 41)—namely, the Domain Assertion.</p>
+<p>A Domain Assertion is a Stated Outcome Assertion (see Assertion
+Method) that states something that should be true in domain-specific
+terms. It helps elevate the test into “business-speak.”</p>
+<ul>
+<li>全ての組み込みアサーションメソッドはドメイン非依存</li>
+<li>Custom Equality Assertion は、テストに限定された 2 つのオブジェクト間の等価性を実装するだけ</li>
+<li>Domain Assertion<ul>
+<li>ドメインに限定された Higher-Level Language (41ページ) を定義する</li>
+<li>Stated Outcome Assertion (Assertion Method 参照)</li>
+<li>ドメインで規程された条件において真となるアサーション</li>
+<li>テストケースをビジネス用語で表現</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: Diagnostic Assertion</h3>
+<p>Sometimes we find ourselves doing Frequent Debugging whenever a test
+fails because the assertions tell us only that something is wrong but
+do not identify the specific problem (e.g., the assertions indicate
+these two objects are not equal but it isn’t clear what isn’t equal
+about the object). We can write a special kind of Custom Assertion
+that may look just like one of the built-in assertions but provide
+more information about what is different between the expected and
+actual values than a built-in assertion because it is specific to our
+types. (For example, it might tell us which attributes are different
+or where long strings differ.)</p>
+<ul>
+<li>アサーションが失敗<ul>
+<li>失敗したことは分かるけど...</li>
+<li>具体的に何が駄目なのか特定できないので Frequent Debugging</li>
+</ul></li>
+<li>組み込みアサーションと同じような使い勝手だけど、失敗の原因を詳しく出力するアサーション</li>
+</ul>
+<p>On one project, we were comparing string variables containing XML. 
+Whenever a test failed, we had to bring up two string inspectors and scroll 
+through them looking for the difference. Finally, we got smart and included 
+the logic in a Custom Assertion that told us where the first difference between 
+the two XML strings occurred. The small amount of time we spent writing 
+the diagnostic custom assertion was paid back many times over as we ran 
+our tests.</p>
+<ul>
+<li>XML文字列を比較するテストが失敗<ul>
+<li>インスペクタで文字列をスクロールしながら確認...</li>
+</ul></li>
+<li>異なる最初の部分を出力できるカスタムアサーションを導入した<ul>
+<li>ちょっと時間はかかったけど、充分ペイするだけの価値はあった</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: verification Method</h3>
+<p>In customer tests, a lot of the complexity of verifying the outcome is
+related to interacting with the SUT. verification Methods are a form
+of Custom Assertions that interact directly with the SUT, thereby
+relieving their callers from this task. This simplifies the tests
+significantly and leads to a more “declarative” style of outcome
+specification. After the Custom Assertion has been written, we can
+write subsequent tests that result in the same outcome much more
+quickly.  In some cases, it may be advantageous to incorporate even
+the exercise SUT phase of the test into the verification Method. This
+is one step short of a full Parameterized Test that incorporates all
+the test logic in a reusable Test Utility Method (page 599).</p>
+<ul>
+<li>カスタマーテストにおける結果検証の複雑さは SUT とのやり取りがあることに起因する</li>
+<li>verification Method<ul>
+<li>SUT と直接やりとりするカスタムアサーション</li>
+<li>アサーションを実行する側 (テストコード) で SUT へアクセスしなくてもよくなる</li>
+<li>テストコードが劇的にシンプルに</li>
+<li>宣言的な仕様を導出</li>
+<li>exercise phase のコードも取り込める</li>
+</ul></li>
+<li>完全な Parameterized Test への第一歩<ul>
+<li>Test Utility Method (599ページ)</li>
+</ul></li>
+</ul>
+</div>
+<h2>Implementation Notes</h2>
+<p>The Custom Assertion is typically implemented as a set of calls to the various 
+built-in Assertion Methods. Depending on how we plan to use it in our tests, 
+we may also want to include the standard Equality Assertion template to ensure 
+correct behavior with null parameters. Because the Custom Assertion is itself an 
+Assertion Method, it should not have any side effects, nor should it call the SUT. 
+(If it needs to do so, it would be a verification Method.)</p>
+<ul>
+<li>カスタムアサーションの実装<ul>
+<li>組み込みアサーション呼び出しの組み合わせ</li>
+<li>NULL パラメータでも正しい振る舞いをすることを保証する<ul>
+<li>標準的な Equality Assertion の形式を取るようにしたい</li>
+<li>テストコードでの使い方に関する想定にもよるが...</li>
+</ul></li>
+<li>副作用を持つべきではない<ul>
+<li>カスタムアサーションもアサーションメソッドなのだから...</li>
+</ul></li>
+<li>SUT を呼び出すべきでhaない<ul>
+<li>SUT の呼び出しが必要なら、それは verification Method になる</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: Custom Assertion Test</h3>
+<p>Testing zealots would also write a Custom Assertion Test (a
+Self-Checking Test—see page 26—for Custom Assertions) to verify the
+Custom Assertion. The benefit from doing so is obvious: increased
+confidence in our tests. In most cases, writing Custom Assertion Tests
+isn’t particularly difficult because Assertion Methods take all their
+arguments as parameters.  We can treat the Custom Assertion as the SUT
+simply by calling it with various arguments and verifying that it
+fails in the right cases. Single-Outcome Assertions (see Assertion
+Method) need only a single test because they don’t take any
+parameters (other than possibly an Assertion Message). Stated Outcome
+Assertions need one test for each possible value (or boundary
+value). Equality Assertions need one test that compares two objects
+deemed to be equivalent, one test that compares an object with itself,
+and one test for each attribute whose inequality should cause the
+assertion to fail. Attributes that don’t affect equality can be
+verified in one additional test because the Equality Assertion should
+not raise an error for any of them.</p>
+<ul>
+<li>テスト狂は、カスタムアサーションをテストするためのカスタムアサーションを書く</li>
+<li>私たちのテストがより信頼できるものになるというメリット</li>
+<li>カスタムアサーションのテストを書くのは難しい<ul>
+<li>すべての引数がパラメータ</li>
+</ul></li>
+<li>カスタムアサーションを SUT と同じように扱う<ul>
+<li>様々な引数を渡す</li>
+<li>正しく失敗することを検証する</li>
+</ul></li>
+<li>Single-Outcome Assertions<ul>
+<li>1 つのテストがあればよい</li>
+<li>アサーションメッセージの他に引数を取らないから</li>
+</ul></li>
+<li>Stated Outcome Assertions<ul>
+<li>可能な値 (もしくは境界値) ごとに 1 つのテストが必要</li>
+</ul></li>
+<li>Equality Assertions<ul>
+<li>等価比較をしようとしている 2 つのオブジェクトを比較するテスト</li>
+<li>2 つのオブジェクトのうち、いずれかのオブジェクトとそれ自身を比較するテスト</li>
+<li>アサーションを失敗させるオブジェクトの属性を比較するテスト</li>
+<li>ついでに等価性に影響しない属性を検証するテストも追加で書いておく</li>
+</ul></li>
+</ul>
+<p>The Custom Assertions follow the normal Simple Success Test (see Test
+Method on page 348) and Expected Exception Test (see Test Method)
+templates with one minor difference: Because the Assertion Method is
+the SUT, the exercise SUT and verify outcome phases of the Four-Phase
+Test (page 358) are combined into a single phase.</p>
+<ul>
+<li>形式の話<ul>
+<li>普通の Simple Success Test の形式 (テストメソッド、348ページ) に従う</li>
+<li>Expected Exception Test の形式 (テストメソッド) に従う</li>
+</ul></li>
+<li>ちょっとだけ違うところ<ul>
+<li>アサーションメソッドが SUT でもあること</li>
+<li>Four-Phase Test (358ページ) が 1 つのフェーズに結合される</li>
+</ul></li>
+</ul>
+<p>Each test consists of setting up the Expected Object and the actual
+object and then calling the Custom Assertion. If the objects should be
+equivalent, that’s all there is to it. (The Test Automation Framework
+described on page 298 would catch any assertion failures and fail the
+test.) For the tests where we expect the Custom Assertion to fail, we
+can write the test as an Expected Exception Test (except that the
+exercise SUT and verify outcome phases of the Four-Phase Test are
+combined into the single call to the Custom Assertion).</p>
+<ul>
+<li>テストの成り立ち<ul>
+<li>期待値オブジェクトの準備</li>
+<li>期待値オブジェクトと結果値オブジェクトでカスタムアサーションを呼び出すこと</li>
+<li>オブジェクトが等価であるならそれしかやることはない</li>
+</ul></li>
+<li>自動化テストフレームワーク (298ページ)<ul>
+<li>あらゆるアサーションの失敗を catch し テストを失敗させることになってる</li>
+</ul></li>
+<li>カスタムアサーションが失敗することを期待するようなテストは Expected Exception Test で<ul>
+<li>Four-Phase Test が集約されてない場合を除く</li>
+</ul></li>
+</ul>
+<p>The simplest way to build the objects to be compared for a specific
+test is to do something similar to One Bad Attribute (see Derived
+Value on page 718)—that is, build the first object and make a deep
+copy of it. For successful tests, modify any of the attributes that
+should not be compared. For each test failure, modify one attribute
+that should be grounds for failing the assertion.</p>
+<ul>
+<li>特定のテストで比較に使われるオブジェクトを簡単に構築する方法<ul>
+<li>オブジェクトを deep copy</li>
+<li>One Bad Attribute (Derived Value、718ページ) によく似ているが...</li>
+</ul></li>
+<li>成功するテスト<ul>
+<li>比較しない属性を変える</li>
+</ul></li>
+<li>失敗させるテスト<ul>
+<li>アサーションを失敗させる属性を変える</li>
+</ul></li>
+</ul>
+<p>A brief warning about a possible complication in a few members of the
+xUnit family: If all of the test failure handling does not occur in
+the Test Runner (page 377), calls to fail or built-in assertions may
+add messages to the failure log even if we catch the error or
+exception in our Custom Assertion Test. The only way to circumvent
+this behavior is to use an “Encapsulated Test Runner” to run each
+test by itself and verify that the one test failed with the expected
+error message.</p>
+<ul>
+<li>いくつかの xUnit ファミリーについて、複雑な問題になりうることの警告<ul>
+<li>Test Runner (377ページ) でエラーハンドリング機構が動かない</li>
+<li>fail や組み込みアサーションはログにメッセージを出力するだけ<ul>
+<li>カスタムアサーションのテストでエラーや例外を catch したくても...</li>
+</ul></li>
+</ul></li>
+<li>そんなときのやりかた<ul>
+<li>"Encapsulated Test Runner" で Test Runner を駆動</li>
+<li>テストが失敗したときのエラーメッセージを検証する</li>
+</ul></li>
+</ul>
+</div>
+<h2>Motivating Example</h2>
+<p>In the following example, several test methods repeat the same series
+of assertions:</p>
+<p>Note that the first test ends with a series of three assertions and
+the second test repeats the series of three assertions twice, once for
+each line item. This is clearly a bad case of Test Code Duplication.</p>
+<p>最初のテストは 3 つのアサーションで終わっている。
+2 つ目のテストは各行について 3 つのアサーションを 2 回繰り返している。
+Test Code Duplication です。</p>
+</div>
+<h2>Refactoring Notes</h2>
+<p>Refactoring zealots can probably see that the solution is to do an
+Extract Method [Fowler] refactoring on these tests. If we pull out all
+the common calls to Assertion Methods, we will be left with only the
+differences in each test. The extracted method is our Custom
+Assertion. We may also need to introduce an Expected Object to hold
+all the values that were being passed to the individual Assertion
+Methods on a single object to be passed to the Custom Assertion.</p>
+<ul>
+<li>リファクタリング厨：Extract Method(Fowler) を使うことに気付く<ul>
+<li>共通するアサーションメソッドの呼び出しを抽出しても、テストごとの些少な差異に煩わされる</li>
+</ul></li>
+<li>全ての値を保持する期待値オブジェクトを導入<ul>
+<li>オブジェクトを介して個々のアサーションメソッドに値を提供</li>
+<li>カスタムアサーションには 1 つの引数として期待値オブジェクトを渡す</li>
+</ul></li>
+</ul>
+</div>
+<h3>Example: Custom Assertion</h3>
+<p>In this test, we use a Custom Assertion to verify that <a href="LineItem">LineItem</a>
+matches the expected <a href="LineItem">LineItem</a>(s). For one reason or another, we have
+chosen to implement a test-specific equality rather than using a
+standard Equality Assertion.</p>
+<ul>
+<li><a href="LineItem">LineItem</a> を検証するカスタムアサーションを実装</li>
+<li>ある理由により、標準的な Equality Assertion ではなく テスト固有の等値メソッドを実装</li>
+</ul>
+<p>The tests have become significantly smaller and more
+intent-revealing. We have also chosen to pass a string indicating
+which item we are examining as an argument to the Custom Assertion to
+avoid playing Assertion Roulette when a test fails.</p>
+<ul>
+<li>テストコードは目に見えて小さくなった<ul>
+<li>意図も分かりやすくなった</li>
+</ul></li>
+<li>テストが失敗したときのアサーションルーレットを避けるために<ul>
+<li>カスタムアサーションの引数に文字列を加えた</li>
+<li>どのオブジェクトをテストしていたか分かりやすい</li>
+</ul></li>
+</ul>
+<p>This simplified test was made possible by having the following Custom
+Assertion available to us:</p>
+<p>This Custom Assertion compares the same attributes of the object as we
+were comparing on an in-line basis in the previous version of the
+test; thus the semantics of the test haven’t changed. We also
+concatenate the name of the attribute being compared with the message
+parameter to get a unique failure message, which allows us to avoid
+playing Assertion Roulette when a test fails.</p>
+<ul>
+<li>このカスタムアサーションの説明<ul>
+<li>最初のバージョン(直書き)と同様に、オブジェクトのいくつかの属性だけを比較する</li>
+<li>意味論的には変わってない</li>
+<li>比較される属性をパラメータのメッセージと連結してユニークなエラーメッセージ<ul>
+<li>アサーションルーレットを回避</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<h3>Example: Domain Assertion</h3>
+<p>In this next version of the test, we have further elevated the level
+of the assertions to better communicate the expected outcome of the
+test scenarios:</p>
+<p>This simplified version of the test was made possible by extracting
+the following Domain Assertion method:</p>
+<p>This example chose to forgo passing a message to the Domain Assertion
+to save a bit of space. In real life, we would typically include a
+message string in the parameter list and concatenate the messages of
+the individual assertions to one passed in. See Assertion Message
+(page 370) for more details.</p>
+</div>
+<h3>Example: verification Method</h3>
+<p>If the exercise SUT and result verification phases of several tests
+are pretty much identical, we can incorporate both phases into our
+reusable Custom Assertion.  Because this approach changes the
+semantics of the Custom Assertion from being just a function free of
+side effects to an operation that changes the state of the SUT, we
+usually give it a more distinctive name starting with “verify”.</p>
+<ul>
+<li>SUT の exercise フェーズと結果検証フェーズが独立している<ul>
+<li>両方のフェーズをカスタムアサーション(再利用可)に組込むことができる</li>
+</ul></li>
+<li>カスタムアサーションのセマンティクスを変える<ul>
+<li>前:副作用のない関数</li>
+<li>後:SUTの状態を変えるオペレーション</li>
+</ul></li>
+<li>名前<ul>
+<li>"verify"から始まる名前にするのが通例</li>
+</ul></li>
+</ul>
+<p>This version of the test merely sets up the test fixture before
+calling a verification Method that incorporates both the exercise SUT
+and verify outcome phases of the test. It is most easily recognized by
+the lack of a distinct “exercise” phase in the calling test and the
+presence of calls to methods that modify the state of one of the
+objects passed as a parameter of the verification Method.</p>
+<ul>
+<li>今回のテストコード<ul>
+<li>フィクスチャのセットアップと verification Method の呼び出しだけしかない</li>
+<li>verification Method が exercise フェーズを内包しているから</li>
+</ul></li>
+</ul>
+<p>This verification Method calls the “pure” Custom Assertion, although
+it could just as easily have included all the assertion logic if we
+didn’t have the other Custom Assertion to call. Note the call to
+addItemQuantity on the parameter inv; this is what changes if from a
+Custom Assertion to a verification Method.</p>
+<ul>
+<li>単なるカスタムアサーションの呼び出しだけ</li>
+<li>引数の inv の addItemQuantity メソッドを呼び出しているところに注目</li>
+</ul>
+</div>
+<h3>Example: Custom Assertion Test</h3>
+<p>This Custom Assertion isn’t particularly complicated, so we may feel
+comfortable without having any automated tests for it. If there is
+anything complex about it, however, we may find it worthwhile to write
+tests like these:</p>
+<p>This example includes a few of the Custom Assertion Tests needed for
+this Custom Assertion. Note that the code includes one “equivalent”
+and several “different” tests (one for each attribute whose
+difference should cause the test to fail). We have to use the second
+form of the Expected Exception Test template in those cases where the
+assertion was expected to fail, because fail throws the same exception
+as our assertion method. In one of the “different” tests, we have
+included sample logic for asserting on the exception
+message. (Although I’ve abridged it to save space, the example here
+should give you an idea of where to assert on the message.)</p>
+<ul>
+<li>この例にはカスタムアサーションテストに必要なものが含まれている<ul>
+<li>1 つの "equivalent" テスト</li>
+<li>いくつかの "diffrent" テスト<ul>
+<li>テストを失敗させるために必要な属性について</li>
+</ul></li>
+</ul></li>
+<li>Expected Exception Testの雛形として 2 番目を使っている<ul>
+<li>アサーションメソッドが例外をスローするから</li>
+</ul></li>
+<li>メッセージは要約してる</li>
+</ul>
+</div>
+</body>
+</html>

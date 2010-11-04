@@ -1,0 +1,190 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="s6.js"></script>
+<script type="text/javascript" src="s6setup.js"></script>
+</head>
+<body>
+<h1>Table Truncation Teardown</h1>
+<address>yujiorama</address></div><div>
+<p><em>How do we tear down the Test Fixture when it is in a relational database?</em></p>
+<p><strong>We truncate the tables modified during the test to tear down the fixture.</strong></p>
+<ul>
+<li>繰り返し実行可能で、しっかりしたテストを支えるもの<ul>
+<li>テストフィクスチャーがテストの最後に解体 (tear down) されることを保証していること</li>
+<li>不要なリソースを残しておけば、良くて性能劣化、悪くてテストの失敗やシステムクラッシュを引き起こす<ul>
+<li>オブジェクト</li>
+<li>データベースのレコード</li>
+<li>ファイル</li>
+<li>コネクション</li>
+</ul></li>
+<li>ガベージコレクションによって自動的に回収されるリソースもあるでしょう</li>
+<li>明示的に解体 (tear down) されないものは残ってしまうでしょう</li>
+</ul></li>
+</ul>
+<ul>
+<li>あらゆる環境を適切に掃除することを期待された teardown コードを書く<ul>
+<li>とても挑戦的</li>
+<li>時間がかかる</li>
+</ul></li>
+<li>テストの考えられる出力結果のうち、何を放置できるか理解し、それを扱うコードを書くということです</li>
+</ul>
+<ul>
+<li><em>Complex Teardown</em> (<em>Obscure Test</em>, pp.186) の末路<ul>
+<li>ちょっとした <em>Conditional Test Logic</em> (pp.200)</li>
+<li>最悪の場合 <em>Untestable Test Code</em> (<em>Hard-to-Test Code</em>, pp.209) になります</li>
+</ul></li>
+</ul>
+<ul>
+<li>RDB を使ったシステムのテストには、<em>TRUNCATE</em> コマンドというアドバンテージがあります</li>
+</ul>
+</div>
+<h2>How It Works</h2>
+<ul>
+<li>永続的なフィクスチャーが不要なら、それぞれのテーブルに対して <em>TRUNCATE</em> コマンドを実行する</li>
+</ul>
+</div>
+<h2>When To Use It</h2>
+<ul>
+<li><em>Persistent Fresh Fixture</em> を使っているときはたいていの場合 <em>Table Truncation Teardown</em> を使います<ul>
+<li>1 番の選択肢です</li>
+</ul></li>
+<li><em>Shared Fixture</em> (pp.317) で使うのもよいでしょう<ul>
+<li><em>Transaction Rollback Teardown</em> を使う場合は長いトランザクションが必要になります</li>
+<li>不可能ではないですが、トラブルの元になります</li>
+</ul></li>
+</ul>
+<ul>
+<li>満たすべき条件があります<ol>
+<li>本当にテーブルのデータを全て消去したいということ</li>
+<li>テストランナーが <em>Database Sandbox</em> (pp.650) を持ってること</li>
+</ol></li>
+</ul>
+<ul>
+<li>ユーザやテストの実行を分けるために <em>Database Partitioning Scheme</em> を使っている場合はうまく機能しません<ul>
+<li><em>Immutable Shared Fixture</em> の場合を除いて、<em>DB Schema per Test Runner</em> での使用を想定してます</li>
+</ul></li>
+</ul>
+<ul>
+<li>トランザクションのあるデータベースを使ってない場合の <em>Automated Teardown</em> (pp.503) に類似したパターンです<ul>
+<li><em>Delta Assertions</em> (pp.485) によって teardown が必須ではなくなりました</li>
+</ul></li>
+</ul>
+</div>
+<h2>Implementation Notes</h2>
+<ul>
+<li>teardown のコードをどこに書けばいいか</li>
+<li>次の質問の答えで決めましょう<ul>
+<li>実際にはどうやってデータを消すか (データベースで実行するコマンドは何か)</li>
+<li>外部キー制約やトリガーをどうするか</li>
+<li>使ってる ORM (OR マッパー) 一貫性をどうやって保つか</li>
+</ul></li>
+</ul>
+<ul>
+<li><strong>TRUNCATE</strong> コマンドが使えるデータベースならそれを使うのがよいでしょう<ul>
+<li>無ければ <strong>DELETE * FROM table-name</strong> を使うしかありません</li>
+</ul></li>
+</ul>
+<ul>
+<li><strong>TRUNCATE</strong> や <strong>DELETE</strong><ul>
+<li><em>In-line Teardown</em> (pp.509) で使われることがあります</li>
+<li><em>Implicit Teardown</em> (pp.516) で使われることがあります</li>
+</ul></li>
+</ul>
+<ul>
+<li><em>Lazy Teardown</em> で使うことを推奨する人もいます<ul>
+<li>テストの前にテーブルが空になっていることを保証できるから</li>
+</ul></li>
+</ul>
+<ul>
+<li>外部キー制約<ul>
+<li>Oracle には関連する行を削除する <strong>ON DELETE CASCADE</strong> オプションがある</li>
+<li><em>cascade delete</em> のないデータベースもある<ul>
+<li>schema に従って順番にデータが削除されるようにしないといけない</li>
+<li>schema が変わるとこの順番も変わってしまう ?</li>
+</ul></li>
+</ul></li>
+</ul>
+<ul>
+<li><em>teardown</em> コードの失敗<ul>
+<li>テスト失敗は <em>teardown</em> コードを調整しないといけないことを教えてくれる</li>
+<li>修正の仕方は直線的 (<strong>TRUNCATE</strong> コマンドの順番を変える)</li>
+<li><strong>TRUNCATE</strong> を実行する処理は <em>Test Utility Method</em> (pp.599) で隠蔽するとよいでしょう</li>
+</ul></li>
+</ul>
+<ul>
+<li><strong>TRUNCATE</strong> をサポートしてないデータベースで、トリガーの副作用を回避したい<ul>
+<li>テスト時は制約やトリガーを無効にすればよい</li>
+</ul></li>
+</ul>
+<ul>
+<li>ORM を使ってるなら、ORM にデータ削除をさせる<ul>
+<li>データベースのデータだけでなく、ORM のキャッシュやオブジェクトも消去させるため</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: Lazy Teardown</h3>
+<ul>
+<li><em>Shared Fixture</em> と一緒に使える数少ない teardown 戦略</li>
+<li>フィクスチャーが任意の時点で削除可能でなければならない<ul>
+<li>余計な記憶領域なしで「覚えておく」ことができなくなると困るので</li>
+</ul></li>
+<li><em>Table Truncation Teardown</em> は、いつ実行しても同じ処理をするところが目的に合っている<ul>
+<li>フィクスチャーの生成をする直前で、<em>trancation command</em> を実行するだけでよいから</li>
+</ul></li>
+</ul>
+</div>
+<h2>Motivating Example</h2>
+<ul>
+<li><em>Guaranteed In-line Teardown</em> の例です</li>
+<li>このコードは簡単に書けないし、正確でもないです</li>
+</ul>
+<pre>[Test]
+public void TestGetFlightsByOrigin_NoInboundFlights() {
+    // Fixture Setup
+    long OutboundAirport = CreateTestAirport("1OF");
+    long InboundAirport = CreateTestAirport("1IF");
+    FlightDto ExpFlightDto = null;
+    try {
+        ExpFlightDto = CreateTestFlight(OutboundAirport, InboundAirport);
+        // Exercise System IList FlightsAtDestination1 =
+            Facade.GetFlightsByOriginAirport( InboundAirport);
+        // Verify Outcome Assert.AreEqual( 0, FlightsAtDestination1.Count );
+    } finally {
+        Facade.RemoveFlight( ExpFlightDto.FlightNumber );
+        Facade.RemoveAirport( OutboundAirport );
+        Facade.RemoveAirport( InboundAirport );
+    }
+}</pre>
+</div>
+<h2>Refactoring Notes</h2>
+<ul>
+<li>複数リソースの <em>In-line Teardown</em> における問題を、<em>Table Truncation Teardown</em> で解消します</li>
+<li>リファクタリングの要旨は、<em>finally</em> 節のメソッド呼び出しを <em><a href="CleanDatabase">CleanDatabase</a></em> だけにしたことです</li>
+</ul>
+</div>
+<h3>Example: Table Truncation (Delegated) Teardown Test</h3>
+<ul>
+<li><em>finally</em> 節のメソッド呼び出しを <em><a href="CleanDatabase">CleanDatabase</a></em> に修正</li>
+</ul>
+</div>
+<h3>Example:: Lazy Teardown Test</h3>
+<ul>
+<li><em>try</em> 節の先頭で <em><a href="CleanDatabase">CleanDatabase</a></em> を呼ぶように修正</li>
+<li>データベースは必ず初期化されている</li>
+</ul>
+</div>
+<h3>Example: Table Truncation Teardown Using SQL</h3>
+<ul>
+<li>SQL による <em><a href="CleanDatabase">CleanDatabase</a></em> メソッドの実装です</li>
+<li><em>SQL Server</em> 用なので <strong>DELETE * FROM ...</strong> の SQL を実行しています</li>
+</ul>
+</div>
+<h3>Example: Table Truncation Teardown Using ORM</h3>
+<ul>
+<li>NHibernate による <em><a href="CleanDatabase">CleanDatabase</a></em> メソッドの実装です</li>
+<li>親オブジェクトの <em>City</em> や <em>Airport</em> を削除すると、子オブジェクトの <em>Flight</em> も削除されます</li>
+</ul>
+</div>
+</body>
+</html>
