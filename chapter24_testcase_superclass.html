@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Testcase Sueprclass</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p><em>Where do we put our test code when it is in reusable Test Utility Methods?</em></p>
 <p><strong>We inherit reusable test-specific logic from an abstract Testcase Super class.</strong></p>
 <ul>
@@ -16,6 +17,7 @@
 <li><em>Testcase Superclass</em> パターンは、<em>Test Utility Methods</em> の置き場所として 1 つの選択肢になります。</li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>さまざまなテストケースクラスで再利用可能なテストユーティリティメソッドを、抽象基底クラスに定義します</li>
@@ -23,6 +25,7 @@
 <li>この抽象基底クラスを親クラスとして使用します</li>
 </ul>
 </div>
+<div>
 <h2>When to Use It</h2>
 <ul>
 <li>さまざまなテストケースクラスで <em>Test Utility Methods</em> を再利用したいとき</li>
@@ -50,6 +53,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Test Helper Mixin</h3>
 <ul>
 <li>Mix-in をサポートしてる言語ではもっともよい方法です</li>
@@ -66,6 +70,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li>テスティングフレームワークが、フレームワークの提供する <em>Testcase Superclass</em> を基底クラスとすることを要求する場合<ul>
@@ -92,12 +97,16 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 </div>
+<div>
 <h3>Example: Testcase Superclass</h3>
 </div>
+<div>
 <h3>Example: Test Helper Mixin</h3>
 <ul>
 <li><em>Test Code Duplication</em> (pp.213) が見あたります</li>

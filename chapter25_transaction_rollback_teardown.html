@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Transaction Rollback Teardown</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p><em>How do we tear down the Test Fixture when it is in a relational database?</em></p>
 <p><strong>We roll back the uncommitted test transaction as part of the teardown.</strong></p>
 <ul>
@@ -17,6 +18,7 @@
 <li>コミットしてないせいで残ってしまったデータベースへの変更は、ロールバックで回避できます</li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>私たちのテストの振る舞い<ul>
@@ -28,6 +30,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>When to Use It</h2>
 <ul>
 <li><em>Fresh Fixture</em> (pp.311) とロールバック可能なデータベースを使っているときに使えるパターンです<ul>
@@ -75,6 +78,7 @@
 </ul>
 <p><a href="担当割当表/PARTⅢ/Transaction Rollback Teardown/Column">担当割当表/PARTⅢ/Transaction Rollback Teardown/Column</a></p>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li>本体だけでこのパターンをサポートしている xUnit ファミリーはあまり多くありません<ul>
@@ -109,6 +113,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 <ul>
 <li><em>Guaranteed In-line Teardown</em> の例です</li>
@@ -132,12 +137,14 @@ public void TestGetFlightsByOrigin_NoInboundFlights() {
     }
 }</pre>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li>setUp メソッドでフィクスチャーの生成をする前に <em>beginTransaction</em> を読んでおかなければなりません</li>
 <li><em>Creation Method</em> (pp.415) を使っているなら、トランザクションをコミットしないように修正しましょう</li>
 </ul>
 </div>
+<div>
 <h3>Example: Object Transaction Rollback Teardown</h3>
 <pre>public void testGetFlightsByOrigin_NoInboundFlight_TRBTD()
     throws Exception {
@@ -205,6 +212,7 @@ public void TestGetFlightsByOrigin_NoInboundFlights() {
 
 }</pre>
 </div>
+<div>
 <h3>Example: Database Transaction Rollback Teardown</h3>
 <ul>
 <li>前の例ではデータベースの存在をデータアクセスレイヤのコードで隠蔽してました</li>

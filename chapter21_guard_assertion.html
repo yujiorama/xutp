@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Guard Assertion</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <ul>
 <li>How do we avoid Conditional Test Logic ?<ul>
 <li>We replace an if statement in a test with an assertion that fails that test if not ssatisfied</li>
@@ -27,6 +28,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>テストには通過するか失敗するかしかない</li>
@@ -40,6 +42,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>When To Use It</h2>
 <ul>
 <li>条件によってテストをエラー終了させてしまうような式を置き換えるために使うパターン</li>
@@ -47,6 +50,7 @@
 <li>exercise フェーズと verify フェーズの間に導入する</li>
 </ul>
 </div>
+<div>
 <h3>Variation: Shared Fixture State Assertion</h3>
 <ul>
 <li>Shared Fixture を使っている場合</li>
@@ -55,6 +59,7 @@
 <li>Tests as Documentation (23ページ) を促進する</li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li>assertNotNil<ul>
@@ -65,8 +70,10 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li>Replace Nested Conditinal with Guard Clauses を使う<ul>
@@ -83,8 +90,10 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Simple Guard Assertion</h3>
 </div>
+<div>
 <h3>Example: Shared Fixture Guard Assertion</h3>
 </div>
 </body>

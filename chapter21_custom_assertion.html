@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Custom Assertion</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p>How do we make tests self-checking when we have test-speciﬁc equality logic?
 How do we reduce Test Code Duplication when the same assertion 
 logic appears in many tests?
@@ -41,6 +42,7 @@ with an Intent-Revealing Name [SBPP]. </p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <p>We encapsulate the mechanics of verifying that something is true (an
 assertion) behind an Intent-Revealing Name. To do so, we factor out
@@ -78,6 +80,7 @@ rather than the mechanics of how the test would be carried out. </p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>When to Use It</h2>
 <p>We should consider creating a Custom Assertion whenever any of the following 
 statements are true: 
@@ -156,6 +159,7 @@ cannot write other kinds as well.</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Custom Equality Assertion</h3>
 <p>For custom equality assertions, the Custom Assertion must be passed an
 Expected Object and the actual object to be verified. It should also
@@ -163,6 +167,7 @@ take an Assertion Message (page 370) to avoid playing Assertion
 Roulette (page 224). Such an assertion is essentially an equals method
 implemented as a Foreign Method [Fowler].</p>
 </div>
+<div>
 <h3>Variation: Object Attribute Equality Assertion</h3>
 <p>We often run across Custom Assertions that take one actual object and
 several different Expected Objects that need to be compared with
@@ -181,6 +186,7 @@ Equality Assertion looks only at the objects passed in as parameters.</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Domain Assertion</h3>
 <p>All of the built-in Assertion Methods are domain independent. Custom
 Equality Assertions implement test-specific equality but still compare
@@ -201,6 +207,7 @@ terms. It helps elevate the test into “business-speak.”</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Diagnostic Assertion</h3>
 <p>Sometimes we find ourselves doing Frequent Debugging whenever a test
 fails because the assertions tell us only that something is wrong but
@@ -235,6 +242,7 @@ our tests.</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: verification Method</h3>
 <p>In customer tests, a lot of the complexity of verifying the outcome is
 related to interacting with the SUT. verification Methods are a form
@@ -261,6 +269,7 @@ the test logic in a reusable Test Utility Method (page 599).</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <p>The Custom Assertion is typically implemented as a set of calls to the various 
 built-in Assertion Methods. Depending on how we plan to use it in our tests, 
@@ -284,6 +293,7 @@ Assertion Method, it should not have any side effects, nor should it call the SU
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Custom Assertion Test</h3>
 <p>Testing zealots would also write a Custom Assertion Test (a
 Self-Checking Test—see page 26—for Custom Assertions) to verify the
@@ -401,6 +411,7 @@ error message.</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 <p>In the following example, several test methods repeat the same series
 of assertions:</p>
@@ -411,6 +422,7 @@ each line item. This is clearly a bad case of Test Code Duplication.</p>
 2 つ目のテストは各行について 3 つのアサーションを 2 回繰り返している。
 Test Code Duplication です。</p>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <p>Refactoring zealots can probably see that the solution is to do an
 Extract Method [Fowler] refactoring on these tests. If we pull out all
@@ -429,6 +441,7 @@ Methods on a single object to be passed to the Custom Assertion.</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Custom Assertion</h3>
 <p>In this test, we use a Custom Assertion to verify that <a href="LineItem">LineItem</a>
 matches the expected <a href="LineItem">LineItem</a>(s). For one reason or another, we have
@@ -469,6 +482,7 @@ playing Assertion Roulette when a test fails.</p>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Domain Assertion</h3>
 <p>In this next version of the test, we have further elevated the level
 of the assertions to better communicate the expected outcome of the
@@ -481,6 +495,7 @@ message string in the parameter list and concatenate the messages of
 the individual assertions to one passed in. See Assertion Message
 (page 370) for more details.</p>
 </div>
+<div>
 <h3>Example: verification Method</h3>
 <p>If the exercise SUT and result verification phases of several tests
 are pretty much identical, we can incorporate both phases into our
@@ -522,6 +537,7 @@ Custom Assertion to a verification Method.</p>
 <li>引数の inv の addItemQuantity メソッドを呼び出しているところに注目</li>
 </ul>
 </div>
+<div>
 <h3>Example: Custom Assertion Test</h3>
 <p>This Custom Assertion isn’t particularly complicated, so we may feel
 comfortable without having any automated tests for it. If there is

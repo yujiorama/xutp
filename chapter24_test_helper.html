@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Test Helper</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p><em>Where do we put our test code when it is in reusable Test Utility Methods?</em></p>
 <p><strong>We define a helper class to hold any Test Utility Methods we want to reuse in several tests.</strong></p>
 <ul>
@@ -14,12 +15,14 @@
 <li>テストユーティリティメソッドを置いておく (ry</li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>さまざまなテストケースクラスから利用できるテストユーティリティメソッドを置いておくためのクラスを定義します</li>
 <li>テストコードは、スタティックメソッドやインスタンスメソッドからアクセスします</li>
 </ul>
 </div>
+<div>
 <h2>When to Use It</h2>
 <ul>
 <li>さまざまなテストケースクラスで共有したいロジックや変数があるけど、<em>Testcase Superclass</em> (pp.638) が利用できない</li>
@@ -56,6 +59,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Test Fixture Registry</h3>
 <ul>
 <li><em>Registry</em> (PoEAA)<ul>
@@ -83,6 +87,7 @@
 <li>このケースではフィクスチャーはクラス変数に持つのがよいですね</li>
 </ul>
 </div>
+<div>
 <h3>Variation: Object Mother</h3>
 <ul>
 <li>簡単に言うと、テストのフィクスチャーの生成と管理のためにいくつかのパターンをまとめたパターンです</li>
@@ -104,6 +109,7 @@
 <li>その性質を知りたいときは、個々のパターンを参照したほうがよいでしょう</li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li><em>Test Helper</em> において、テストユーティリティメソッドをどうやって実装するか<ul>
@@ -112,6 +118,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Test Helper Class</h3>
 <ul>
 <li>状態を持たないテストユーティリティメソッドはクラスメソッドとして実装するのが簡単です</li>
@@ -121,6 +128,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Test Helper Object</h3>
 <ul>
 <li>クラスメソッドが使えない場合は、インスタンスメソッドでなんとかしましょう</li>
@@ -137,16 +145,20 @@
 <li><em>Mock Objects</em> 自体の正しさと、交互に検証できて便利になります</li>
 </ul>
 </div>
+<div>
 <h2>Moving Example</h2>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li><em>Move Method</em> だけで済むでしょう</li>
 <li>グローバル変数のように使われていたインスタンス変数は、メソッド引数として渡すようにしましょう</li>
 </ul>
 </div>
+<div>
 <h3>Example: Test Helper with Class Methods</h3>
 </div>
+<div>
 <h3>Example: Test Helper with Instance Methods</h3>
 </div>
 </body>

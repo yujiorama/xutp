@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>State Verification</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <pre>How do we make tests self-checking when there is state to be verified?
 
 We inspect the state of the system under test after it has been
@@ -26,6 +27,7 @@ exercised and compare it to the expected state.</pre>
 </blockquote>
 <pre>State Verification involves inspecting the state of the SUT after it has been exercised.</pre>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>SUT の exercise は、着目しているメソッドの呼び出しによって行います。</li>
@@ -55,6 +57,7 @@ exercised and compare it to the expected state.</pre>
 </ul>
 </blockquote>
 </div>
+<div>
 <h2>When to Use It</h2>
 <ul>
 <li>State Verification は、私達が SUT の最終的な状態に注目しているときに使うべき手法です。</li>
@@ -78,9 +81,11 @@ exercised and compare it to the expected state.</pre>
 </ul>
 </blockquote>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <pre>There are two basic styles of implementing State Verification.</pre>
 </div>
+<div>
 <h3>Variation: Procedural State Verification</h3>
 <ul>
 <li>Procedural State Verification を使うときは、ごく単純に Assertion Method を順番に書いていきます。</li>
@@ -97,6 +102,7 @@ exercised and compare it to the expected state.</pre>
 </ul>
 </blockquote>
 </div>
+<div>
 <h3>Variation: Expected State Specification</h3>
 <ul>
 <li>Expected Stated Specification では、exercise 後の SUT について、期待する属性を持った 1 つ以上のオブジェクトの集合としての仕様を作ります。</li>
@@ -141,6 +147,7 @@ exercised and compare it to the expected state.</pre>
 <li>これらは、要因 (フィクスチャと Expected State Specification の相互影響) を把握することを容易にします。</li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 </div>
 </body>

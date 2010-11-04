@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Testcase Class per Fixture</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p><em>How do we organize our Test Methods onto Testcase Classes?</em></p>
 <p><strong>フィクスチャーの共通性を元にテストメソッドをまとめる</strong></p>
 <ul>
@@ -18,6 +19,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>必要とするテストフィクスチャーを元にテストメソッドを集めます</li>
@@ -25,6 +27,7 @@
 <li>4 フェーズテスト (pp.358) における exercise、および verify フェーズに集中することができます</li>
 </ul>
 </div>
+<div>
 <h2>When to Use It</h2>
 <ul>
 <li>同じフィクスチャーを使うテストメソッドのグループがあり、それらを単純にしたいときのためのパターンです</li>
@@ -46,6 +49,7 @@
 <li>テストの期待結果の要約を含むような命名規約と組み合せることで、<em>Tests as Documentation</em> (pp.23) を推進します</li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li>フィクスチャの生成は <em>Test Automation Framework</em> が setUp メソッドで行う</li>
@@ -89,6 +93,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 <ul>
 <li><em>Testcase Class per Class</em> パターンで構成された Flight クラスのテスト<ul>
@@ -97,6 +102,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li>フィクスチャーの生成における <em>Test Code Duplication</em> (pp.213) を取り除きます</li>
@@ -125,6 +131,7 @@
 <li>リファクタリングによって、テストメソッド名にテストすることと期待結果を含めるような世界から開放された</li>
 </ul>
 </div>
+<div>
 <h3>Example: Testcase Class per Fixture</h3>
 </div>
 </body>

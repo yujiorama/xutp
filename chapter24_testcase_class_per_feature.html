@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Testcase Class per Feature</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p><em>How do we organize our Test Methods onto Testcase Classes?</em></p>
 <p><em>We group the Test Methods onto Testcase Classes based on which testable feature of the SUT they exercise.</em></p>
 <ul>
@@ -18,6 +19,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>テストメソッドが、検証されるべき機能ごとに用意されたテストケースクラスに集まります</li>
@@ -25,6 +27,7 @@
 <li>特定の機能についてのテスト結果を一瞥することができるようになります</li>
 </ul>
 </div>
+<div>
 <h2>When to Use It</h2>
 <ul>
 <li><em>Testcase Class per Feature</em> を使う状況<ul>
@@ -50,6 +53,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Testcase Class per Method</h3>
 <ul>
 <li>引数に様々なパラメータを受け取るメソッドには、多くのテストが必要になります</li>
@@ -57,6 +61,7 @@
 <li>残りは他のテストケースクラスに入れましょう</li>
 </ul>
 </div>
+<div>
 <h3>Variation: Testcase Class per Feature</h3>
 <ul>
 <li>あるクラスの "feature" は普通は 1 つの操作ないし関数になります</li>
@@ -71,6 +76,7 @@
 <li>そこで私達は、あるオブジェクトの読み書きをすることを 1 つの "feature" として取り扱っています</li>
 </ul>
 </div>
+<div>
 <h3>Variation: Testcase Class per User Story</h3>
 <ul>
 <li>それぞれのストーリーのテストメソッドを、異なるテストケースクラスに置きます<ul>
@@ -84,6 +90,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li>テストケースクラスが SUT の 1 つの機能に対する要求を示すようになります<ul>
@@ -99,6 +106,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 <ul>
 <li>例では、<em>Flight</em> クラスのテストメソッドを <em>Testcase Class per Class</em> パターンによって構成しています<ul>
@@ -117,6 +125,7 @@
 <li><em>Testcase Class per Future</em> パターンにリファクタリングするにはよい例でしょう</li>
 </ul>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li><em>Testcase Class per Future</em> パターンに変換することで<ul>
@@ -163,6 +172,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Testcase Class per Feature</h3>
 <ul>
 <li>メソッド名以外 (つまりメソッドの実装) は変更していません</li>

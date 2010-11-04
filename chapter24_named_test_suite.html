@@ -5,14 +5,17 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Named Test Suite (pp.592)</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 </div>
+<div>
 <h3>前書き</h3>
 <p><em>恣意的なテストのグループがあるとき、どうやってテストを実行したらいいの?</em></p>
 <p><strong>グループとして実行させたいテストの集合を含んだ、適切な名前のテストスイートを定義します。</strong></p>
 <p><a href="https://cacoo.com/diagrams/2iXo4LSsCvd7qDFQ">https://cacoo.com/diagrams/2iXo4LSsCvd7qDFQ</a></p>
 </div>
+<div>
 <h2>How It Works (pp.592)</h2>
 <ul>
 <li>無数のテストがある<ul>
@@ -32,6 +35,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>When to Use It (pp.593)</h2>
 <ul>
 <li>Intent-Revealing Name による特別な <em>Test Suite Factory</em> を定義する<ul>
@@ -45,6 +49,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: <a href="AllTests">AllTests</a> Suite (pp.593)</h3>
 <ul>
 <li>一見矛盾した要求<ul>
@@ -65,6 +70,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Subset Suite (pp.593)</h3>
 <ul>
 <li>開発者はスローテスト (pp.253) を実行したがらない<ul>
@@ -87,6 +93,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Single Test Suite (pp.593)</h3>
 <ul>
 <li><em>Subset Suite</em> を退化させたもの<ul>
@@ -99,6 +106,7 @@
 <li>大抵のテスト自動化フレームワークでは、同じワークスペース中で <em>Testcase Class</em> をオープンにしている</li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes (pp.594)</h2>
 <ul>
 <li>概念とその実現方法は独立している<ul>
@@ -125,9 +133,11 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Refactoring Notes (pp.594)</h2>
 <p><em>Named Test Suite</em> へのリファクタリングの手順は、その variant に依存したものになる。</p>
 </div>
+<div>
 <h3>Examples: <a href="AllTests">AllTests</a> Suite (pp.594)</h3>
 <ul>
 <li><em><a href="AllTests">AllTests</a> Suite</em> は、機能によって分類した異なる部分集合であるテストをすべて実行する。</li>
@@ -159,6 +169,7 @@
 <li>IDE (この場合は Eclipse) は、これらのコメントの間に半自動的な <em>Test Discovery</em> によってコードを再生成する。</li>
 </ul>
 </div>
+<div>
 <h3>Example: Special-Purpose Suite (pp.595)</h3>
 <ul>
 <li>業務ロジックを実装したクラスを含む 3 つのパッケージ (A, B, C) があるとする。</li>
@@ -208,6 +219,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Single Test Suite (pp.596)</h3>
 <ul>
 <li>デバッガを使っているなどの特殊な状況<ul>
@@ -261,6 +273,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Smoke Test Suite (pp.597)</h3>
 <ul>
 <li><em>Special-Purpose Suite</em> の考え方と <em>Single Test Suite</em> の方法によって構築する。<ul>

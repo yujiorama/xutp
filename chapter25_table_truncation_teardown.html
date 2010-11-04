@@ -5,8 +5,9 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Table Truncation Teardown</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 <p><em>How do we tear down the Test Fixture when it is in a relational database?</em></p>
 <p><strong>We truncate the tables modified during the test to tear down the fixture.</strong></p>
 <ul>
@@ -39,11 +40,13 @@
 <li>RDB を使ったシステムのテストには、<em>TRUNCATE</em> コマンドというアドバンテージがあります</li>
 </ul>
 </div>
+<div>
 <h2>How It Works</h2>
 <ul>
 <li>永続的なフィクスチャーが不要なら、それぞれのテーブルに対して <em>TRUNCATE</em> コマンドを実行する</li>
 </ul>
 </div>
+<div>
 <h2>When To Use It</h2>
 <ul>
 <li><em>Persistent Fresh Fixture</em> を使っているときはたいていの場合 <em>Table Truncation Teardown</em> を使います<ul>
@@ -71,6 +74,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes</h2>
 <ul>
 <li>teardown のコードをどこに書けばいいか</li>
@@ -123,6 +127,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Lazy Teardown</h3>
 <ul>
 <li><em>Shared Fixture</em> と一緒に使える数少ない teardown 戦略</li>
@@ -134,6 +139,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivating Example</h2>
 <ul>
 <li><em>Guaranteed In-line Teardown</em> の例です</li>
@@ -157,29 +163,34 @@ public void TestGetFlightsByOrigin_NoInboundFlights() {
     }
 }</pre>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li>複数リソースの <em>In-line Teardown</em> における問題を、<em>Table Truncation Teardown</em> で解消します</li>
 <li>リファクタリングの要旨は、<em>finally</em> 節のメソッド呼び出しを <em><a href="CleanDatabase">CleanDatabase</a></em> だけにしたことです</li>
 </ul>
 </div>
+<div>
 <h3>Example: Table Truncation (Delegated) Teardown Test</h3>
 <ul>
 <li><em>finally</em> 節のメソッド呼び出しを <em><a href="CleanDatabase">CleanDatabase</a></em> に修正</li>
 </ul>
 </div>
+<div>
 <h3>Example:: Lazy Teardown Test</h3>
 <ul>
 <li><em>try</em> 節の先頭で <em><a href="CleanDatabase">CleanDatabase</a></em> を呼ぶように修正</li>
 <li>データベースは必ず初期化されている</li>
 </ul>
 </div>
+<div>
 <h3>Example: Table Truncation Teardown Using SQL</h3>
 <ul>
 <li>SQL による <em><a href="CleanDatabase">CleanDatabase</a></em> メソッドの実装です</li>
 <li><em>SQL Server</em> 用なので <strong>DELETE * FROM ...</strong> の SQL を実行しています</li>
 </ul>
 </div>
+<div>
 <h3>Example: Table Truncation Teardown Using ORM</h3>
 <ul>
 <li>NHibernate による <em><a href="CleanDatabase">CleanDatabase</a></em> メソッドの実装です</li>

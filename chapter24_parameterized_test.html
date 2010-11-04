@@ -5,9 +5,11 @@
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 <h1>Parameterized Test (pp.607)</h1>
-<address>yujiorama</address></div><div>
+<address>yujiorama</address>
 </div>
+<div>
 <h3>前書き</h3>
 <p><em>同じロジックがいくつものテストコードに現われる場合、どうやって Test Code Duplication を減らせばよいか</em></p>
 <p><strong>フィクスチャーのセットアップと結果の検証に必要なパラメータを、テストの完全なライフサイクルを実装したユーティリティメソッドに渡しましょう。</strong></p>
@@ -33,6 +35,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>How It Works (pp. 608)</h2>
 <ul>
 <li>共通的なロジックを括り出してユーティリティメソッドにする<ul>
@@ -56,6 +59,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>When to Use It (pp. 608)</h2>
 <ul>
 <li><em>Test Code Duplication</em> になっているときはいつでも<ul>
@@ -87,6 +91,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Implementation Notes (pp. 608)</h2>
 <ul>
 <li><em>Parameterized Test</em> の名前は <em>Intention Revealing Name</em> であるべき<ul>
@@ -135,6 +140,7 @@
 どんなものでも、このテストにおける SUT の役割を担うものは DOC となる。
 (このことを説明しようとすると頭が痛くなる。本当に複雑なことではないし、実際にやろうとするときいろいろな気付きが得られる)</pre>
 </div>
+<div>
 <h3>Variation: Tabular Test (pp. 609)</h3>
 <ul>
 <li>さまざまなこの本のレビューアが <em>Parameterized Test</em> の変形として書くべきだと勧めてきた<ul>
@@ -179,6 +185,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Incremental Tabular Test (pp. 609)</h3>
 <ul>
 <li><em>Tabular Test</em> の変形</li>
@@ -198,6 +205,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Variation: Loop-Driven Test (pp. 610)</h3>
 <ul>
 <li>特定のリストやある範囲の全ての値について SUT をテストしたい<ul>
@@ -221,6 +229,7 @@
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Motivation Example</h2>
 <ul>
 <li>この本を書くときに使った Ruby による Web 出版インフラから持ってきた runit のテストコード</li>
@@ -276,6 +285,7 @@ end</pre>
 </ul></li>
 </ul>
 </div>
+<div>
 <h2>Refactoring Notes</h2>
 <ul>
 <li><em>Parameterized Test</em> へのリファクタリングは <em>Custom Assertion</em> へのそれに似てる</li>
@@ -284,6 +294,7 @@ end</pre>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Parameterized Test</h3>
 <ul>
 <li>これらのテストは 2 つのステップに変えることができる<ul>
@@ -333,6 +344,7 @@ end</pre>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Independent Tabular Test</h3>
 <ul>
 <li>テスト条件をコンパクトに表現できているでしょう ?<ul>
@@ -358,6 +370,7 @@ end</pre>
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Incremental Tabular Test</h3>
 <ul>
 <li><em>Tabular Test</em> は 1 つのテストメソッドとして定義する</li>
@@ -385,6 +398,7 @@ end</pre>
     }
 }</pre>
 </div>
+<div>
 <h3>Example: Tabular Test with Framework Support (<a href="MbUnit">MbUnit</a>)</h3>
 <ul>
 <li><a href="MbUnit">MbUnit</a> のドキュメントにある <a href="RowTest">RowTest</a> アトリビュートの解説</li>
@@ -404,6 +418,7 @@ public void tAdd(Int32 x, Int32 y, Int32 expectedSum)
     Assert.AAreEqual(expectedSum, Sum);
 }</pre>
 </div>
+<div>
 <h3>Example: Loop-Driven Test (Enumerated Values)</h3>
 <pre>public void testMultipleValueSets() {
     // Set up fixture
@@ -433,6 +448,7 @@ private String message(int i) {
 </ul></li>
 </ul>
 </div>
+<div>
 <h3>Example: Loop-Driven Test (Calculated Values)</h3>
 <ul>
 <li><em>special case</em> が <em>Production Logic in Test</em> になってる</li>
@@ -461,6 +477,7 @@ private String message(int i, int j) {
                     + String.valueOf(j)+ ")"
 }</pre>
 </div>
+<div>
 <h2>Furthre Reading</h2>
 <ul>
 <li>DDSteps extension for JUnit<ul>
