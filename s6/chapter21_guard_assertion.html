@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="s6.js"></script>
+<script type="text/javascript" src="s6setup.js"></script>
+</head>
+<body>
+<h1>Guard Assertion</h1>
+<address>yujiorama</address></div><div>
+<ul>
+<li>How do we avoid Conditional Test Logic ?<ul>
+<li>We replace an if statement in a test with an assertion that fails that test if not ssatisfied</li>
+</ul></li>
+</ul>
+<ul>
+<li>検証ロジックが失敗するとはどういうことか ?<ul>
+<li>SUT からの返却値が期待した通りになっていない</li>
+</ul></li>
+<li>テストの途中で予期しない問題が発生した場合<ul>
+<li>テストエラーではなくテスト失敗となりがち</li>
+</ul></li>
+<li>テストランナー (377ページ)<ul>
+<li>できるかぎりの診断情報を出力しようとする</li>
+</ul></li>
+<li>自動化テスト<ul>
+<li>部分的に状態を調べた結果のレポートを出力する</li>
+</ul></li>
+</ul>
+</div>
+<h2>How It Works</h2>
+<ul>
+<li>テストには通過するか失敗するかしかない</li>
+<li>テストは Assertion Method (362ページ) によって失敗する</li>
+<li>Conditional Test Logic をアサーションで置き換える<ul>
+<li>テストエラーが起きる場合をテスト失敗にすることができる</li>
+</ul></li>
+<li>このパターンのメリット<ul>
+<li>Guard Assertion の条件が真になることをドキュメント化する</li>
+<li>conditional logic の結果から推測していた事実が、Guard Assertion の成功/失敗として明らかになる</li>
+</ul></li>
+</ul>
+</div>
+<h2>When To Use It</h2>
+<ul>
+<li>条件によってテストをエラー終了させてしまうような式を置き換えるために使うパターン</li>
+<li>if then else fail コードを導入する代わり</li>
+<li>exercise フェーズと verify フェーズの間に導入する</li>
+</ul>
+</div>
+<h3>Variation: Shared Fixture State Assertion</h3>
+<ul>
+<li>Shared Fixture を使っている場合</li>
+<li>exercise フェーズの前に、fixture がテストの事前条件を満たしているかどうかを検証できる</li>
+<li>テストの読者に、どの fixture を使うのかを示すことができる</li>
+<li>Tests as Documentation (23ページ) を促進する</li>
+</ul>
+</div>
+<h2>Implementation Notes</h2>
+<ul>
+<li>assertNotNil<ul>
+<li>Outcome Assertions</li>
+</ul></li>
+<li>assertEquals<ul>
+<li>Equality Assertions</li>
+</ul></li>
+</ul>
+</div>
+<h2>Motivating Example</h2>
+</div>
+<h2>Refactoring Notes</h2>
+<ul>
+<li>Replace Nested Conditinal with Guard Clauses を使う<ul>
+<li>蜘蛛の巣コードをまっすぐのシーケンスに直します</li>
+<li>テストコードでは、条件分岐 1 つでも多すぎる</li>
+</ul></li>
+<li>次のように変更<ul>
+<li>オブジェクトの null チェック<ul>
+<li>Stated Outcome Assertion で置き換え</li>
+</ul></li>
+<li>コレクション中のオブジェクト数のチェック<ul>
+<li>Equality Assertion で置き換え</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<h3>Example: Simple Guard Assertion</h3>
+</div>
+<h3>Example: Shared Fixture Guard Assertion</h3>
+</div>
+</body>
+</html>

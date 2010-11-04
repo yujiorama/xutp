@@ -1,0 +1,275 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="s6.js"></script>
+<script type="text/javascript" src="s6setup.js"></script>
+</head>
+<body>
+<h1>Transaction Rollback Teardown</h1>
+<address>yujiorama</address></div><div>
+<p><em>How do we tear down the Test Fixture when it is in a relational database?</em></p>
+<p><strong>We roll back the uncommitted test transaction as part of the teardown.</strong></p>
+<ul>
+<li>繰り返し実行可能で (ry</li>
+<li>あらゆる環境を適切に掃除することを (ry</li>
+</ul>
+<ul>
+<li>コミットしてないせいで残ってしまったデータベースへの変更は、ロールバックで回避できます</li>
+</ul>
+</div>
+<h2>How It Works</h2>
+<ul>
+<li>私たちのテストの振る舞い<ul>
+<li>新しいトランザクションを開始します</li>
+<li>フィクスチャーを生成します</li>
+<li>SUT のテストを実行します</li>
+<li>テストの出力を検証します</li>
+<li>トランザクションをロールバックします</li>
+</ul></li>
+</ul>
+</div>
+<h2>When to Use It</h2>
+<ul>
+<li><em>Fresh Fixture</em> (pp.311) とロールバック可能なデータベースを使っているときに使えるパターンです<ul>
+<li>他にもいくつか前提条件があります</li>
+</ul></li>
+</ul>
+<ul>
+<li>SUT が、トランザクション中で呼ばれることを想定したメソッドを公開しているような状況があります<ul>
+<li><em>Humber Transaction Controller</em> (pp.695)</li>
+<li>コントローラがチープな場合 ?</li>
+</ul></li>
+</ul>
+<ul>
+<li>メソッドがトランザクションを開始しないし、コミットもしない<ul>
+<li>テスト駆動開発をしているなら、<em>Transaction Rollback Teardown</em> を応用すると最終的にこういう設計になります</li>
+</ul></li>
+</ul>
+<ul>
+<li>既存システムに後付けで <em>Transaction Rollback Teardown</em> なテストを書くためには<ul>
+<li>事前に <em>Humble Transaction Controller</em> を使うようにリファクタリングしなければなりません</li>
+</ul></li>
+</ul>
+<ul>
+<li>テストの前後でデータベースの状態が変わらないところはナイスです</li>
+</ul>
+<ul>
+<li>どれを掃除するか、または掃除しないかを決める必要がありません</li>
+</ul>
+<ul>
+<li>データベースのスキーマやデータの変更は、teardown ロジックに何も影響しません</li>
+</ul>
+<ul>
+<li><em>Table Truncation Teardown</em> (pp.661) よりシンプルです</li>
+</ul>
+<ul>
+<li>実際のデータベースでテストを実行するときの注意点<ul>
+<li>データベースアクセスのないテストに対して 50 倍時間がかかります</li>
+<li><em>In-Memory Database</em> (pp.551) に置き換えない限り <em>Slow Tests</em> (pp.253) になってしまいます</li>
+<li>トランザクション機能に依存してるので、ACID をサポートしてない単純な Fake Database では荷が重いです</li>
+<li>どこかでトランザクションがコミットされてしまっても何もできません</li>
+</ul></li>
+</ul>
+<ul>
+<li>よく分からない箇所でコミットされるせいで混乱した例を紹介しましょう</li>
+</ul>
+<p><a href="担当割当表/PARTⅢ/Transaction Rollback Teardown/Column">担当割当表/PARTⅢ/Transaction Rollback Teardown/Column</a></p>
+</div>
+<h2>Implementation Notes</h2>
+<ul>
+<li>本体だけでこのパターンをサポートしている xUnit ファミリーはあまり多くありません<ul>
+<li>オープンソースの拡張はいくつかあります</li>
+</ul></li>
+<li>もし何もなくても、自分で実装するのは簡単です</li>
+<li>真剣に考慮すべきは、テストに、SUT のトランザクション不要なメソッドにアクセスさせることです<ul>
+<li>ほとんどのドメインオブジェクトはトランザクション不要なので、ドメインオブジェクトのユニットテストではそれほど問題ではないです</li>
+</ul></li>
+<li><em>Subcutaneous Test</em> (pp.337) を書くときに問題になるでしょう<ul>
+<li><em>Service Facade</em> [CJ2EEP] がトランザクション管理をするからです</li>
+<li>トランザクション不要なメソッドを公開するために、<em>Humble Transaction Controller</em> パターンへのリファクタリングが必要かもしれません</li>
+<li>トランザクション不要なメソッドを、<em>Decorator</em> [GOF] に委譲することも可能です<ul>
+<li><em>Poor Mans Humble Object</em> と呼ばれる方法です</li>
+</ul></li>
+</ul></li>
+</ul>
+<ul>
+<li>クライアントから見えないメソッドがあるなら、テストのためにこれを公開しなければなりません<ul>
+<li><em>public</em> にしてテストすることができます</li>
+<li><em>Test-Specific Subclass</em> (pp.579) によって間接的に公開することもできます</li>
+<li><em>Extract Tesable Component</em> (pp.735) によって、トランザクション不要なメソッドを他のクラスの公開メソッドにすることもできます</li>
+</ul></li>
+</ul>
+<ul>
+<li>更新されたデータの読み込みは、同一のトランザクション内で起こなわれなければなりません</li>
+<li>普通は問題ないです</li>
+<li>シミュレーションやテストが、並列に実行されるときは問題になります</li>
+<li>ORM を使っている場合は、ORM に変更をデータベースに書き込ませなければなりません<ul>
+<li><em><a href="EntityManager">EntityManager</a>.flush</em> とか (EJB 3.0)</li>
+<li>データベースを直接読むオブジェクトがいるから</li>
+</ul></li>
+</ul>
+</div>
+<h2>Motivating Example</h2>
+<ul>
+<li><em>Guaranteed In-line Teardown</em> の例です</li>
+<li>このコードは簡単に書けないし、正確でもないです</li>
+</ul>
+<pre>[Test]
+public void TestGetFlightsByOrigin_NoInboundFlights() {
+    // Fixture Setup
+    long OutboundAirport = CreateTestAirport("1OF");
+    long InboundAirport = CreateTestAirport("1IF");
+    FlightDto ExpFlightDto = null;
+    try {
+        ExpFlightDto = CreateTestFlight(OutboundAirport, InboundAirport);
+        // Exercise System IList FlightsAtDestination1 =
+            Facade.GetFlightsByOriginAirport( InboundAirport);
+        // Verify Outcome Assert.AreEqual( 0, FlightsAtDestination1.Count );
+    } finally {
+        Facade.RemoveFlight( ExpFlightDto.FlightNumber );
+        Facade.RemoveAirport( OutboundAirport );
+        Facade.RemoveAirport( InboundAirport );
+    }
+}</pre>
+</div>
+<h2>Refactoring Notes</h2>
+<ul>
+<li>setUp メソッドでフィクスチャーの生成をする前に <em>beginTransaction</em> を読んでおかなければなりません</li>
+<li><em>Creation Method</em> (pp.415) を使っているなら、トランザクションをコミットしないように修正しましょう</li>
+</ul>
+</div>
+<h3>Example: Object Transaction Rollback Teardown</h3>
+<pre>public void testGetFlightsByOrigin_NoInboundFlight_TRBTD()
+    throws Exception {
+    // Fixture Setup
+    TransactionManager.beginTransaction();
+    BigDecimal outboundAirport = createTestAirPort("10F");
+    BigDecimal inboundAirport = null;
+    FlightDto expectedFlightDto = null;
+    try {
+        inboundAirport = createTestAirPort("11F");
+        expectedFlightDto = createTestFlight(outboundAirport, inboundAirport);
+        // Exercise System
+        List flightsAtDestination1 = facade.getFlightsByOriginAirport(inboundAirport);
+        // Verify Outcome
+        assertEquals(0, flightsAtDestination1.size());
+    } finally {
+        TransactionManager.abortTransaction();
+    }
+}</pre>
+<ul>
+<li>teardown コードを <em>abortTransaction</em> の呼び出しに変更しました</li>
+<li><em>In-line Teardown</em> なので、まだ <em>finally</em> ブロックは必要です<ul>
+<li><em>tearDown</em> メソッドへ移動するのは簡単なことです</li>
+</ul></li>
+</ul>
+<ul>
+<li>この例では生成されたフィクスチャーを元に戻していません</li>
+<li>フィクスチャーのオブジェクトはデータベースにコミットされていないからです</li>
+<li>ACID の "C" (consistent:一貫性) があるからです</li>
+</ul>
+<ul>
+<li><em>creation method</em> はトランザクション不要バージョンの facade メソッドを呼んでいます</li>
+<li><em>Poor Mans Humble Object</em> の一例になります</li>
+<li><em>getFlighsFromAirport</em> などのメソッドがトランザクションを開始したり終了したりするなら、同じように修正しないといけません</li>
+</ul>
+<pre>private BigDecimal createTestAirPort(String airPortName)
+    throws FlightBookingException {
+    BigDecimal newAirportId =
+          facade._createAirport(airportName,
+                                " Airport" + airportName,
+                                "City" + airportName);
+   return newAirportId;
+}</pre>
+<pre>public class Facade {
+
+    public BigDecimal createAirport(String airportCode,
+                                    String name,
+                                    String nearbyCity)
+             throws FlightBookingException {
+        TransactionManager.beginTransaction();
+        BigDecimal airportId = _createAirport(airportCode, name, nearbyCity);
+        TransactionManager.commitTransaction();
+        return airportId;
+    }
+
+    // private, nontransactional version for use by tests
+    BigDecimal _createAirport(String airportCode,
+                              String name,
+                              String nearbyCity)
+             throws FlightBookingException, InavlidArgumentException {
+        Airport airport = dataAccess.createAirport(airportCode,name, nearbyCity);
+        logMessage("CreateFlight", airport.getCode());
+        rerutnr airport.getId();
+    }
+
+}</pre>
+</div>
+<h3>Example: Database Transaction Rollback Teardown</h3>
+<ul>
+<li>前の例ではデータベースの存在をデータアクセスレイヤのコードで隠蔽してました</li>
+<li><em>Domain Model</em> [PEAA] を使っている場合の一般的なプラクティスです</li>
+</ul>
+<ul>
+<li><em>Transaction Rollback Teardown</em> は、アプリケーションコードからデータベースを直接操作しているときでも使えます<ul>
+<li><em>Transaction Script</em>[PEAA] として知られています</li>
+</ul></li>
+<li>.NET フレームワークの行セットを使っているときの例を示します</li>
+</ul>
+<pre>[TestFixture]
+public class TransactionRollbackTearDownTest
+{
+    private SqlConnection _Connection;
+    private SqlTransaction _Transaction;
+
+    public TransactionRollbackTearDownTest()
+    {
+    }
+
+    [SetUp]
+    public void Setup()
+    {
+        string dbConnectionString = ConfigurationSettings.AppSettings.Get("DbConnectionString");
+        _Connection = new SqlConnection(dbConnectionString);
+        _Connection.Open();
+        _Transaction = _Connection.BeginTransaction();
+    }
+
+    [TearDow]
+    public void TearDown()
+    {
+        _Transaction.Rollback();
+        _Connection.CLose();
+        // Avoid NUnit "instance behavior" bug
+        _Transaction = null;
+        _Connection = null;
+    }
+
+    [Test]
+    public void AnNUnitTest()
+    {
+        const string C_INSERT_SQL =
+            "INSERT INTO Invoice(Amount, Tax, CustomerId)" +
+            " Values({0}, {1}, {2})";
+        SqlCommand cmd = _Connection.CreateCommand();
+        cmd.Transaction = _Transaction;
+        cmd.CommandText = string.Format(
+            C_INSERT_SQL,
+            new object[]{"100.00", "7.00", 2001});
+        // Exercise SUT
+        cmd.ExecuteNonQuery();
+        // Verify result
+        // etc.
+    }
+}</pre>
+<ul>
+<li><em>Implicit Setup</em> (pp.424) でコネクションを確立し、トランザクションを開始します</li>
+<li>テストメソッドが実行されます</li>
+<li><em>Implicit Teardown</em> (pp.516) でトランザクションのロールバックとコネクションの切断を行います<ul>
+<li><em>NUnit</em> なのでインスタンス変数には null を代入します (テストオブジェクトが使い回されるから)</li>
+<li>詳しくは pp.384 のコラムを読んでください</li>
+</ul></li>
+</ul>
+</div>
+</body>
+</html>

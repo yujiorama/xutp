@@ -1,0 +1,152 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="s6.js"></script>
+<script type="text/javascript" src="s6setup.js"></script>
+</head>
+<body>
+<h1>Delta Assertion</h1>
+<address>yujiorama</address></div><div>
+<ul>
+<li>フィクスチャの初期状態は操作できない環境でセルフチェックテストを実行する</li>
+<li>exerciseの前後における差異を元にしたアサーションを作成する</li>
+</ul>
+<ul>
+<li>Delta Assertion<ul>
+<li>Shared Fixture に存在するデータに対する依存性を軽減する</li>
+</ul></li>
+<li>テストデータベースとして shared fixture (317ページ) を使っている<ul>
+<li>SUTのexercise後のfixtureのコンテンツ状態に依存したアサーションを書くのは大変</li>
+<li>他のテストでfixtureに作られたオブジェクトがアサーションを失敗させてしまうかも</li>
+</ul></li>
+<li>Database Partitioning Scheme (Database Sandbox, 650ページ) を使えば他のテストから独立できる<ul>
+<li>その選択肢が選べないときはどうする?</li>
+</ul></li>
+</ul>
+</div>
+<h2>How it Works</h2>
+<ul>
+<li>exercise の前にやること<ul>
+<li>Shared Fixture の適当なスナップショットを取得する</li>
+</ul></li>
+<li>exercise の後にやること<ul>
+<li>取得したスナップショットに相対的なアサーションを定義する</li>
+</ul></li>
+</ul>
+<ul>
+<li>Delta Assertion の例<ul>
+<li>変更されたオブジェクトの数は正しいか</li>
+<li>SUTから返されるオブジェクトの集合のコンテンツは期待通りに増えているか</li>
+</ul></li>
+</ul>
+</div>
+<h2>When Use It</h2>
+<ul>
+<li>使いどき<ul>
+<li>test fixture のコントロールが無い</li>
+<li>Interacting Test(Erratic Test, 228ページ) を無くしたい</li>
+<li>同じテストランナーで複数のテストを実行する</li>
+<li>SUTとフィクスチャを変更するのが私たちのテストだけである</li>
+</ul></li>
+</ul>
+<ul>
+<li>メリット<ul>
+<li>テストコードに、フィクスチャに対する柔軟性ができる</li>
+<li>メモリ/データリークの検出ができる<ul>
+<li>Implicit Teardown(516ページ)と合わせて使う</li>
+<li>詳しくは 487 ページのコラムを参照</li>
+</ul></li>
+</ul></li>
+</ul>
+<ul>
+<li>できないこと<ul>
+<li>複数プロセスが並行して実行するような Test Run War は防げない</li>
+</ul></li>
+</ul>
+</div>
+<h2>Implementation Notes</h2>
+<ul>
+<li>exercise前にできることは 1 つ<ul>
+<li>スナップショットを取得した後で、SUT がスナップショットの状態を変更できないようにする</li>
+</ul></li>
+<li>例:スナップショットがオブジェクトの集合のとき<ul>
+<li>ディープコピー</li>
+<li>シャローコピーでは、コレクションが参照してるオブジェクトをSUTから変更できてしまう</li>
+</ul></li>
+<li>exercise後にできることは複数<ul>
+<li>何もしない<ul>
+<li>(1)個数を数えて、(2)スナップショットに含まれてるオブジェクトが存在することを確認し、(3)新たなExpected Object(462ページ)が存在することを確認する</li>
+</ul></li>
+<li>スナップショットに含まれるものは全部削除<ul>
+<li>新たなExpected Objectsが存在することを確認する</li>
+</ul></li>
+<li>実現方法<ul>
+<li>Custom Assertion(474ページ)</li>
+<li>Verification Method</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<h2>Using Delta Assertions to Detect Data Leakage</h2>
+<ul>
+<li>カスタマーテスト実行後のテストフィクスチャの初期化方法について実験していた</li>
+<li>私達のテストはデータベースにアクセスして、いくつかのオブジェクトを残していた</li>
+<li>このとき問題になっていたこと<ul>
+<li>Unrepeatable Test</li>
+<li>Interacting Test</li>
+<li>Slow Test</li>
+</ul></li>
+<li>Automated Tear down で、テスト中に作られたオブジェクトを記録するようにした<ul>
+<li>データベースをスタブ化できることが分かった (Fake Database (551ページ))</li>
+</ul></li>
+<li>データベースがフェイクでもリアルでも同じテストを実行できるようにした<ul>
+<li>相互作用に起因する問題は解決した</li>
+<li>テストはオブジェクトを残し続けていた</li>
+<li>どのテストが悪いのかつきとめる必要がある</li>
+</ul></li>
+</ul>
+<ul>
+<li>解決方法はシンプル<ul>
+<li>フェイクデータベースの中を見た<ul>
+<li>実装はハッシュテーブルにオブジェクト数を返すメソッドを追加したもの</li>
+</ul></li>
+</ul></li>
+</ul>
+<ul>
+<li>全てのオブジェクトを初期化できていることを検証した<ul>
+<li>setup メソッドでデータベースのオブジェクト数を取得してインスタンス変数に記録</li>
+<li>記録したオブジェクト数を Equality Assertion の期待値とする</li>
+</ul></li>
+<li>どのテストメソッドがデータをリークしているかすぐに分かった</li>
+</ul>
+<ul>
+<li>私達の気付き<ul>
+<li>同じテストを繰り返し実行できることの有用性</li>
+<li>データベースをインメモリで持つことの有用性</li>
+</ul></li>
+</ul>
+<ul>
+<li>社内のテストケーススーパークラスを使ってたら teardown で落ちた<ul>
+<li>Delta Assertion を実装してる</li>
+<li>メモリリークの検出が同じように出来た</li>
+</ul></li>
+</ul>
+</div>
+<h2>Motivating Example</h2>
+<p>Shared Fixture を使っているため、他のテストを実行すると失敗してしまうかもしれないテスト。</p>
+</div>
+<h2>Refactoring Notes</h2>
+<ul>
+<li>Delta Assertion を使うようにテストを変更する<ul>
+<li>後で検証するデータ(もしくはオブジェクト集合) のスナップショットを取得する</li>
+<li>アサーションの内容を、事前データと事後データの差異を検証するものに変更する</li>
+</ul></li>
+<li>Conditional Test Logic にならないように、カスタムアサーションを導入する<ul>
+<li>事前データを引数に取れるようにしたもの</li>
+</ul></li>
+</ul>
+</div>
+<h3>Example: Delta Assertion</h3>
+</div>
+</body>
+</html>

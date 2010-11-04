@@ -1,0 +1,267 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<script type="text/javascript" src="s6.js"></script>
+<script type="text/javascript" src="s6setup.js"></script>
+</head>
+<body>
+<h1>Stored Procedure Test</h1>
+<address>yujiorama</address></div><div>
+<p><em>How can we verify logic independently when we have stored procedures?</em></p>
+<p><strong>We write Fully Automated Tests for each stored procedure.</strong></p>
+<ul>
+<li>アプリケーションには、その状態を永続化するためにデータベースを使用するものがあります<ul>
+<li>中には、ストアドプロシージャやトリガーを使ってパフォーマンスを稼いだり、更新処理を共通化したりしてます</li>
+</ul></li>
+</ul>
+<ul>
+<li>このパターンは、データベースの中に置いてあるコードについて、テスト自動化のプラクティスを適用します</li>
+</ul>
+</div>
+<h2>How It Works</h2>
+<ul>
+<li>アプリケーションとは独立して、ストアドプロシージャのためのユニットテストを書きます<ul>
+<li>レイヤー交差テスト、回帰テストになります</li>
+<li>テスト対象のストアドプロシージャの性質によって変わります</li>
+</ul></li>
+</ul>
+</div>
+<h2>When to Use it</h2>
+<ul>
+<li>重要なロジックをストアドプロシージャに置いてるなら、テストを書くべきです<ul>
+<li>ストアドプロシージャが SUT になります</li>
+<li>アプリケーションとは独立して検証できるようになります</li>
+</ul></li>
+</ul>
+<ul>
+<li><em>Stored Procedure Tests</em> が重要なテストになるケース<ul>
+<li>1 つ以上のアプリケーションから利用されるような場合</li>
+<li>他のチームによって開発される場合</li>
+<li>アプリケーションのテストによって適切にテストされることが保証できない場合<ul>
+<li>Indirect Testing のようなテスト</li>
+</ul></li>
+</ul></li>
+</ul>
+<ul>
+<li>ストアドプロシージャが呼ばれるような全ての状況を列挙し、その振る舞いを確認できます<ul>
+<li>状況をよく検討することで、設計を進歩できます</li>
+<li>TDD の普遍的な成果です</li>
+</ul></li>
+</ul>
+</div>
+<h2>Implementation Notes</h2>
+<ol>
+<li>ストアドプロシージャと同じ言語でテストを書いて、データベース側で実行する</li>
+<li>アプリケーションの言語でテストを書いて、<em>Remote Proxy</em>[GOF] でストアドプロシージャにアクセスする</li>
+</ol>
+<ul>
+<li>どちらの方法でもテストは書けます</li>
+<li>ストアドプロシージャの開発担当者は (1) の方法でユニットテストを書くでしょう</li>
+<li>アプリケーションの開発担当は (2) の方法で受け入れテストを書くでしょう<ul>
+<li>そしてアプリケーションのビルド時に実行するでしょう</li>
+</ul></li>
+</ul>
+<ul>
+<li>どちらにしても、フィクスチャーの生成や、期待結果の検証をどうするか決めなければなりません<ul>
+<li>"before": テスト前のデータベース</li>
+<li>"after": cascading delete など期待される振る舞いの後のデータベース</li>
+</ul></li>
+</ul>
+<ul>
+<li>テストは、データの insert や verify をするために直接データベースとやりとりすることになるでしょう<ul>
+<li><em>Back Door Manipulation</em> (pp.327)</li>
+<li>他のストアドプロシージャも使えるでしょう (回帰テストの一種)</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: In-Database Stored Procedure Test</h3>
+<ul>
+<li>テスト自動化に xUnit を使う利点は、テスト対象のコードと同じ言語でテストを書けることです</li>
+</ul>
+<ul>
+<li>新たな言語やデバッガの学習をしなくてもよいので、開発者に自動テストを学んでもらいやすくなります</li>
+</ul>
+<ul>
+<li>突き詰めると、ストアドプロシージャのテストはストアドプロシージャで書いてもらえばよいということになります</li>
+</ul>
+<ul>
+<li>この場合、テストはデータベースの内部で実行されることになるため、<em>Integration Build</em> と一緒に実行するのは厳しいです</li>
+</ul>
+<ul>
+<li><em>In-Database Stored Procedure Test</em> は、次のような場合に有効です<ul>
+<li>開発者が、ストアドプロシージャ言語やその環境について、アプリケーションのそれよりも詳しい</li>
+<li>1 つの環境ですべてのテストを実行する必要が無い</li>
+</ul></li>
+</ul>
+<ul>
+<li>ストアドプロシージャの担当になったチームには魅力的な方法でしょう</li>
+</ul>
+<ul>
+<li>ストアドプロシージャが、アプリケーションコードとは異なるリポジトリに保存されている場合も、このパターンが有効かもしれません<ul>
+<li>テストコードを SUT と同じリポジトリに置くことができるからです</li>
+</ul></li>
+</ul>
+<ul>
+<li>ユニットテスト、およびテスト駆動開発において、テストコードから実装の詳細へアクセスしやすいという点もあります<ul>
+<li>カプセル化を破るので、<em>Overspecified Software</em> (pp.239) になってしまうかもしれません</li>
+</ul></li>
+</ul>
+<ul>
+<li>クライアントコードにデータアクセスレイヤがある場合<ul>
+<li>エラー (接続異常など) を正しく扱っていることを保証するために、アプリケーションのプログラミング言語でユニットテストを書きましょう</li>
+</ul></li>
+</ul>
+<ul>
+<li>データベースソフトウェアの中には、いくつかのプログラミング言語をサポートしているものもあります<ul>
+<li>テストは、テストの書きやすい言語で書きましょう</li>
+<li>ストアドプロシージャは、できるだけ伝統的なストアドプロシージャ言語で書きましょう</li>
+</ul></li>
+</ul>
+<ul>
+<li>Oracle は PL/SQL と Java の両方をサポートしています<ul>
+<li>PL/SQL のストアドプロシージャをテストするために JUnit が使えます</li>
+</ul></li>
+</ul>
+<ul>
+<li>MS SQL Server は C# をサポートしています<ul>
+<li>Transact-SQL のストアドプロシージャをテストするために NUnit が使えます</li>
+</ul></li>
+</ul>
+</div>
+<h3>Variation: Remoted Stored Procedure Test</h3>
+<ul>
+<li>テストを、クライアントアプリケーションのプログラミング言語で書けます</li>
+<li>ストアドプロシージャのアクセスには <em>Remote Proxy</em> [GOF] を使って、詳細を隠蔽します</li>
+<li>プロキシは <em>Service Facade</em> [CJ2EEP] や <em>Command</em> [GOF] として構成されます<ul>
+<li>Java の <a href="JdbcOdbcCallableStatement">JdbcOdbcCallableStatement</a> は <em>Command</em> に相当します</li>
+</ul></li>
+</ul>
+<ul>
+<li>このパターンは、ストアドプロシージャを "ブラックボックス" としたコンポーネントテストになります<ul>
+<li>データベースの内部で実行しないからです</li>
+</ul></li>
+</ul>
+<ul>
+<li>回帰テストにするのがお勧めです<ul>
+<li>フィクスチャーの生成や結果の検証がが困難であれば、他のストアドプロシージャを使います</li>
+<li>他に必要なタスクがあればそれも実行します</li>
+<li>xUnit ファミリーには、そういった機能を持たせるための拡張版があります<ul>
+<li>Java なら <a href="DbUnit">DbUnit</a></li>
+<li>.NET なら <a href="NDbUnit">NDbUnit</a></li>
+</ul></li>
+</ul></li>
+</ul>
+<ul>
+<li>すべてのテストを 1 つの言語で統一するにはよい方法です<ul>
+<li>アプリケーションコードの変更をチェックインするたびにテストを実行するのが簡単になります</li>
+</ul></li>
+</ul>
+<ul>
+<li>この性質は、クライアントコードとは別のチームによってストアドプロシージャが開発される場合は特に役立ちます</li>
+</ul>
+<ul>
+<li>他のチームの開発者が欠陥無しのコードを書いてくれるとは信じられない時もこのパターンを適用します<ul>
+<li>たぶん彼らは <em>In-Database Stored Procedure Tests</em> も書いてない</li>
+<li>受け入れテストとして使えるパターンです</li>
+<li>実際の例をコラムに書きました</li>
+</ul></li>
+</ul>
+<p><a href="担当割当表/PARTⅢ/Stored Procedure Test/Column">担当割当表/PARTⅢ/Stored Procedure Test/Column</a></p>
+<ul>
+<li>欠点はテストの実行に時間がかかることです<ul>
+<li>データの準備に時間がかかるからです</li>
+</ul></li>
+<li>テストを <em>Subset Suite</em> (pp.592) に分割すれば、インメモリテストで全てを実行する必要はありません<ul>
+<li>だいぶ速くなります</li>
+<li><em>Slow Test</em>(pp.253) は避けられます</li>
+</ul></li>
+</ul>
+<ul>
+<li>このパターンは、アプリケーションの言語で書かれたすでにユニットテストのあるロジックを、データベースに移植するときも役立ちます<ul>
+<li>すでにユニットテストがあるので、書き直さなくてよいからです</li>
+<li>お金と時間の節約になります<ul>
+<li>異なる言語</li>
+<li>異なるテスト自動化フレームワーク (lpp.298)</li>
+</ul></li>
+<li>書き直しで生じる変換エラーも防ぐことができます</li>
+</ul></li>
+</ul>
+</div>
+<h2>Motivating Example</h2>
+<p>これだけのサンプルでも、どういうふうにテストをするのかはよく分かります。</p>
+<pre>CREATE OR REPLACE PROCEDURE calc_secs_between (
+    date1 IN DATE,
+    date2 IN DATE,
+    secs OUT NUMBER
+)
+IS
+BEGIN
+    secs := (date2 - date1) * 24 * 60 * 60;
+END;
+/</pre>
+</div>
+<h2>Refactoring Notes</h2>
+<p>これからテストコードを紹介するのでリファクタリングはありません...</p>
+</div>
+<h3>Example: In-Database Stored Procedure Test</h3>
+<p>utPLSQL のサンプルコードです。</p>
+<ul>
+<li><a href="http://utplsql.sourceforge.net/">http://utplsql.sourceforge.net/</a></li>
+<li><a href="http://ssoft.web.fc2.com/utplsql_sourceforge.html">http://ssoft.web.fc2.com/utplsql_sourceforge.html</a></li>
+</ul>
+<pre>CREATE OR REPLACE PACKAGE BODY ut_calc_secs_between
+IS
+    PROCEDURE ut_setup
+    IS
+    BEGIN
+        NULL;
+    END;
+    PROCEDURE ut_teardown
+    IS
+    BEGIN
+        NULL;
+    END;
+    -- For each program to test...
+    PROCEDURE ut_CALC_SECS_BETWEEN
+    IS
+        secs PLS_INTEGER;
+    BEGIN
+        CALC_SECS_BETWEEN (
+            DATE1 =&gt; SYSDATE
+            '
+            DATE2 =&gt; SYSDATE
+            '
+            SECS =&gt; secs
+        );
+
+        utAssert.eq (
+            'Same dates',
+            secs,
+            0
+            );
+    END ut_CALC_SECS_BETWEEN;
+
+END ut_calc_secs_between;
+/</pre>
+</div>
+<h3>Example: Remoted Stored Procedure Test</h3>
+<pre>public class StoredProcedureTest extends TestCase {
+    public void testCalcSecsBetween_SameTime() {
+        // Setup
+        TimeCalculatorProxy SUT = new TimeCalculatorProxy();
+        Calendar cal = new GregorianCalendar();
+        long now = cal.getTimeInMillis();
+        // Exercise
+        long timeDifference = SUT.calc_secs_between(now,now);
+        // Verify
+        assertEquals( 0, timeDifference );
+    }
+}</pre>
+<ul>
+<li>テストをシンプルにするため、<em><a href="JdbcOdbcCallableStatement">JdbcOdbcCallableStatement</a></em> を <em>Service Facade</em> で隠蔽しています</li>
+<li>このコードだけでは Java のメソッドのテストをしてるわけじゃないということを伝えるのが難しい</li>
+<li>異常系のテストでは、例外テスト (pp.348) を追加します</li>
+</ul>
+</div>
+</body>
+</html>
