@@ -34,8 +34,7 @@ s6.attach(s6, 'ready', function ready() {
         var startIndex = +result[1];
     }
 
-    pr = new s6.Presentation({ element: document.getElementById('main'), width: width, height: height, startIndex: startIndex });
-    //pr = new s6.Presentation({ element: document.body, width: width, height: height, startIndex: startIndex });
+    pr = new s6.Presentation({ element: document.body, width: width, height: height, startIndex: startIndex });
     pr.style.left = left;
     pr.style.top = top;
     pr.start();
