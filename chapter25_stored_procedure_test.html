@@ -6,10 +6,12 @@
 </head>
 <body>
 <div>
-<h1>Stored Procedure Test</h1>
+</div><div><h1>Stored Procedure Test</h1>
 <address>yujiorama</address>
+</div><div><h2>がいよう</h2>
 <p><em>How can we verify logic independently when we have stored procedures?</em></p>
 <p><strong>We write Fully Automated Tests for each stored procedure.</strong></p>
+</div><div><h2>がいようのほそく</h2>
 <ul>
 <li>アプリケーションには、その状態を永続化するためにデータベースを使用するものがあります<ul>
 <li>中には、ストアドプロシージャやトリガーを使ってパフォーマンスを稼いだり、更新処理を共通化したりしてます</li>
@@ -18,18 +20,14 @@
 <ul>
 <li>このパターンは、データベースの中に置いてあるコードについて、テスト自動化のプラクティスを適用します</li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>アプリケーションとは独立して、ストアドプロシージャのためのユニットテストを書きます<ul>
 <li>レイヤー交差テスト、回帰テストになります</li>
 <li>テスト対象のストアドプロシージャの性質によって変わります</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>When to Use it</h2>
+</div><div><h2>When to Use it</h2>
 <ul>
 <li>重要なロジックをストアドプロシージャに置いてるなら、テストを書くべきです<ul>
 <li>ストアドプロシージャが SUT になります</li>
@@ -51,9 +49,7 @@
 <li>TDD の普遍的な成果です</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ol>
 <li>ストアドプロシージャと同じ言語でテストを書いて、データベース側で実行する</li>
 <li>アプリケーションの言語でテストを書いて、<em>Remote Proxy</em>[GOF] でストアドプロシージャにアクセスする</li>
@@ -77,9 +73,7 @@
 <li>他のストアドプロシージャも使えるでしょう (回帰テストの一種)</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: In-Database Stored Procedure Test</h3>
+</div><div><h3>Variation: In-Database Stored Procedure Test</h3>
 <ul>
 <li>テスト自動化に xUnit を使う利点は、テスト対象のコードと同じ言語でテストを書けることです</li>
 </ul>
@@ -132,9 +126,7 @@
 <li>Transact-SQL のストアドプロシージャをテストするために NUnit が使えます</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Remoted Stored Procedure Test</h3>
+</div><div><h3>Variation: Remoted Stored Procedure Test</h3>
 <ul>
 <li>テストを、クライアントアプリケーションのプログラミング言語で書けます</li>
 <li>ストアドプロシージャのアクセスには <em>Remote Proxy</em> [GOF] を使って、詳細を隠蔽します</li>
@@ -192,9 +184,7 @@
 <li>書き直しで生じる変換エラーも防ぐことができます</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
+</div><div><h2>Motivating Example</h2>
 <p>これだけのサンプルでも、どういうふうにテストをするのかはよく分かります。</p>
 <pre>CREATE OR REPLACE PROCEDURE calc_secs_between (
     date1 IN DATE,
@@ -206,13 +196,9 @@ BEGIN
     secs := (date2 - date1) * 24 * 60 * 60;
 END;
 /</pre>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Refactoring Notes</h2>
 <p>これからテストコードを紹介するのでリファクタリングはありません...</p>
-</div>
-<div>
-<h3>Example: In-Database Stored Procedure Test</h3>
+</div><div><h3>Example: In-Database Stored Procedure Test</h3>
 <p>utPLSQL のサンプルコードです。</p>
 <ul>
 <li><a href="http://utplsql.sourceforge.net/">http://utplsql.sourceforge.net/</a></li>
@@ -252,9 +238,7 @@ IS
 
 END ut_calc_secs_between;
 /</pre>
-</div>
-<div>
-<h3>Example: Remoted Stored Procedure Test</h3>
+</div><div><h3>Example: Remoted Stored Procedure Test</h3>
 <pre>public class StoredProcedureTest extends TestCase {
     public void testCalcSecsBetween_SameTime() {
         // Setup

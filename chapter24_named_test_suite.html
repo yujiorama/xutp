@@ -6,17 +6,13 @@
 </head>
 <body>
 <div>
-<h1>Named Test Suite (pp.592)</h1>
+</div><div><h1>Named Test Suite (pp.592)</h1>
 <address>yujiorama</address>
-</div>
-<div>
-<h3>前書き</h3>
+</div><div><h3>前書き</h3>
 <p><em>恣意的なテストのグループがあるとき、どうやってテストを実行したらいいの?</em></p>
 <p><strong>グループとして実行させたいテストの集合を含んだ、適切な名前のテストスイートを定義します。</strong></p>
 <p><a href="https://cacoo.com/diagrams/2iXo4LSsCvd7qDFQ">https://cacoo.com/diagrams/2iXo4LSsCvd7qDFQ</a></p>
-</div>
-<div>
-<h2>How It Works (pp.592)</h2>
+</div><div><h2>How It Works (pp.592)</h2>
 <ul>
 <li>無数のテストがある<ul>
 <li>系統だった方法で組織化したい</li>
@@ -34,9 +30,7 @@
 <li>定義されたサブセットから実行したいテストの選択を可能にする</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>When to Use It (pp.593)</h2>
+</div><div><h2>When to Use It (pp.593)</h2>
 <ul>
 <li>Intent-Revealing Name による特別な <em>Test Suite Factory</em> を定義する<ul>
 <li>関連したテストからなる一緒に実行したいそれぞれのグループに適用する</li>
@@ -48,9 +42,7 @@
 <li>目的の Test Suite Object を生成</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: <a href="AllTests">AllTests</a> Suite (pp.593)</h3>
+</div><div><h3>Variation: <a href="AllTests">AllTests</a> Suite (pp.593)</h3>
 <ul>
 <li>一見矛盾した要求<ul>
 <li>コマンド 1 つで全てのテストを実行したい</li>
@@ -69,9 +61,7 @@
 <li>あるコンテキストには実行したくないテストが含まれている</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Subset Suite (pp.593)</h3>
+</div><div><h3>Variation: Subset Suite (pp.593)</h3>
 <ul>
 <li>開発者はスローテスト (pp.253) を実行したがらない<ul>
 <li>データベースにアクセスするコンポーネントを exercise するテスト</li>
@@ -92,9 +82,7 @@
 <li>失敗することは分かってる and グリーンバーを維持するチャンスを失ってしまう</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Single Test Suite (pp.593)</h3>
+</div><div><h3>Variation: Single Test Suite (pp.593)</h3>
 <ul>
 <li><em>Subset Suite</em> を退化させたもの<ul>
 <li>1 つの <em>Test Method</em> を実行するために 1 つの <em><a href="TestCase">TestCase</a> Object</em> をインスタンス化しているような状況</li>
@@ -105,9 +93,7 @@
 </ul></li>
 <li>大抵のテスト自動化フレームワークでは、同じワークスペース中で <em>Testcase Class</em> をオープンにしている</li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes (pp.594)</h2>
+</div><div><h2>Implementation Notes (pp.594)</h2>
 <ul>
 <li>概念とその実現方法は独立している<ul>
 <li>「名前付けられた集合としてテストを実行する」、という考え方</li>
@@ -132,13 +118,9 @@
 <li>this collection of tests is then rolled up into the <em><a href="AllTests">AllTests</a> Suite' for the local context as well as the 'Named Test Suite</em> and the next higner context.</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Refactoring Notes (pp.594)</h2>
+</div><div><h2>Refactoring Notes (pp.594)</h2>
 <p><em>Named Test Suite</em> へのリファクタリングの手順は、その variant に依存したものになる。</p>
-</div>
-<div>
-<h3>Examples: <a href="AllTests">AllTests</a> Suite (pp.594)</h3>
+</div><div><h3>Examples: <a href="AllTests">AllTests</a> Suite (pp.594)</h3>
 <ul>
 <li><em><a href="AllTests">AllTests</a> Suite</em> は、機能によって分類した異なる部分集合であるテストをすべて実行する。</li>
 <li>java のパッケージなどの単位(サブコンポーネント、コンテキスト)ごとに、`<a href="AllTests">AllTests</a>` と呼ばれる特別なテストスイートと、対応するテストスイートファクトリを定義する。</li>
@@ -168,9 +150,7 @@
 <li>このコードサンプルでは、<em>JUnit-start</em> や <em>Junit-end</em> といったコメントに注意して欲しい。</li>
 <li>IDE (この場合は Eclipse) は、これらのコメントの間に半自動的な <em>Test Discovery</em> によってコードを再生成する。</li>
 </ul>
-</div>
-<div>
-<h3>Example: Special-Purpose Suite (pp.595)</h3>
+</div><div><h3>Example: Special-Purpose Suite (pp.595)</h3>
 <ul>
 <li>業務ロジックを実装したクラスを含む 3 つのパッケージ (A, B, C) があるとする。</li>
 <li>それぞれのパッケージには、インメモリオブジェクトとデータベースへのアクセスを行うクラスがある。</li>
@@ -218,9 +198,7 @@
 <li>データベーステストやインメモリテストといったコンテキストごとにテストクラスを追加する</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Single Test Suite (pp.596)</h3>
+</div><div><h3>Example: Single Test Suite (pp.596)</h3>
 <ul>
 <li>デバッガを使っているなどの特殊な状況<ul>
 <li><em>Testcase Class</em> の全てのテストを実行されないことが望ましい</li>
@@ -272,9 +250,7 @@
 <li>結果は他の <em>Named Test Suites</em> と同じように扱える</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Smoke Test Suite (pp.597)</h3>
+</div><div><h3>Example: Smoke Test Suite (pp.597)</h3>
 <ul>
 <li><em>Special-Purpose Suite</em> の考え方と <em>Single Test Suite</em> の方法によって構築する。<ul>
 <li>システムの主要な領域を代表するテストをピックアップ</li>

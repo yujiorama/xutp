@@ -6,31 +6,26 @@
 </head>
 <body>
 <div>
-<h1>Test Utility Method</h1>
+</div><div><h1>Test Utility Method</h1>
 <address>yujiorama</address>
+</div><div><h2>がいよう</h2>
 <p>'テストコードの重複を防ぎたい'
 <em>再利用できるテストロジックは適切な名前を付けたユーティリティメソッドにしてその詳細を隠蔽します</em></p>
-</div>
-<div>
-<h2>がいよう</h2>
+</div><div><h2>がいようの補足</h2>
 <ul>
 <li>テストを書くとき、同じようなロジックを毎回書いている</li>
 <li>初めはコピペ( clone and twiddle ) してた</li>
 <li>コピペされたテストコードの重複が問題になりつつある</li>
 <li>'Test Utility Method' を考えましょう</li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>一番手軽なロジックの再利用は、サブルーチンや関数</li>
 <li>'Test Utility Method' は同じ原則を OO のテストコードに適用する</li>
 <li>いくつものテストで使われてる同じロジック</li>
 <li>1 つのテスト内で何度も使われてる同じロジック</li>
 </ul>
-</div>
-<div>
-<h2>When to Use It</h2>
+</div><div><h2>When to Use It</h2>
 <ul>
 <li>'Test Utility Method' の使いどころ<ul>
 <li>同じロジックが何度も現れる</li>
@@ -47,22 +42,16 @@
 <li>名前付けでいくらか救われる (Intent-Revealing Names)</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Creation Method</h3>
+</div><div><h3>Variation: Creation Method</h3>
 <ul>
 <li>setup フェーズにおける使用可能オブジェクトの生成</li>
 <li>生成の複雑さと依存関係を隠蔽</li>
 </ul>
-</div>
-<div>
-<h3>Variation: Attachment Method</h3>
+</div><div><h3>Variation: Attachment Method</h3>
 <ul>
 <li>setup フェーズにおける既オブジェクトの修正</li>
 </ul>
-</div>
-<div>
-<h3>Variation: Finder Method</h3>
+</div><div><h3>Variation: Finder Method</h3>
 <ul>
 <li>'Shared Fixture' からオブジェクトを取得するあらゆるロジック</li>
 <li>Intent-Revealing Name</li>
@@ -98,9 +87,7 @@
 <li>既知のキーによる参照</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: SUT Enscapsulation Method</h3>
+</div><div><h3>Variation: SUT Enscapsulation Method</h3>
 <ul>
 <li>'Test utility Method' を使う別の理由<ul>
 <li>SUT の API を隠蔽する</li>
@@ -113,21 +100,13 @@
 <li>こういった SUT のメソッド呼び出しを隠蔽する</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Custom Assertion</h3>
+</div><div><h3>Variation: Custom Assertion</h3>
 <ul>
 <li>テストよく使われるテスト用の等価性判定</li>
 </ul>
-</div>
-<div>
-<h3>Variation: Verification Method</h3>
-</div>
-<div>
-<h3>Variation: Parameterized Test</h3>
-</div>
-<div>
-<h3>Variation: Cleanup Method</h3>
+</div><div><h3>Variation: Verification Method</h3>
+</div><div><h3>Variation: Parameterized Test</h3>
+</div><div><h3>Variation: Cleanup Method</h3>
 </div>
 </body>
 </html>

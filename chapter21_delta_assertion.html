@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-<h1>Delta Assertion</h1>
+</div><div><h1>Delta Assertion</h1>
 <address>yujiorama</address>
 <ul>
 <li>フィクスチャの初期状態は操作できない環境でセルフチェックテストを実行する</li>
@@ -24,9 +24,7 @@
 <li>その選択肢が選べないときはどうする?</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>How it Works</h2>
+</div><div><h2>How it Works</h2>
 <ul>
 <li>exercise の前にやること<ul>
 <li>Shared Fixture の適当なスナップショットを取得する</li>
@@ -41,9 +39,7 @@
 <li>SUTから返されるオブジェクトの集合のコンテンツは期待通りに増えているか</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>When Use It</h2>
+</div><div><h2>When Use It</h2>
 <ul>
 <li>使いどき<ul>
 <li>test fixture のコントロールが無い</li>
@@ -66,9 +62,7 @@
 <li>複数プロセスが並行して実行するような Test Run War は防げない</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ul>
 <li>exercise前にできることは 1 つ<ul>
 <li>スナップショットを取得した後で、SUT がスナップショットの状態を変更できないようにする</li>
@@ -90,9 +84,7 @@
 </ul></li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Using Delta Assertions to Detect Data Leakage</h2>
+</div><div><h2>Using Delta Assertions to Detect Data Leakage</h2>
 <ul>
 <li>カスタマーテスト実行後のテストフィクスチャの初期化方法について実験していた</li>
 <li>私達のテストはデータベースにアクセスして、いくつかのオブジェクトを残していた</li>
@@ -136,13 +128,9 @@
 <li>メモリリークの検出が同じように出来た</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
+</div><div><h2>Motivating Example</h2>
 <p>Shared Fixture を使っているため、他のテストを実行すると失敗してしまうかもしれないテスト。</p>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Refactoring Notes</h2>
 <ul>
 <li>Delta Assertion を使うようにテストを変更する<ul>
 <li>後で検証するデータ(もしくはオブジェクト集合) のスナップショットを取得する</li>
@@ -152,9 +140,7 @@
 <li>事前データを引数に取れるようにしたもの</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Delta Assertion</h3>
+</div><div><h3>Example: Delta Assertion</h3>
 </div>
 </body>
 </html>

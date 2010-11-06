@@ -572,9 +572,8 @@ class HikiDoc
     #
     
     def headline(level, title)
-      @f.puts "</div>" if level > 1
-      @f.puts "<h#{level}>#{title}</h#{level}>"
-      @f.puts "<address>yujiorama</address></div><div>" if level == 1
+      @f.puts "</div><div><h#{level}>#{title}</h#{level}>"
+      @f.puts "<address>yujiorama</address>" if level == 1
     end
     
     def hrule
@@ -910,6 +909,7 @@ if __FILE__ == $0
 <script type="text/javascript" src="s6setup.js"></script>
 </head>
 <body>
+<div>
 HTML
   puts HikiDoc.to_xhtml(ARGF.read(nil))
   puts <<HTML

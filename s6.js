@@ -260,7 +260,7 @@ if (!s6.uai.ie || s6.uai.ie >= 7) {
     s6.defaultStyles = {
     
         '.s6': {
-            position: 'absolute',
+            //position: 'absolute',
             margin: 0,
             padding: 0,
             border: 0,
@@ -277,7 +277,7 @@ if (!s6.uai.ie || s6.uai.ie >= 7) {
     
         '.s6 .page': {
             position: 'absolute',
-            height: '100%',
+            height: '7680px',//'100%',
             width: '100%',
             margin: 0,
             padding: 0,

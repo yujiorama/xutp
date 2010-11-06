@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-<h1>Behavior Verification</h1>
+</div><div><h1>Behavior Verification</h1>
 <address>yujiorama</address>
 <pre>   How do we make tests self-checking when there is no state to verify?</pre>
 <pre>   We capture the indirect outputs of the SUT as they occur and compare them to the expected behavior.</pre>
@@ -30,9 +30,7 @@ SUT as it is being exercised.</p>
 <ul>
 <li>Behavior Verifiction は、exercised した SUT の間接出力を検証するものです。</li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <p>Each test specifies not only how the client of the SUT interacts with
 it during the exercise SUT phase of the test, but also how the SUT
 interacts with the components on which it should depend. This ensures
@@ -77,9 +75,7 @@ SUT on the DOC (Behavior Verification).</p>
 <li>DOC = depended-on component</li>
 </ul>
 </blockquote>
-</div>
-<div>
-<h2>When to Use It</h2>
+</div><div><h2>When to Use It</h2>
 <p>Behavior Verification is primarily a technique for unit tests and
 component tests. We can use Behavior Verification whenever the SUT
 calls methods on other objects or components. We must use Behavior
@@ -150,9 +146,7 @@ coverage.  </p>
 <li>断言することはできません。</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <p>Before we exercise the SUT by invoking the methods of interest, we
 must ensure that we have a way of observing its behavior. Sometimes
 the mechanisms that the SUT uses to interact with the components
@@ -183,9 +177,7 @@ Behavior Verification.</p>
 <li>もう 1 つは ?</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Procedural Behavior Verification</h3>
+</div><div><h3>Variation: Procedural Behavior Verification</h3>
 <p>In Procedural Behavior Verification, we capture the method calls made
 by the SUT as it executes and later get access to them from within the
 Test Method (page 348). Then we use Equality Assertions (see Assertion
@@ -233,9 +225,7 @@ the verification of them to Custom Assertions (page 474).</p>
 <li>結果の検証をカスタムアサーションに任せる</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Expected Behavior Specification</h3>
+</div><div><h3>Variation: Expected Behavior Specification</h3>
 <p>Expected Behavior Specification is a different way of doing Behavior
 Verification. Instead of waiting until after the fact to verify the
 indirect outputs of the SUT by using a sequence of assertions, we load
@@ -281,9 +271,7 @@ arguments will be passed to it in the method calls.</p>
 <li>DOC のメソッド呼び出しにどんな引数が渡されるかを予測しないといけない</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
+</div><div><h2>Motivating Example</h2>
 <p>The following test is not a Self-Checking Test because it does not
 verify that the expected outcome has actually occurred; it contains no
 calls to Assertion Methods, nor does it set up any expectations on a
@@ -344,9 +332,7 @@ changes for the objects with which the SUT interacts.</p>
 <li>工夫: SUT と相互作用するオブジェクトの状態遷移によって、その振る舞いを表現できる</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Refactoring Notes</h2>
 <p>When we made the changes in the second code sample in the “Motivating
 Example,” we weren’t really refactoring; instead, we added
 verification logic to make the tests behave differently. There are,
@@ -383,9 +369,7 @@ install the Mock Object instead of the Test Spy.</p>
 <li>Test Spy の代わりに Mock Object をインストール</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Procedural Behavior Verification</h3>
+</div><div><h3>Example: Procedural Behavior Verification</h3>
 <p>The following test verifies the basic functionality of creating a
 flight but uses Procedural Behavior Verification to verify the
 indirect outputs of the SUT. That is, it uses a Test Spy to capture
@@ -416,9 +400,7 @@ making in-line calls to the Assertion Methods.</p>
                   expectedFlightDto.getFlightNumber(),
                   logSpy.getDetail());
   }</pre>
-</div>
-<div>
-<h3>Example: Expected Behavior Specification</h3>
+</div><div><h3>Example: Expected Behavior Specification</h3>
 <p>In this version of the test, we use the JMock framework to define the
 expected behavior of the SUT. The method expects on mockLog configures
 the Mock Object with the Expected Behavior Specification

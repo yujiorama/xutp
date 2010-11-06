@@ -6,25 +6,23 @@
 </head>
 <body>
 <div>
-<h1>Testcase Class per Class</h1>
+</div><div><h1>Testcase Class per Class</h1>
 <address>yujiorama</address>
+</div><div><h2>がいよう</h2>
 <p><em>How do we orgnize our Test Methods onto Testcase Classes?</em></p>
 <p><strong>We put all the Test Methods for one SUT class onto a single Testcase Class.</strong></p>
+</div><div><h2>がいようのほそく</h2>
 <ul>
 <li><em>Test Methods</em> (pp.348) が成長するにつれて、どの <em>Testcase Class</em> (pp.373) に入れるかを決める必要がある</li>
 <li>私達が選ぶ戦略は、テストの "big picture" をどれだけ確かに得られるか、という点に影響する</li>
 <li><em>Testcase Class per Class</em> パターンは、私達のテストの組織化を初めるための単純な方法です</li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>私達はテスト対象のクラスごとに別々の <em>Testcase Class</em> を作る</li>
 <li>各 <em>Testcase Class</em> は、SUT class の振る舞いを検証するための ''Test Methods' の家となる</li>
 </ul>
-</div>
-<div>
-<h2>When to Use It</h2>
+</div><div><h2>When to Use It</h2>
 <ul>
 <li>自分達がまだそれほど多くの <em>Test Methods</em> を持っていない</li>
 <li>SUT のテストを書き始めたばかり</li>
@@ -47,9 +45,7 @@
 <li>Kent Beck</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ul>
 <li><em>Testcase Class</em> のクラス名<ul>
 <li>SUT であるクラス名を元にする</li>
@@ -76,9 +72,7 @@
 <li><em>In-line Setup</em> がごく単純にならなければ、<em>Creation Method</em> (pp.415) を使った <em>Delegated Setup</em> は読み易いテストにしやすい</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Testcase Class per Class</h3>
+</div><div><h3>Example: Testcase Class per Class</h3>
 <ul>
 <li>サンプルコードでは <em>Fresh Fixture</em> を <em>Delegated Setup</em> で書いてます<ul>
 <li>もっと宣言的にしたい</li>

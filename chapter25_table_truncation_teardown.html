@@ -6,10 +6,12 @@
 </head>
 <body>
 <div>
-<h1>Table Truncation Teardown</h1>
+</div><div><h1>Table Truncation Teardown</h1>
 <address>yujiorama</address>
+</div><div><h2>がいよう</h2>
 <p><em>How do we tear down the Test Fixture when it is in a relational database?</em></p>
 <p><strong>We truncate the tables modified during the test to tear down the fixture.</strong></p>
+</div><div><h2>がいようのほそく(1/2)</h2>
 <ul>
 <li>繰り返し実行可能で、しっかりしたテストを支えるもの<ul>
 <li>テストフィクスチャーがテストの最後に解体 (tear down) されることを保証していること</li>
@@ -23,6 +25,7 @@
 <li>明示的に解体 (tear down) されないものは残ってしまうでしょう</li>
 </ul></li>
 </ul>
+</div><div><h2>がいようのほそく(2/2)</h2>
 <ul>
 <li>あらゆる環境を適切に掃除することを期待された teardown コードを書く<ul>
 <li>とても挑戦的</li>
@@ -39,15 +42,11 @@
 <ul>
 <li>RDB を使ったシステムのテストには、<em>TRUNCATE</em> コマンドというアドバンテージがあります</li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>永続的なフィクスチャーが不要なら、それぞれのテーブルに対して <em>TRUNCATE</em> コマンドを実行する</li>
 </ul>
-</div>
-<div>
-<h2>When To Use It</h2>
+</div><div><h2>When To Use It</h2>
 <ul>
 <li><em>Persistent Fresh Fixture</em> を使っているときはたいていの場合 <em>Table Truncation Teardown</em> を使います<ul>
 <li>1 番の選択肢です</li>
@@ -73,9 +72,7 @@
 <li><em>Delta Assertions</em> (pp.485) によって teardown が必須ではなくなりました</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ul>
 <li>teardown のコードをどこに書けばいいか</li>
 <li>次の質問の答えで決めましょう<ul>
@@ -126,9 +123,7 @@
 <li>データベースのデータだけでなく、ORM のキャッシュやオブジェクトも消去させるため</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Lazy Teardown</h3>
+</div><div><h3>Variation: Lazy Teardown</h3>
 <ul>
 <li><em>Shared Fixture</em> と一緒に使える数少ない teardown 戦略</li>
 <li>フィクスチャーが任意の時点で削除可能でなければならない<ul>
@@ -138,9 +133,7 @@
 <li>フィクスチャーの生成をする直前で、<em>trancation command</em> を実行するだけでよいから</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
+</div><div><h2>Motivating Example</h2>
 <ul>
 <li><em>Guaranteed In-line Teardown</em> の例です</li>
 <li>このコードは簡単に書けないし、正確でもないです</li>
@@ -162,36 +155,26 @@ public void TestGetFlightsByOrigin_NoInboundFlights() {
         Facade.RemoveAirport( InboundAirport );
     }
 }</pre>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Refactoring Notes</h2>
 <ul>
 <li>複数リソースの <em>In-line Teardown</em> における問題を、<em>Table Truncation Teardown</em> で解消します</li>
 <li>リファクタリングの要旨は、<em>finally</em> 節のメソッド呼び出しを <em><a href="CleanDatabase">CleanDatabase</a></em> だけにしたことです</li>
 </ul>
-</div>
-<div>
-<h3>Example: Table Truncation (Delegated) Teardown Test</h3>
+</div><div><h3>Example: Table Truncation (Delegated) Teardown Test</h3>
 <ul>
 <li><em>finally</em> 節のメソッド呼び出しを <em><a href="CleanDatabase">CleanDatabase</a></em> に修正</li>
 </ul>
-</div>
-<div>
-<h3>Example:: Lazy Teardown Test</h3>
+</div><div><h3>Example:: Lazy Teardown Test</h3>
 <ul>
 <li><em>try</em> 節の先頭で <em><a href="CleanDatabase">CleanDatabase</a></em> を呼ぶように修正</li>
 <li>データベースは必ず初期化されている</li>
 </ul>
-</div>
-<div>
-<h3>Example: Table Truncation Teardown Using SQL</h3>
+</div><div><h3>Example: Table Truncation Teardown Using SQL</h3>
 <ul>
 <li>SQL による <em><a href="CleanDatabase">CleanDatabase</a></em> メソッドの実装です</li>
 <li><em>SQL Server</em> 用なので <strong>DELETE * FROM ...</strong> の SQL を実行しています</li>
 </ul>
-</div>
-<div>
-<h3>Example: Table Truncation Teardown Using ORM</h3>
+</div><div><h3>Example: Table Truncation Teardown Using ORM</h3>
 <ul>
 <li>NHibernate による <em><a href="CleanDatabase">CleanDatabase</a></em> メソッドの実装です</li>
 <li>親オブジェクトの <em>City</em> や <em>Airport</em> を削除すると、子オブジェクトの <em>Flight</em> も削除されます</li>

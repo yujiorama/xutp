@@ -6,7 +6,7 @@
 </head>
 <body>
 <div>
-<h1>Guard Assertion</h1>
+</div><div><h1>Guard Assertion</h1>
 <address>yujiorama</address>
 <ul>
 <li>How do we avoid Conditional Test Logic ?<ul>
@@ -27,9 +27,7 @@
 <li>部分的に状態を調べた結果のレポートを出力する</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>テストには通過するか失敗するかしかない</li>
 <li>テストは Assertion Method (362ページ) によって失敗する</li>
@@ -41,26 +39,20 @@
 <li>conditional logic の結果から推測していた事実が、Guard Assertion の成功/失敗として明らかになる</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>When To Use It</h2>
+</div><div><h2>When To Use It</h2>
 <ul>
 <li>条件によってテストをエラー終了させてしまうような式を置き換えるために使うパターン</li>
 <li>if then else fail コードを導入する代わり</li>
 <li>exercise フェーズと verify フェーズの間に導入する</li>
 </ul>
-</div>
-<div>
-<h3>Variation: Shared Fixture State Assertion</h3>
+</div><div><h3>Variation: Shared Fixture State Assertion</h3>
 <ul>
 <li>Shared Fixture を使っている場合</li>
 <li>exercise フェーズの前に、fixture がテストの事前条件を満たしているかどうかを検証できる</li>
 <li>テストの読者に、どの fixture を使うのかを示すことができる</li>
 <li>Tests as Documentation (23ページ) を促進する</li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ul>
 <li>assertNotNil<ul>
 <li>Outcome Assertions</li>
@@ -69,12 +61,8 @@
 <li>Equality Assertions</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Motivating Example</h2>
+</div><div><h2>Refactoring Notes</h2>
 <ul>
 <li>Replace Nested Conditinal with Guard Clauses を使う<ul>
 <li>蜘蛛の巣コードをまっすぐのシーケンスに直します</li>
@@ -89,12 +77,8 @@
 </ul></li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Simple Guard Assertion</h3>
-</div>
-<div>
-<h3>Example: Shared Fixture Guard Assertion</h3>
+</div><div><h3>Example: Simple Guard Assertion</h3>
+</div><div><h3>Example: Shared Fixture Guard Assertion</h3>
 </div>
 </body>
 </html>

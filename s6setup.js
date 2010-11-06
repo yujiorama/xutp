@@ -1,6 +1,6 @@
 var bodyStyle = {
     width: '100%',
-    height: document.documentElement.offsetHeight * 10,//'100%',
+    height: '100%',
     padding: '0',
     margin: '0',
     overflow: 'hidden',
@@ -35,8 +35,8 @@ s6.attach(s6, 'ready', function ready() {
     }
     
     pr = new s6.Presentation({ element: document.body, width: width, height: height, startIndex: startIndex });
-    pr.style.left = 0;//left;
-    pr.style.top = 0;//top;
+    pr.style.left = left;
+    pr.style.top = top;
     pr.start();
 
     var indexNoOutline = false;
@@ -68,6 +68,7 @@ s6.attach(s6, 'ready', function ready() {
     s6.attach(document,   'keypress Right', 'step', 0, pr);
     s6.attach(document,   'keypress Left',  'prev', 0, pr);
     s6.attach(document,   'keypress i',    function() { pr.go('index') });
+    s6.attach(document,   'keypress r',    function() { window.location.href='./index.html' });
     //    s6.attach(document,   'keypress Down',  'back', 0, pr);
 });
 

@@ -6,10 +6,12 @@
 </head>
 <body>
 <div>
-<h1>Database Sandbox</h1>
+</div><div><h1>Database Sandbox</h1>
 <address>yujiorama</address>
+</div><div><h2>がいよう</h2>
 <p><em>How do we develop and test software that depends on a database?</em></p>
 <p><strong>We provide a separate test database for each developer or tester.</strong></p>
+</div><div><h2>がいようのほそく</h2>
 <ul>
 <li>多くのアプリケーションは永続的な状態を保存するためにデータベースを使います</li>
 <li>従って、そのアプリケーションのテストもデータベースにアクセスしなければなりません</li>
@@ -18,18 +20,14 @@
 <li>同じデータベースで複数の開発者がすべてのテストを実行するような環境では困難なことです</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>ユーザごとに独立したサンドボックスを提供します</li>
 <li>サンドボックスには、ユーザ自身のコードのコピーと、データベースのコピー (これが一番重要) を含みます</li>
 <li>ユーザのやりたいようにデータベースを変更できるようになります</li>
 <li>テストでアプリケーションを動かしても、他のユーザへの影響を気にする必要が無くなります</li>
 </ul>
-</div>
-<div>
-<h2>When to Use It</h2>
+</div><div><h2>When to Use It</h2>
 <ul>
 <li>データベースが、アプリケーションの機能における重要な部品となっている場合</li>
 </ul>
@@ -47,9 +45,7 @@
 <li>ユーザごとの環境を独立するだけなので、1 つのテストが実行される間はフィクスチャーは共有されます</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ul>
 <li>テストを実施するときは、データベースを設定によって変更できるようにしなければなりません<ul>
 <li>プロパティファイルから設定情報を読み取るようにすることが多いです</li>
@@ -63,9 +59,7 @@
 <li>1 つのインスタンスで複数のインスタンスのふりをする</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Dedicated Database Sandbox</h3>
+</div><div><h3>Variation: Dedicated Database Sandbox</h3>
 <ul>
 <li>ユーザごとにデータベースインスタンスを提供するパターンです</li>
 </ul>
@@ -81,9 +75,7 @@
 <li>共有サーバハード上で稼動している、専用の仮想マシン</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: DB Schema per Test Runner</h3>
+</div><div><h3>Variation: DB Schema per Test Runner</h3>
 <ul>
 <li>複数スキーマをサポートしたデータベースによって、ユーザごとに独立したデータベースインスタンスを提供する</li>
 </ul>
@@ -94,9 +86,7 @@
 <li>データベースの構造が変更されるときはちょっとした問題になります</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Database Partitioning Scheme</h3>
+</div><div><h3>Variation: Database Partitioning Scheme</h3>
 <ul>
 <li>1 つの <em>Database Sandbox</em> で、開発者、テスター、ユーザーそれぞれに分離されたデータを提供します</li>
 <li>ユーザは自分のデータは変更できるが、他のユーザのデータは変更できません</li>
@@ -120,9 +110,7 @@
 <ul>
 <li>このパターンを使っても、<em>Distinct Generated Values</em> (pp.723) を使っていない限り、<em>Unrepetable Test</em> は回避できません</li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
+</div><div><h2>Motivating Example</h2>
 <ul>
 <li>元のテストは Product のコンストラクタ引数に即値リテラルを使ってます</li>
 <li>Product は複数の開発者の共有するデータベースインスタンスに永続化されるものです</li>
@@ -133,9 +121,7 @@
 <li>テストの後にどれだけ Product を綺麗に teardown したとしても、このテストは <em>Test Run War</em> になってしまいます</li>
 <li>同じタイミングで他のテストランナーによって実行した同じテストが、同じ Product を作ろうとするからです</li>
 </ul>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Refactoring Notes</h2>
 <ul>
 <li>ユーザごとの <em>Dedicated Database Sandbox</em> を使っているなら修正はいりません<ul>
 <li>テストは他のテストランナーから完全に独立して実行されます</li>
@@ -149,9 +135,7 @@
 <ul>
 <li>即値リテラルを getUnique メソッド呼び出しによって置き換えることができます</li>
 </ul>
-</div>
-<div>
-<h3>Example: Database Partitioning Scheme</h3>
+</div><div><h3>Example: Database Partitioning Scheme</h3>
 <ul>
 <li><em>Database Partitioning Scheme</em> を使う例です<ul>
 <li>テストが異なる product を使うことを保証します</li>

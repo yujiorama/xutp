@@ -6,10 +6,12 @@
 </head>
 <body>
 <div>
-<h1>Testcase Class per Feature</h1>
+</div><div><h1>Testcase Class per Feature</h1>
 <address>yujiorama</address>
+</div><div><h2>がいよう</h2>
 <p><em>How do we organize our Test Methods onto Testcase Classes?</em></p>
 <p><em>We group the Test Methods onto Testcase Classes based on which testable feature of the SUT they exercise.</em></p>
+</div><div><h2>がいようのほそく</h2>
 <ul>
 <li><em>Test Methods</em> (pp.348) が増加するにつれて、どの <em>Testcase Class</em> (pp.373) に配置するかを決めなければいけなくなる</li>
 <li><em>Testcase Class per Feature</em><ul>
@@ -18,17 +20,13 @@
 <li>テストメソッドを壊さずに、巨大なテストケースクラスをいくつかの小さなクラスに分割する体系的な方法を与えるものです</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>How It Works</h2>
+</div><div><h2>How It Works</h2>
 <ul>
 <li>テストメソッドが、検証されるべき機能ごとに用意されたテストケースクラスに集まります</li>
 <li>より小さいテストケースクラスが得られます</li>
 <li>特定の機能についてのテスト結果を一瞥することができるようになります</li>
 </ul>
-</div>
-<div>
-<h2>When to Use It</h2>
+</div><div><h2>When to Use It</h2>
 <ul>
 <li><em>Testcase Class per Feature</em> を使う状況<ul>
 <li>大量のテストメソッドを持っている</li>
@@ -52,17 +50,13 @@
 <li>ファサードクラスのメソッドに対する顧客テスト</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Variation: Testcase Class per Method</h3>
+</div><div><h3>Variation: Testcase Class per Method</h3>
 <ul>
 <li>引数に様々なパラメータを受け取るメソッドには、多くのテストが必要になります</li>
 <li>この 1 つのメソッドに対するテストメソッドは 1 つの <em>Testcase Class per Method</em> にしましょう</li>
 <li>残りは他のテストケースクラスに入れましょう</li>
 </ul>
-</div>
-<div>
-<h3>Variation: Testcase Class per Feature</h3>
+</div><div><h3>Variation: Testcase Class per Feature</h3>
 <ul>
 <li>あるクラスの "feature" は普通は 1 つの操作ないし関数になります</li>
 <li>しかし、当該オブジェクトのインスタンス変数を操作するメソッドがひとまとまりになっている場合もあります</li>
@@ -75,9 +69,7 @@
 <li>別々にテストするのは困難です</li>
 <li>そこで私達は、あるオブジェクトの読み書きをすることを 1 つの "feature" として取り扱っています</li>
 </ul>
-</div>
-<div>
-<h3>Variation: Testcase Class per User Story</h3>
+</div><div><h3>Variation: Testcase Class per User Story</h3>
 <ul>
 <li>それぞれのストーリーのテストメソッドを、異なるテストケースクラスに置きます<ul>
 <li>XP のように漸進的な開発をしている場合は有用な方法です</li>
@@ -89,9 +81,7 @@
 <li>ユーザーストーリーをどのように分割するかによります</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Implementation Notes</h2>
+</div><div><h2>Implementation Notes</h2>
 <ul>
 <li>テストケースクラスが SUT の 1 つの機能に対する要求を示すようになります<ul>
 <li>テストケースクラスの名前が、テストが検証する機能を示すような名前となるように働きます</li>
@@ -105,9 +95,7 @@
 <li><em>Test Enumeration</em> (pp.399) を使っているなら、<em><a href="AllTest">AllTest</a> Suite</em> (<em>Named Test Suite</em> pp.592) によって 1 つのテストスイートに集めることができます</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h2>Motivating Example</h2>
+</div><div><h2>Motivating Example</h2>
 <ul>
 <li>例では、<em>Flight</em> クラスのテストメソッドを <em>Testcase Class per Class</em> パターンによって構成しています<ul>
 <li><em>Flight</em> クラスには 3 つの状態 (<em>Unscheduled, Scheduled, <a href="AwaitingApproval">AwaitingApproval</a></em>) があります</li>
@@ -124,9 +112,7 @@
 </ul></li>
 <li><em>Testcase Class per Future</em> パターンにリファクタリングするにはよい例でしょう</li>
 </ul>
-</div>
-<div>
-<h2>Refactoring Notes</h2>
+</div><div><h2>Refactoring Notes</h2>
 <ul>
 <li><em>Testcase Class per Future</em> パターンに変換することで<ul>
 <li>テストケースクラスを小さくできます</li>
@@ -171,9 +157,7 @@
 <li>全てが終わったら元のテストケースクラスを削除します</li>
 </ul></li>
 </ul>
-</div>
-<div>
-<h3>Example: Testcase Class per Feature</h3>
+</div><div><h3>Example: Testcase Class per Feature</h3>
 <ul>
 <li>メソッド名以外 (つまりメソッドの実装) は変更していません</li>
 <li>メソッド名には、事前条件 (フィクスチャ)、exercise する機能、期待結果が含まれるようになりました</li>
