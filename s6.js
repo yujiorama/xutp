@@ -2839,6 +2839,7 @@ s6.Presentation.prototype = {
         this.toIndex = null;
         this.getPage(this.fromIndex).reset();
         this.fromIndex = null;
+        window.scroll(0,0);
     },
 
     // プレゼンテーションの開始
