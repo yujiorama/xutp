@@ -2,11 +2,12 @@
 
 ! Stored Procedure Test
 
+!! がいよう
 ''How can we verify logic independently when we have stored procedures?''
 
 '''We write Fully Automated Tests for each stored procedure.'''
 
-
+!! がいようのほそく
 * アプリケーションには、その状態を永続化するためにデータベースを使用するものがあります
 ** 中には、ストアドプロシージャやトリガーを使ってパフォーマンスを稼いだり、更新処理を共通化したりしてます
 

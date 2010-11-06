@@ -2,10 +2,12 @@
 
 ! Database Sandbox
 
+!! がいよう
 ''How do we develop and test software that depends on a database?''
 
 '''We provide a separate test database for each developer or tester.'''
 
+!! がいようのほそく
 * 多くのアプリケーションは永続的な状態を保存するためにデータベースを使います
 * 従って、そのアプリケーションのテストもデータベースにアクセスしなければなりません
 * テストごとのデータが永続化されてしまうことが ''Erratic Test'' (pp.228) となる一番の要因です

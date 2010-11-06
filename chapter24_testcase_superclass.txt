@@ -2,10 +2,12 @@
 
 ! Testcase Sueprclass
 
+!! がいよう
 ''Where do we put our test code when it is in reusable Test Utility Methods?''
 
 '''We inherit reusable test-specific logic from an abstract Testcase Super class.'''
 
+!! がいようのほそく
 * テストを書いていると、必ず同じロジックが必要になることがある
 * 最初のうちは、コピペしてしまうものです
 * 最終的には、''Test Utility Methods'' (pp.599) パターンにするが、どこに置いたらいいのか ?

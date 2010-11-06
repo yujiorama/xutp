@@ -2,10 +2,12 @@
 
 ! Transaction Rollback Teardown
 
+!! がいよう
 ''How do we tear down the Test Fixture when it is in a relational database?''
 
 '''We roll back the uncommitted test transaction as part of the teardown.'''
 
+!! がいようのほそく
 * 繰り返し実行可能で (ry
 * あらゆる環境を適切に掃除することを (ry
 

@@ -2,10 +2,12 @@
 
 ! Testcase Class per Feature
 
+!! がいよう
 ''How do we organize our Test Methods onto Testcase Classes?''
 
 ''We group the Test Methods onto Testcase Classes based on which testable feature of the SUT they exercise.''
 
+!! がいようのほそく
 * ''Test Methods'' (pp.348) が増加するにつれて、どの ''Testcase Class'' (pp.373) に配置するかを決めなければいけなくなる
 * ''Testcase Class per Feature'' 
 ** 私達が「テストの全体像を容易に理解できるようになる」ことに作用するテスト組織化の戦略
