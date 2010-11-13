@@ -76,3 +76,6 @@ s6.attach(s6, 'ready', function ready() {
 setInterval(function() {
     document.cookie = 'page=' + pr.index;
 }, 1000);
+
+
+
