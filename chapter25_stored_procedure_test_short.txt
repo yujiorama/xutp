@@ -25,7 +25,7 @@ Implementation Notes
 --------------------
 
 1. ストアドプロシージャと同じ言語でテストを書いて、データベース側で実行する
-2. アプリケーションの言語でテストを書いて、''Remote Proxy''[GOF] でストアドプロシージャにアクセスする
+2. アプリケーションの言語でテストを書いて、*Remote Proxy*[GOF] でストアドプロシージャにアクセスする
 
 * ストアドプロシージャの開発担当者は (1) の方法でユニットテストを書くでしょう
 * アプリケーションの開発担当は (2) の方法で受け入れテストを書くでしょう
@@ -36,7 +36,7 @@ Implementation Notes
     * 新たな言語やデバッガの学習をしなくてもよいので、開発者に自動テストを学んでもらいやすくなります
     * ストアドプロシージャの担当になったチームには魅力的な方法でしょう
     * テストコードから実装の詳細へアクセスしやすいという利点もあります
-    * カプセル化を破るので、''Overspecified Software'' (pp.239) になってしまうかもしれません
+    * カプセル化を破るので、*Overspecified Software* (pp.239) になってしまうかもしれません
 
 * データベースソフトウェアの中には、いくつかのプログラミング言語をサポートしているものもあります
     * Oracle は PL/SQL と Java の両方をサポートしています
@@ -50,9 +50,9 @@ Implementation Notes
 ### Variation: Remoted Stored Procedure Test
 
 * ストアドプロシージャを "ブラックボックス" としたコンポーネントテストになります
-    * ''Remote Proxy'' [GOF] を使って、詳細を隠蔽します
-    * プロキシは ''Service Facade'' [CJ2EEP] や ''Command'' [GOF] として構成されます
-    * Java の ''JdbcOdbcCallableStatement'' は ''Command'' に相当します
+    * *Remote Proxy* [GOF] を使って、詳細を隠蔽します
+    * プロキシは *Service Facade* [CJ2EEP] や *Command* [GOF] として構成されます
+    * Java の *JdbcOdbcCallableStatement* は *Command* に相当します
 
 * 回帰テストにするのがお勧めです
     * フィクスチャーの生成や結果の検証が困難であれば、他のストアドプロシージャを使います
@@ -62,15 +62,15 @@ Implementation Notes
         * .NET なら NDbUnit
 
 * 他のチームの開発者が欠陥無しのコードを書いてくれるとは信じられない時もこのパターンを適用します
-    * たぶん彼らは ''In-Database Stored Procedure Tests'' も書いていません
+    * たぶん彼らは *In-Database Stored Procedure Tests* も書いていません
     * 受け入れテストとして使えるパターンです
     * 実際の例をコラムに書きました
 
 [コラム](chapter25_stored_procedure_test_column.txt)
 
 * 欠点はテストの実行時間
-    * データの準備に時間がかかる = ''Slow Test''(pp.253) 
-    * テストを ''Subset Suite'' (pp.592) に分割すれば、だいぶ速くなります
+    * データの準備に時間がかかる = *Slow Test*(pp.253) 
+    * テストを *Subset Suite* (pp.592) に分割すれば、だいぶ速くなります
 
 * アプリケーションの言語で書かれたすでにユニットテストの存在するロジックを、データベースに移植するときも役立ちます
     * お金と時間の節約
