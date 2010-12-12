@@ -32,7 +32,7 @@ When to Use It
     * どこかでトランザクションがコミットされてしまっても何もできません
 
 よく分からない箇所でコミットされるせいで混乱した例を紹介しましょう。
-[Transaction Rollback Pain](chapter25_transaction_rollback_teardown_pain.md)
+[Transaction Rollback Pain](chapter25_transaction_rollback_pain.md)
 
 Implementation Notes
 --------------------
