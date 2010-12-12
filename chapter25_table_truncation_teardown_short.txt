@@ -11,36 +11,36 @@ Table Truncation Teardown
         * ファイル
         * コネクション
 * あらゆる環境を適切に掃除することを期待された teardown コードを書くことは大変
-* ''Complex Teardown'' (''Obscure Test'', pp.186) の末路
-    * ちょっとした ''Conditional Test Logic'' (pp.200)
-    * 最悪の場合 ''Untestable Test Code'' (''Hard-to-Test Code'', pp.209) になります
+* *Complex Teardown* (*Obscure Test*, pp.186) の末路
+    * ちょっとした *Conditional Test Logic* (pp.200)
+    * 最悪の場合 *Untestable Test Code* (*Hard-to-Test Code*, pp.209) になります
 
-* RDB を使うシステムのテストには、''TRUNCATE'' コマンドというアドバンテージがあります
+* RDB を使うシステムのテストには、*TRUNCATE* コマンドというアドバンテージがあります
 
 How It Works
 ------------
 
-永続的なフィクスチャーが不要なら、それぞれのテーブルに対して ''TRUNCATE'' コマンドを実行する。
+永続的なフィクスチャーが不要なら、それぞれのテーブルに対して *TRUNCATE* コマンドを実行する。
 
 When To Use It
 --------------
 
 * 満たすべき条件があります
-    1. '''本当に'''全てのデータを消去したいということ
-    2. テスト実行に ''Database Sandbox'' (pp.650) を使っていること
-* ''Persistent Fresh Fixture'' を使っているときは 1 番の選択肢です
-* ''Shared Fixture'' (pp.317) で使うのもよいでしょう
-* トランザクションのあるデータベースを使ってない場合の ''Automated Teardown'' (pp.503) に類似したパターンです
-    * ''Delta Assertions'' (pp.485) によって teardown が必須ではなくなりました
+    1. **本当に**全てのデータを消去したいということ
+    2. テスト実行に *Database Sandbox* (pp.650) を使っていること
+* *Persistent Fresh Fixture* を使っているときは 1 番の選択肢です
+* *Shared Fixture* (pp.317) で使うのもよいでしょう
+* トランザクションのあるデータベースを使ってない場合の *Automated Teardown* (pp.503) に類似したパターンです
+    * *Delta Assertions* (pp.485) によって teardown が必須ではなくなりました
 
 Implementation Notes
 --------------------
 
 1. 実際にどうやってデータを消すか (データベースで実行するコマンドは何?)
-    * 使えるなら '''TRUNCATE'''、なければ '''DELETE * FROM table-name'''
+    * 使えるなら **TRUNCATE**、なければ **DELETE * FROM table-name**
 2. 外部キー制約やトリガーをどうするか
-    * Oracle には関連する行を削除する '''ON DELETE CASCADE''' オプションがある
-    * ''cascade delete'' のないデータベースもある
+    * Oracle には関連する行を削除する **ON DELETE CASCADE** オプションがある
+    * *cascade delete* のないデータベースもある
     * schema に従って順番にデータが削除されるようにしないといけない
         * schema が変わるとこの順番も変わってしまう ?
     * テスト時は制約やトリガーを無効にすればよい
@@ -49,15 +49,15 @@ Implementation Notes
 
 ### Variation: Lazy Teardown
 
-* ''Shared Fixture'' と一緒に使える数少ない teardown 戦略
+* *Shared Fixture* と一緒に使える数少ない teardown 戦略
 * フィクスチャーが任意の時点で削除可能でなければなりません
-* ''Table Truncation Teardown'' は、いつ実行しても同じ処理をするところが目的に合っています
-* フィクスチャーの生成をする直前で、''trancation command'' を実行するだけです
+* *Table Truncation Teardown* は、いつ実行しても同じ処理をするところが目的に合っています
+* フィクスチャーの生成をする直前で、*trancation command* を実行するだけです
 
 Motivating Example
 ------------------
 
-''Guaranteed In-line Teardown'' の例です。
+*Guaranteed In-line Teardown* の例です。
 
  [Test]
  public void TestGetFlightsByOrigin_NoInboundFlights() {
