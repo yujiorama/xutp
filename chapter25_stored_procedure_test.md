@@ -27,8 +27,9 @@ Implementation Notes
 1. ストアドプロシージャと同じ言語でテストを書いて、データベース側で実行する
 2. アプリケーションの言語でテストを書いて、*Remote Proxy*[GOF] でストアドプロシージャにアクセスする
 
-* ストアドプロシージャの開発担当者は (1) の方法でユニットテストを書くでしょう
-* アプリケーションの開発担当は (2) の方法で受け入れテストを書くでしょう
+
+ストアドプロシージャの開発担当者は (1) の方法でユニットテストを書くでしょう。
+アプリケーションの開発担当は (2) の方法で受け入れテストを書くでしょう。
 
 ### Variation: In-Database Stored Procedure Test
 
@@ -66,7 +67,7 @@ Implementation Notes
     * 受け入れテストとして使えるパターンです
     * 実際の例をコラムに書きました
 
-[コラム](chapter25_stored_procedure_test_column.txt)
+[コラム](chapter25_stored_procedure_test_column.md)
 
 * 欠点はテストの実行時間
     * データの準備に時間がかかる = *Slow Test*(pp.253) 
