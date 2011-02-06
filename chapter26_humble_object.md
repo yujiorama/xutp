@@ -58,13 +58,45 @@ Chapter26. Humble Object
     - システムの応答をユーザの認識できる振る舞いとして伝えます
     - ユーザインターフェースの裏でアプリケーションを呼び出します
     - 自分や他の visual object の状態を変えます
+
 - Visual object の効率的なテストはとっても大変
     - プレゼンテーションフレームワークとの結合が密すぎる
     - テストは、環境をシミュレートして、visual object が必要とする情報や設備 (属性?機能?) を提供しないといけない
+
 - Visual object の効率的なテストは本当に大変
     - フレームワークが管理してる専用のスレッドから使用してることがある (# SWT とかそうですね)
     - **asynchronous test** を使わざるを得ない
         - とてもチャレンジング
         - *Slow Test* になってしまう
         - *Nondeterminisitic Test* になってしまう
-- *Humble Object* によって解決できる!
+
+*Humble Object* によって解決できるのです!
+
+### Variation: Humble Executable
+
+- active object は自分用のスレッドを持っているので、並行に動作することができます
+    - Windows アプリケーション (.exe) は別々のプロセスで動くことができます
+    - (Java では) Runnable を実装したオブジェクトは別々のスレッドで動くことができます
+    - クライアントが起動することもあれば、自動的に開始することもあります
+    - キューからリクエストされたプロセスは、return message として応答を送ります
+- どっちにしてもテストするには **asynchronous test** を使わざるを得ない
+    - interprocess coordination
+    - 遅延させる機能
+    - *Neverfail Test*
+
+- *Humble Executable* パターン
+    - *Slow Test* にも *Nondeterminisitic Test* にもならない唯一つの方法です
+    - executable の全てのロジックを **synchronouse test** 可能なコンポーネントに移します
+    - このコンポーネントが実装するサービスインターフェース
+        - executable の全てのロジックをメソッドとして公開してる
+        - メソッドは同期呼び出しできる
+    - テスタブルコンポーネントは DLL (Windows) や JAR (Java) になるでしょう
+
+- *Humble Executable* コンポーネントの特徴
+    - 小さいコード
+    - フレームワーク側のスレッドからは、テスタブルコンポーネント (*True Humble Object*?) をロードしてメッセージを委譲するだけ
+    - テストは、1 つか 2 つ (load できること、委譲できること) で済みます
+    - 実行にかかる時間はばかにできないので、数が少なくてもテストスイートの実行時間には大きな影響がある
+    - そうそう変わるものでもないので、開発者用のテストスイートからは外してもいいかも
+    - 自動化ビルドのテストスイートには入れておくことをお勧めします
+
