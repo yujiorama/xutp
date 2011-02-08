@@ -149,8 +149,24 @@ Chapter26. Humble Object
 ### Variation: Poor Man's Humble Object
 
 - ロジックを部分部分に隔離したり公開するには、別のメソッドにするのが簡単です
-- **Extract Method** します
+- インラインロジックを **Extract Method** して、テストから見れるようにします
+
 - 公開されたメソッドは、コンテキストに何も要求できません
 - 理想的には必要な情報はすべて引数として渡すんですが、フィールドに置くこともできます
 - 問題はテスタブルコンポーネントからこのメソッドを呼び出した際に、必要な情報がコンテキスト (存在しない、もしくは偽物) に依存してるような場合です
+
+- "poor man's" *Humble Object* はこういった方法から構成されます
+- オブジェクト (*Humble Object*) のインスタンス化を妨げるようなものがなければうまく機能するのです
+    - 自動的に開始するスレッド
+    - public なコンストラクタがない
+    - 満たされない依存性
+- *Test Specific Subclass* でこういった依存性を切ることができます
+    - テストしやすいコンストラクタ
+    - private メソッドをテストに公開する
+
+- *Subclassed Humble Object* や *Poor Man's Humble Object* のテスト
+    - テスト対象のメソッドがどう呼ばれるか分からないときに、その呼び出しを記録します
+        - *Subclassed Test Double* (*Test Spy*) を作ります
+    - 記録した結果と期待する結果を *Test Method* で検証します
+
 
