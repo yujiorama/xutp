@@ -45,7 +45,7 @@ public class RequestHandlerTest extends TestCase {
         // Exercise
         Response response = sut.processOneRequest(makeSimpleRequest());
         // Verify
-        assertEquals(1, sut.getNumberOfRequestsDone());
+        assertEquals(1, sut.getNumberOfRequestsCompleted());
         assertResponseEquals(makeSimpleResponse(), response);
     }
     
@@ -54,7 +54,21 @@ public class RequestHandlerTest extends TestCase {
         HumbleRequestHandlerThread sut = new HumbleRequestHandlerThread();
         // Verify
         String actualDelegateClass = sut.requestHandler.getClass().getName();
-        assertEquals(RequestHandlerImpl.class.getName, actualDelegateClass);
+        assertEquals(RequestHandlerImpl.class.getName(), actualDelegateClass);
+    }
+    
+    static class RequestHandlerRecordingStub implements RequestHandler {
+        public boolean initializedSuccessfully() {
+            return true;
+        }
+        public int getNumberOfRequestsCompleted() {
+            return 0;
+        }
+        public Response processOneRequest(Request request) {
+            return null;
+        }
+        public void initializeThread() {
+        }
     }
     
     public void testLogicCalled_Sync() throws InterruptedException {
@@ -69,6 +83,6 @@ public class RequestHandlerTest extends TestCase {
         // Verify
         Thread.sleep(TWO_SECONDS);
         assertTrue("init", mockHandler.initializedSuccessfully());
-        assertEquals(1, mockHandler.getNumberOfRequests());
+        assertEquals(1, mockHandler.getNumberOfRequestsCompleted());
     }
 }

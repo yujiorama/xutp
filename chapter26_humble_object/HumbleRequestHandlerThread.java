@@ -6,6 +6,10 @@ public class HumbleRequestHandlerThread extends Thread implements Runnable {
         requestHandler = new RequestHandlerImpl();
     }
     
+    public void setHandler(RequestHandler handler) {
+        requestHandler = handler;
+    }
+    
     public void run() {
         requestHandler.initializeThread();
         try {
