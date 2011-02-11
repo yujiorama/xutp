@@ -27,6 +27,7 @@ Chapter26. Humble Object
 - *Humble Object*
     - インスタンスの生成がハードなオブジェクトが持つロジックを、効率的なやりかたでテストに持ち込む方法です
 
+
 [Humble Object] How it Works
 ----------------------------
 
@@ -40,6 +41,7 @@ Chapter26. Humble Object
 - *Humble Object* には、「テストしやすいコンポーネント」が必要とするコンテキストの情報を渡す責務があります
 - *Humble Object* のコードはとても小さいけど、テストを実行するための setup がとても大変なので、書くのが退屈なんてことにはなりません
 
+
 [Humble Object] When to Use It
 ------------------------------
 
@@ -49,6 +51,7 @@ Chapter26. Humble Object
     - 依存関係を切るためのやりかたもいろんな方法になります
 - 本章の variations はよくあるパターンです
     - 自前の variation を考案しても驚くことではないです
+
 
 ### Variation: Humble Dialog
 
@@ -71,6 +74,7 @@ Chapter26. Humble Object
         - *Nondeterminisitic Test* になってしまう
 
 *Humble Object* によって解決できるのです!
+
 
 ### Variation: Humble Executable
 
@@ -100,6 +104,7 @@ Chapter26. Humble Object
     - そうそう変わるものでもないので、開発者用のテストスイートからは外してもいいかも
     - 自動化ビルドのテストスイートには入れておくことをお勧めします
 
+
 ### Variation: Humble Transaction Controller
 
 - データベースを使うアプリケーションのテスト
@@ -120,7 +125,6 @@ Chapter26. Humble Object
     - このような振る舞い(依存性ではない)が、ビジネスロジックのテストにおいて *Humble Object* をバイパスさせます
     - 結論: *Poor Man's Humble Object* を使うことで、うまくテストができるようになります
 
-
 - *Humble Object* にはビジネスロジックがありません
     - テストすべき振る舞いは、メソッド呼び出しによってコミット、ロールバックがちゃんと行われることです
     - テスタブルコンポーネントを、例外をスローする *Test Stub* で置き換えて、トランザクションがロールバックされることを検証できます
@@ -129,6 +133,7 @@ Chapter26. Humble Object
 - たいていのアプリケーションサーバはこのパターンをサポートしてます
     - ビジネスオブジェクトの外でトランザクションを直接、または間接的に制御できます
 - トランザクション制御を持ったフレームワークを使わないなら、自分達でこのパターンを実装しましょう
+
 
 ### Variation: Humble Container Adapter
 
@@ -145,6 +150,7 @@ Chapter26. Humble Object
 - テストしやすくするために *Humble Object* を導入する方法はいろいろあります
 - ロジックを公開することで同期テストで検証しやすくなる、というところは共通してます
 - TDD 純粋主義者は「テストで、"*Humble Object* が公開されたロジックを正しく呼び出すこと"、を検証する」ことを推奨してます
+
 
 ### Variation: Poor Man's Humble Object
 
@@ -168,6 +174,7 @@ Chapter26. Humble Object
     - テスト対象のメソッドがどう呼ばれるか分からないときに、その呼び出しを記録します
         - *Subclassed Test Double* (*Test Spy*) を作ります
     - 記録した結果と期待する結果を *Test Method* で検証します
+
 
 ### Variation: True Humble Object
 
@@ -207,3 +214,11 @@ Chapter26. Humble Object
     - ファクトリのメソッド呼び出しを検証します
     - 通常の **factory** オブジェクトを使うことも可能
     - 振る舞いを観測するため、テストのときだけ *Mock Object* か *Test Stub* に置き換えてしまえばよい
+
+
+### Variant: Subclassed Humble Object
+
+- ロジックを別のクラスに隔離するための中間的なアプローチ
+- よくあるパターン 2 つ
+    1. テストしたいメソッドを持ったフレームワークに依存しているクラスを subclass 化する
+    2. subclass によって実装される抽象メソッドへの委譲をしてるようなクラス
