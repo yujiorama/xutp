@@ -3,7 +3,7 @@ import junit.framework.TestCase;
 public class RequestHandlerThreadTest extends TestCase {
     private static final int TWO_SECONDS = 2000;
     
-    void enqueRequest(Request req) {
+    void enqueRequest(Request req) throws InterruptedException {
         Framework.putRequest(req);
     }
     
@@ -15,7 +15,7 @@ public class RequestHandlerThreadTest extends TestCase {
         return Response.create("test");
     }
     
-    Response getResponse() {
+    Response getResponse() throws InterruptedException {
         return Framework.takeResponse();
     }
     
@@ -45,5 +45,25 @@ public class RequestHandlerThreadTest extends TestCase {
         assertEquals(1, sut.getNumberOfRequestsCompleted());
         assertResponseEquals(makeSimpleResponse(), getResponse());
         sut.interrupt();
+    }
+    
+    public void testWasInitialized_Sync() throws InterruptedException {
+        // Setup
+        RequestHandlerThread sut = new RequestHandlerThread();
+        // Exercise
+        sut.initializeThread();
+        // Verify
+        assertTrue(sut.initializedSuccessfully());
+        sut.interrupt();
+    }
+    
+    public void testHandleOnRequest_Sync() throws InterruptedException {
+        // Setup
+        RequestHandlerThread sut = new RequestHandlerThread();
+        // Exercise
+        Response response = sut.processOneRequest(makeSimpleRequest());
+        // Verify
+        assertEquals(1, sut.getNumberOfRequestsCompleted());
+        assertResponseEquals(makeSimpleResponse(), response);
     }
 }
