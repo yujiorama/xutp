@@ -1,4 +1,4 @@
-publci class RequestHandlerImpl implements RequestHandler {
+public class RequestHandlerImpl implements RequestHandler {
     private boolean _initializationCompleted = false;
     private int _numberOfRequests = 0;
 
