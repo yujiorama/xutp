@@ -28,7 +28,6 @@ public class RequestHandlerTest extends TestCase {
         RequestHandler sut = new RequestHandlerImpl();
         // Verify
         assertFalse("init", sut.initializedSuccessfully());
-        sut.interrupt();
     }
     
     public void testWasInitialized_Sync() throws InterruptedException {
@@ -38,7 +37,6 @@ public class RequestHandlerTest extends TestCase {
         sut.initializeThread();
         // Verify
         assertTrue(sut.initializedSuccessfully());
-        sut.interrupt();
     }
     
     public void testHandleOnRequest_Sync() throws InterruptedException {
@@ -49,7 +47,6 @@ public class RequestHandlerTest extends TestCase {
         // Verify
         assertEquals(1, sut.getNumberOfRequestsDone());
         assertResponseEquals(makeSimpleResponse(), response);
-        sut.interrupt();
     }
     
     public void testConstroctor() {
@@ -73,6 +70,5 @@ public class RequestHandlerTest extends TestCase {
         Thread.sleep(TWO_SECONDS);
         assertTrue("init", mockHandler.initializedSuccessfully());
         assertEquals(1, mockHandler.getNumberOfRequests());
-        sut.interrupt();
     }
 }
