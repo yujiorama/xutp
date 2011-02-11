@@ -10,11 +10,29 @@ public class RequestHandlerThread extends Thread {
     public boolean initializedSuccessfully() {
         return _initializationCompleted;
     }
+
+    public int getNumberOfRequestsCompleted() {
+        return _numberOfRequests;
+    }
+    
+    Request nextMessage() {
+        return null;
+    }
+    
+    Response processOneRequest(Request request) {
+        return null;
+    }
+    
+    void putMsgOntoOutputQueue(Response response) {
+    }
+    
+    void initializeThread() {
+    }
     
     void processRequestsForever() {
         Request request = nextMessage();
         do {
-            Response resonse = processOneRequest(request);
+            Response response = processOneRequest(request);
             if (response != null) {
                 putMsgOntoOutputQueue(response);
             }

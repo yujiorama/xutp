@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="humbleobject" default="junit" basedir="./">
+  <property name="source" value="."/>
+  <target name="javac">
+    <javac srcdir="." destdir=".">
+      <classpath>
+        <fileset dir=".">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+  <target name="junit" depends="javac">
+    <junit printsummary="yes" haltonfailure="no">
+      <classpath>
+        <pathelement location="."/>
+        <fileset dir=".">
+          <include name="*.jar"/>
+        </fileset>
+      </classpath>
+      <formatter type="xml"/>
+      <batchtest fork="yes" todir=".">
+        <fileset dir=".">
+          <include name="*Test.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+  <target name="report" depends="junit">
+    <junitreport todir=".">
+      <fileset dir=".">
+        <include name="TEST-*.xml"/>
+      </fileset>
+      <report format="frames" todir="."/>
+    </junitreport>
+  </target>
+</project>
