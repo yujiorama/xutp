@@ -21,7 +21,7 @@ public class RequestHandlerThread extends Thread {
         return Framework.takeRequest();
     }
     
-    Response processOneRequest(Request request) {
+    private Response processOneRequest(Request request) {
         return Response.create(request.getContent());
     }
     
@@ -29,7 +29,7 @@ public class RequestHandlerThread extends Thread {
         Framework.putResponse(response);
     }
     
-    void initializeThread() {
+    private void initializeThread() {
         try {
             Thread.sleep(1000);
             _initializationCompleted = true;
