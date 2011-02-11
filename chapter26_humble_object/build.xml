@@ -11,15 +11,15 @@
     </javac>
   </target>
   <target name="junit" depends="javac">
-    <junit printsummary="yes" haltonfailure="no">
+    <junit printsummary="yes" haltonfailure="no" showoutput="true" fork="true">
       <classpath>
         <pathelement location="."/>
         <fileset dir=".">
           <include name="*.jar"/>
         </fileset>
       </classpath>
-      <formatter type="xml"/>
-      <batchtest fork="yes" todir=".">
+      <formatter usefile="false" type="brief"/>
+      <batchtest todir=".">
         <fileset dir=".">
           <include name="*Test.java"/>
         </fileset>

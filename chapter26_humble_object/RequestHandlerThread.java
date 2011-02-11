@@ -27,6 +27,10 @@ public class RequestHandlerThread extends Thread {
     }
     
     void initializeThread() {
+        try {
+        Thread.sleep(1000);
+        } catch (InterruptedException ignore) {}
+        _initializationCompleted = true;
     }
     
     void processRequestsForever() {
