@@ -62,7 +62,7 @@ public class RequestHandlerTest extends TestCase {
             return true;
         }
         public int getNumberOfRequestsCompleted() {
-            return 0;
+            return 1;
         }
         public Response processOneRequest(Request request) {
             return null;
