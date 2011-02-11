@@ -21,7 +21,9 @@ public class RequestHandlerThread extends Thread {
         return Framework.takeRequest();
     }
     
-    private Response processOneRequest(Request request) {
+    public Response processOneRequest(Request request) {
+        _numberOfRequests++;
+        //                 System.out.println("number of requests:" + getNumberOfRequestsCompleted());
         return Response.create(request.getContent());
     }
     
@@ -29,7 +31,7 @@ public class RequestHandlerThread extends Thread {
         Framework.putResponse(response);
     }
     
-    private void initializeThread() {
+    public void initializeThread() {
         try {
             Thread.sleep(1000);
             _initializationCompleted = true;
@@ -41,8 +43,6 @@ public class RequestHandlerThread extends Thread {
         do {
             Response response = processOneRequest(request);
             if (response != null) {
-                _numberOfRequests++;
-//                 System.out.println("number of requests:" + getNumberOfRequestsCompleted());
                 putMsgOntoOutputQueue(response);
             }
             request = nextMessage();
