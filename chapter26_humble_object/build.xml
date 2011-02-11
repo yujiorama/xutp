@@ -2,7 +2,7 @@
 <project name="humbleobject" default="junit" basedir="./">
   <property name="source" value="."/>
   <target name="javac">
-    <javac srcdir="." destdir=".">
+    <javac srcdir="." destdir="." debug="true" debuglevel="lines,vars,source">
       <classpath>
         <fileset dir=".">
           <include name="*.jar"/>
@@ -11,7 +11,7 @@
     </javac>
   </target>
   <target name="junit" depends="javac">
-    <junit printsummary="yes" haltonfailure="no" showoutput="true" fork="true">
+    <junit haltonfailure="no" showoutput="true" fork="true">
       <classpath>
         <pathelement location="."/>
         <fileset dir=".">

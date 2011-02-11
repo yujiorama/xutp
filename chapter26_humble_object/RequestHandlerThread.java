@@ -4,7 +4,9 @@ public class RequestHandlerThread extends Thread {
     
     public void run() {
         initializeThread();
-        processRequestsForever();
+        try {
+            processRequestsForever();
+        } catch (InterruptedException ignore) {}
     }
     
     public boolean initializedSuccessfully() {
@@ -15,29 +17,32 @@ public class RequestHandlerThread extends Thread {
         return _numberOfRequests;
     }
     
-    Request nextMessage() {
-        return null;
+    Request nextMessage() throws InterruptedException {
+        return Framework.takeRequest();
     }
     
     Response processOneRequest(Request request) {
-        return null;
+        return Response.create(request.getContent());
     }
     
-    void putMsgOntoOutputQueue(Response response) {
+    void putMsgOntoOutputQueue(Response response) throws InterruptedException {
+        Framework.putResponse(response);
     }
     
     void initializeThread() {
         try {
-        Thread.sleep(1000);
+            Thread.sleep(1000);
+            _initializationCompleted = true;
         } catch (InterruptedException ignore) {}
-        _initializationCompleted = true;
     }
     
-    void processRequestsForever() {
+    void processRequestsForever() throws InterruptedException {
         Request request = nextMessage();
         do {
             Response response = processOneRequest(request);
             if (response != null) {
+                _numberOfRequests++;
+//                 System.out.println("number of requests:" + getNumberOfRequestsCompleted());
                 putMsgOntoOutputQueue(response);
             }
             request = nextMessage();
