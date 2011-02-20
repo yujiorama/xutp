@@ -1,0 +1,43 @@
+#+TITLE:  第17回ぽじぺ
+#+AUTHOR: yuji okazawa (id:yujiorama)
+#+EMAIL:  yujiorama at gmail.com
+#+OPTIONS: H:1 num:t
+
+* [[http://a2.twimg.com/profile_images/691214238/relative-jet_bigger.jpg]]最近の活動
+** 主に管理面でプロジェクトが佳境
+
+#+BEGIN_EXAMPLE
+コードに変更開始とか変更終了とかのコメント入れたり、削除した箇所を
+コメントアウトとして戻す作業、泣きそう。なんというか縁日で買ってき
+たひよこが鶏になったらそれを殺して食えと言われた感じ
+http://twitter.com/yujiorama/status/35554445496565760
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+一行のコードを直すために5個くらいのxlsを直さないといけないとか、オー
+バーヘッド大きすぎるだろう
+http://twitter.com/yujiorama/status/38029501015265280
+#+END_EXAMPLE
+
+** 予断を許さない状況なので TDDBC 福岡への参加は自重
+
+* [[http://a2.twimg.com/profile_images/691214238/relative-jet_bigger.jpg]]参加経験
+** 2010/03 くらいから参加
+** とりまとめお疲れさまでした (setoazusa さん)
+** チームラボ様にもとても感謝
+
+* [[http://a2.twimg.com/profile_images/691214238/relative-jet_bigger.jpg]]関心領域
+** 10 年後に生き残る受託開発の方法論
+** 凡人開発者の生きる道
+
+* [[http://a2.twimg.com/profile_images/691214238/relative-jet_bigger.jpg]]担当箇所
+** 「97きのこ本」の査読をさせていただけたのは 2010 年の最良の出来事
+** Chapter 21.Result Verification Patterns
+** Chapter 24.Test Organization Patterns
+** Chapter 25.Database Patterns
+
+* [[http://a2.twimg.com/profile_images/691214238/relative-jet_bigger.jpg]]今後の希望
+1. WEwLC (独りでは読めそうもない orz)
+2. データベースリファクタリング (地豆の思想そのままに見える)
+** 独りでも読みたいもの/読んでるもの
+*** Fowler の DSL は今のところ 1/4 くらい
