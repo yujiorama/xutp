@@ -1,0 +1,30 @@
+* Assertion Roulette
+** テストが失敗した際、どのアサーションで失敗したのか分かりにくいテストメソッド。
+* Buggy Tests
+** バグが定期的に見つかるような自動化テスト。
+* Conditional Test Logic
+** 条件によって実行されたり、されなかったりするコードが含まれているテスト。
+* Developers Not Writing Tests
+** 開発者が自動化テストを書いてくれない。
+* Erratic Test
+** あるときは成功したりまたあるときは失敗したりといった不安定なテスト。
+* Fragile Test
+** SUT のテストに関係のない部分を変更したはずなのに、テストがコンパイルできなくなったり失敗するようになったりする。
+* Frequent Debugging
+** テストが失敗する原因を調べるのに手動のデバッグが必要なテスト。
+* Hard-to-Test Code
+** テストを書くのがが難しいコード。
+* High Test Maintenance Cost
+** メンテナンスしていくのに大きな手間のかかるテスト。
+* Manual Intervention
+** 実行するたびに人が何かの操作をしなければならないようなテスト。
+* Obscure Test
+** 一瞥して理解できないくらい難しいテスト。
+* Production Bugs
+** 形式的なテストや商用環境で検出された多くのバグ。
+* Slow Tests
+** 実行にとても長い時間のかかるテスト。
+* Test Code Duplication
+** 同じようなコードが繰り返し書かれているテスト。
+* Test Logic in Production
+** テストのときだけ実行されるロジックをプロダクションコードに埋め込んでしまったテスト。

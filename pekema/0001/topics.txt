@@ -1,0 +1,136 @@
+* Assertion Message
+** Assertion Method の引数に、それを説明する文字列を渡す。メッセージは、Assertion の内容の確認や、Expectation の説明に使われる。
+* Assertion Method
+** 期待した出力が得られたかどうかを評価するためのユーティリティメソッドの呼び出し。
+* Automated Teardown
+** テストが生成したリソースが teardown で自動的に破壊、開放されるようにすること。
+* Back Door Manipulation
+** 直接的なデータベースアクセスのような方法で、テストフィクスチャーを構築したり、出力を検証する。
+* Behavior Verification
+** SUT の間接的な出力を捕らえ、期待する振る舞いと比較する。
+* Chained Tests
+** テストフィクスチャーを同じくするテストスイートから他のテストを実行させる。
+* Configurable Test Double
+** テストのフィクスチャーセットアップフェーズにおいて、再利用可能な Test Double の返す値や検証された値を設定する。
+* Creation Method
+** テストフィクスチャーのセットアップで、オブジェクトを利用可能な状態にするための仕組みを隠蔽したメソッド(Intent Revealing Names に従って命名される)を呼び出す。
+* Custom Assertion
+** テストに特化したオブジェクトの属性を比較するための Assertion Method。
+* Data-Driven Test
+** テスト毎に必要な情報を全てデータファイルに入れ、データファイルを読み、テストを実行する。
+* Database Sandbox
+** テスト用データベースを分割して開発者やテスターごとに提供する。
+* Delegated Setup
+** 各々のテストメソッドの中で Creation Method を呼び出して、Fresh Fixture を使用する。
+* Delta Assertion
+** テストメソッドによる動作前後の SUT の状態の差分を検証する。
+* Dependency Injection
+** SUT がクライアントに依存性を提供する仕組み。
+* Dependency Lookup
+** SUT 自身が依存するオブジェクトを使用するため、他のオブジェクトに問い合わせる仕組み。
+* Derived Value
+** 他の値から導出できる値の代わりに、計算した値を使う。
+* Dummy Object
+** メソッドが何もしないオブジェクトを SUT に引き渡す。
+* Fake Object
+** SUT が依存するコンポーネントをごく軽い実装だけのオブジェクトで置き換える。
+* Four-Phase Test
+** テストを、異なる 4 つの部分のシーケンスの並びに構造化する。
+* Fresh Fixture
+** テスト毎に使用するフィクスチャーを新たに生成する。
+* Garbage-Collected Teardown
+** テストの実行後のリソース開放を、テストコードを記述したプログラミング言語の提供する GC 機構に任せる。
+* Generated Value
+** テストの実行ごとに適切な値を生成する。
+* Guard Assertion
+** テストコード中の if 文をアサーションに置き換えることで、if 文の条件式が真にならない場合はテストが失敗するようにする。
+* Hard-Coded Test Double
+** 返す値や期待さあれる呼び出しをハードコードした Test Double。
+* Humble Object
+** 業務ロジックを環境から切り離されたテストしやすいコンポーネントに抽出する。
+* Implicit Setup
+** setUp メソッドで各テストで共通して使用するテストフィクスチャーを生成する。
+* Implicit Teardown
+** 自動化テストフレームワークによって、テストメソッドの実行ごとにリソースの後片付けのロジックを記述した tearDown メソッドを呼び出す。
+* Inline Setup
+** テストメソッドごとに、それぞれが使用する Fresh Fixture を、適切なコンストラクタの呼び出しによって生成する。
+* Inline Teardown
+** テストメソッドの後半で、結果の検証の後に明示的に teardown ロジックを記述する。
+* Layer Test
+** レイヤードアーキテクチャにおいてレイヤーごとに分割されたテストを記述する。
+* Lazy Setup
+** テストが最初に必要とするまでフィクスチャーの生成を遅らせる。
+* Literal Value
+** オブジェクトの属性の設定値やアサーションにリテラル定数を使う。
+* Minimal Fixture
+** 各々のテストに必要最小限のシンプルなフィクスチャーを使う。
+* Mock Object
+** SUT (system under test) の依存するオブジェクトをテスト専用のオブジェクトに置き換える。
+* Named Test Suite
+** 一緒に実行したいテストをテストスイートとして定義して、適切な名前を付ける。
+* Parameterized Test
+** フィクスチャーのセットアップと、結果の検証に必要な情報をユーティリティメソッド化したテストメソッドに引き渡す。
+* Prebuilt Fixture
+** テストを実行しながら Shared Fixture を別々に構築する。
+* Recorded Test
+** ツールによって記録したアプリケーションとのインタラクションを使って、テストを自動化する。
+* Scripted Test
+** テストプログラムを手書きすることでテストを自動化する。
+* Setup Decorator
+** テストを実行する前に共有するテストフィクスチャーをセットアップし、テストの実行後に全ての後始末をするような Decorator によってテストスイートを包みこむ。
+* Shared Fixture
+** 複数のテストでテストフィクスチャーの同じインスタンスを再利用する。
+* Standard Fixture
+** あらゆるテストで使用される基礎的なテストフィクスチャー。
+* State Verification
+** テストによって SUT を動かした後の状態を期待する状態と比較する。
+* Stored Procedure Test
+** 全てのストアドプロシージャについて自動化テストを作成する。
+* SuiteFixture Setup
+** 共有フィクスチャーを構築/破棄するため、自動化テストフレームワークによって最初のテストメソッドを実行する前または最後のテストメソッドを実行した後に呼び出される特別なメソッド。
+* Table Truncation Teardown
+** テストによって変更されたフィクスチャーを tear down によって破棄する。
+* Test Automation Framework
+** テストの実行に必要な仕組みをフレームワークとして提供することで、テストに特化したロジックを書くだけでテストができるようになる。
+* Test Discovery
+** 自動化テストフレームワークによってテストスイートとそれに属するテストを発見する。
+* Test Double
+** SUT が依存するコンポーネントを "テストをする場合において等価である" コンポーネントに置き換える。
+* Test Enumeration
+** 自動化テストにおいてテストスイートに属する全てのテストを手動でコーディングする。
+* Test Helper
+** いろいろなテストから利用するユーティリティメソッドを持ったテスト用ヘルパークラス。
+* Test Hook
+** テスト時のみ特別な振る舞いをするように SUT を変更する。
+* Test Method
+** Encode each test as a single on some class.
+* Test Runner
+** テストケースオブジェクトを内包するテストスイートオブジェクトをインスタンス化し、実行するアプリケーション。
+* Test Selection
+** 自動化テストフレームワークが、テストの実行可否をテストの属性によって判断すること。
+* Test Spy
+** SUT による影響を受けた別のコンポーネントからの出力を間接的に記録する Test Double。
+* Test Stub
+** SUT に入力を与えるオブジェクトをテスト固有のオブジェクトに置き換えること。
+* Test Suite Object
+** 標準的なテストのインターフェースを実装し、関連するテストケースオブジェクトの集合を実行するオブジェクト。
+* Test Utility Method
+** テストに特有のロジックを隠蔽するメソッドに適切な名前を与えること。
+* Test-Specific Subclass
+** テストに必要となる状態を公開したり、特別な振る舞いをするようなメソッドを追加した SUT のサブクラス。
+* Testcase Class
+** 関連するテストメソッドの集合を 1 つのグループとして集めたもの。
+* Testcase Class per Class
+** SUT の 1 つのクラスにつき、1 つのテストケースクラスを用意する。
+* Testcase Class per Feature
+** SUT の 1 つのフィーチャー (機能) につき、1 つのテストケースクラスを用意する。
+* Testcase Class per Fixture
+** 同じフィクスチャーを使用するテストメソッドについて、1 つのテストケースクラスを用意する。
+* Testcase Object
+** 各々のテストメソッドを実行するためのコマンドオブジェクトを生成する。
+* Testcase Superclass
+** 再利用可能なテスト固有のロジックを抽象クラスとして定義する。
+* Transaction Rollback Teardown
+** テストの実行時にコミットされなかったトランザクションを teardown 時にロールバックする。
+* Unfinished Test Assertion
+** 不完全なテストが必ず失敗することを保証するためのアサーション。
