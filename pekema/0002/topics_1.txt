@@ -1,30 +1,196 @@
-* Assertion Roulette
+:書いた人:[[@yujiorama|https://twitter.com/#!/yujiorama]]([[id:yujiorama|http://d.hatena.ne.jp/yujiorama]])
+
+! 目次
+
+* 目的
+* はじめに
+* テストコードの不吉な匂い一覧
+* 逆引きテスティングパターン
+* さいごに
+
+! 目的
+
+この連載記事の目的は次のような感じです。
+* [[xUTP読書会|http://www.fieldnotes.jp/xutp/]]で得られた知見を整理する
+* xUnit Test Patterns に書かれている内容を分かりやすい形で広める
+
+英語の壁も、難しさの壁も、読書会の有志による努力によって取り払われました。
+
+軽い気持ちで、xUnit Test Patterns に挑戦してみましょう。
+
+! はじめに
+
+私見ですが、分量の多い本なので、全体像を掴んでから興味のありそうなところを
+つまみ読みするのがよいのではないか、と思っています。
+
+前回は表紙の裏に記載されている、「テスティングパターンの一覧」について示しました。
+
+今回は裏表紙の裏に記載されている、「テストコードの不吉な匂い一覧」と「逆引きテスティングパターン」
+を紹介したいと思います。
+
+例によってリンクは[[xUTP読書会Wiki|http://www.fieldnotes.jp/xutp/]]から辿れるようになっています。
+リンクの無いものは、独立した章にはなっていないものの、文中で触れられているキーワードとなります。
+
+! テストコードの不吉な匂い一覧
+
+「テストコードの不吉な匂い」とは、マーティン・ファウラーのリファクタリングでも触れられている
+「リファクタリングが必要であるような腐ったコード」のテストコード版です。
+
+例えば、テストコードが増えてくるにつれて、プロダクトコードと合わせて修正する対象が増えてしまい、
+結果として生産性が低下してしまうという経験はよくあることでしょう。
+
+xUnit Test Patterns では、そういった傾向を「不吉な匂い」と呼び、パターンとして分類しています。
+
+「テストコードはあるのに何故かうまくいかない」という状況になったら、見直してみる価値はあると思います。
+
+* [[Assertion Roulette|http://www.slideshare.net/t_wada/xunit-test-patterns-chapter16]]
 ** テストが失敗した際、どのアサーションで失敗したのか分かりにくいテストメソッド。
-* Buggy Tests
+* [[Buggy Tests|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FBuggy+Tests]]
 ** バグが定期的に見つかるような自動化テスト。
-* Conditional Test Logic
+* [[Conditional Test Logic|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FConditional+Test+Logic]]
 ** 条件によって実行されたり、されなかったりするコードが含まれているテスト。
-* Developers Not Writing Tests
+* [[Developers Not Writing Tests|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FDevelopers+Not+Writing+Tests]]
 ** 開発者が自動化テストを書いてくれない。
-* Erratic Test
+* [[Erratic Test|http://www.slideshare.net/t_wada/xunit-test-patterns-chapter16]]
 ** あるときは成功したりまたあるときは失敗したりといった不安定なテスト。
-* Fragile Test
+* [[Fragile Test|http://www.slideshare.net/t_wada/xunit-test-patterns-chapter16]]
 ** SUT のテストに関係のない部分を変更したはずなのに、テストがコンパイルできなくなったり失敗するようになったりする。
-* Frequent Debugging
+* [[Frequent Debugging|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FFrequent+Debugging]]
 ** テストが失敗する原因を調べるのに手動のデバッグが必要なテスト。
-* Hard-to-Test Code
-** テストを書くのがが難しいコード。
-* High Test Maintenance Cost
+* [[Hard-to-Test Code||http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FHard-to-Test+Code]]
+** テストを書くのが難しいコード。
+* [[High Test Maintenance Cost|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FHigh+Test+Maintenance+Cost]]
 ** メンテナンスしていくのに大きな手間のかかるテスト。
-* Manual Intervention
+* [[Manual Intervention|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FManual+Intervention]]
 ** 実行するたびに人が何かの操作をしなければならないようなテスト。
 * Obscure Test
 ** 一瞥して理解できないくらい難しいテスト。
 * Production Bugs
 ** 形式的なテストや商用環境で検出された多くのバグ。
-* Slow Tests
+* [[Slow Tests|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FSlow+Tests]]
 ** 実行にとても長い時間のかかるテスト。
-* Test Code Duplication
+* [[Test Code Duplication|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FTest+Code+Duplication]]
 ** 同じようなコードが繰り返し書かれているテスト。
-* Test Logic in Production
+* [[Test Logic in Production|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B6%2FTest+Logic+in+Production]]
 ** テストのときだけ実行されるロジックをプロダクションコードに埋め込んでしまったテスト。
+
+! 逆引きテスティングパターン
+
+私達の開発するシステムは、規模も複雑さもまちまちです。
+
+しかし、本質的には同じような構造を有しているものが多くあります。
+
+これは、テストコードにも同じことが言えます。
+
+そこで、直面している問題について本質を見抜き、適切なテスティングパターンを選択することで、
+良いテストコードを書くことができるようになるでしょう。
+
+なお、SUT とは System Under Test の略語で、本文で頻出する単語です。
+具体的には、開発しているシステムを構成するコンポーネントの中で、テストコードが対象としているものを指します。
+
+* 私達のソフトウェアについて自動化テストを書くには何を準備すればよいのですか？
+** [[Recorded Test (278)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FRecorded+Test]]
+** Scripted Test (285)
+** Data-Driven Test (288)
+* どうやったらテストを書いたり実行するのを簡単にできますか？
+** Test Automation Framework (298)
+* テストコードはどこに配置すればいいですか？
+** [[Test Method (348)|http://www.slideshare.net/t_wada/xutp-chapter19]]
+** [[Testcase Class (373)|http://www.slideshare.net/t_wada/xutp-chapter19-2-testcase-class]]
+** [[Test Helper (643)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTest+Helper]]
+** [[Testcase Superclass (638)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTestcase+Superclass]]
+* テストメソッドをテストケースクラスにまとめるにはどうしたらいいですか？
+** [[Testcase Class per Feature (624)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTestcase+Class+per+Feature]]
+** [[Testcase Class per Fixture (631)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTestcase+Class+per+Fixture]]
+** [[Testcase Class per Class (617)||http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTestcase+Class+per+Class]]
+* テストの自己チェックはどうしたらいいですか？
+** [[State Verification (462)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FState+Verification]]
+** [[Behavior Verification (468)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FBehavior+Verification]]
+** [[Assertion Method (362)|http://www.slideshare.net/t_wada/xutp-chapter19]]
+** [[Custom Assertion (474)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FCustom+Assertion]]
+** [[Delta Assertion (485)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FDelta+Assertion]]
+* テストロジックはどうやって構造化すればよいですか？
+** [[Four-Phase Test (358)|http://www.slideshare.net/t_wada/xutp-chapter19]]
+** [[Assertion Message (370)|http://www.slideshare.net/t_wada/xutp-chapter19]]
+** Unfinished Test Assertion (494)
+* テストコードの重複を取り除くにはどうしたらいいですか？
+** Data-Driven Test (288)
+** [[Custom Assertion (474)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FCustom+Assertion]]
+** [[Test Utility Method (599)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTest+Utility+Method]]
+** [[Parameterized Test (607)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FParameterized+Test]]
+* テストをどうやって実行したらいいですか？
+** [[Test Runner (377)|http://www.slideshare.net/t_wada/xutp-chapter19-2-testcase-class]]
+** [[Testcase Object (382)|http://www.slideshare.net/t_wada/xutp-chapter19-2-testcase-class]]
+** Test Suite Object (387)
+** [[Named Test Suite (592)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FNamed+Test+Suite]]
+* テストランナーが実行するテストをどうやって選択すればよいですか？
+** Test Discovery (393)
+** Test Enumeration (399)
+** Test Selection (403)
+* どのフィクスチャー戦略を使うべきでしょうか？
+** [[Minimal Fixture (302)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FMinimal+Fixture]]
+** Standard Fixture (305)
+** [[Fresh Fixture (311)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FFresh+Fixture]]
+** Shared Fixture (317)
+* フィクスチャーをどうやって構築したらよいですか？
+** In-line Setup (408)
+** Delegated Setup (411)
+** Creation Method (415)
+** Implicit Setup (424)
+* 最初のテストメソッドが共有フィクスチャーを必要とするまで構築を遅らせるにはどうすればいいですか？
+** Prebuilt Fixture (429)
+** [[Lazy Setup (435)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FLazy+Setup]]
+** [[Suite Fixture Setup (441)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FSuite+Fixture+Setup]]
+** Setup Decorator (447)
+** Chained Tests (454)
+* テストコードで使用する値 (定数) はどうやって決めればよいですか？
+** Dummy Object (728)
+** Literal Value (714)
+** [[Derived Value (718)|http://d.hatena.ne.jp/gnarl/20110227/1298816458]]
+** [[Generated Value (723)|http://www.slideshare.net/t_wada/xutp-chapter27-generated-value]]
+* フィクスチャーを破棄するにはどうしたらいいですか？
+** [[Garbage-Collected Teardown (500)|http://www.slideshare.net/setoazusa/garbage-collected-teardown]]
+** [[In-line Teardown (509)|http://www.slideshare.net/setoazusa/in-line-teardown]]
+** [[Implicit Teardown (516)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FImplicit+Teardown]]
+** Automated Teardown (503)
+** [[Table Truncation Teardown (661)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTable+Truncation+Teardown]]
+** [[Transaction Rollback Teardown (668)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTransaction+Rollback+Teardown]]
+* スローテストを避けるにはどうしたらいいですか？
+** Shared Fixture (317)
+** [[Test Double (522)|http://infog.0ch.biz/download/xutp_testdouble_testdouble.pdf]]
+** [[Fake Object (551)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FFake+Object]]
+* 条件に基づくテストロジックを避けるにはどうしたらいいですか？
+** [[Custom Assertion (474)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FCustom+Assertion]]
+** [[Guard Assertion (490)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FGuard+Assertion]]
+* ロジックだけを独立して検証するにはどうしたらいいですか？
+** [[Back Door Manipulation (327)|http://www.slideshare.net/secret/2pCCpWpafR8WJ]]
+** Layer Test (337)
+** [[Test Double (522)|http://infog.0ch.biz/download/xutp_testdouble_testdouble.pdf]]
+** Test Stub (529)
+** [[Test Spy (538)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTest+Spy]]
+** [[Mock Object (544)|http://www.slideshare.net/setoazusa/mock-object]]
+** [[Fake Object (551)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FFake+Object]]
+** [[Stored Procedure Test (654)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FStored+Procedure+Test]]
+* 振る舞いを検証するにはどうしたらいいですか？
+** [[Test Spy (538)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FTest+Spy]]
+** [[Mock Object (544)|http://www.slideshare.net/setoazusa/mock-object]]
+* テストダブルに任意の返り値や期待値を指定するにはどうしたらよいですか？
+** [[Configurable Test Double (558)|http://www.slideshare.net/setoazusa/20100925xutp]]
+** [[Hard-Coded Test Double (568)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FHard-Coded+Test+Double]]
+* コードをテストしやすくするにはどうしたらよいですか？
+** [[Humble Object (695)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FHumble+Object]]
+** Test-Specific Subclass (579)
+* SUT が動的に依存先を置き換えられるようにするにはどうしたらよいですか？
+** [[Dependency Injection (678)|http://www.slideshare.net/t_wada/xutp-chapter26-dependency-injection]]
+** [[Dependency Lookup (686)|http://www.fieldnotes.jp/xutp/?%C3%B4%C5%F6%B3%E4%C5%F6%C9%BD%2FPART%AD%B7%2FDependency+Lookup]]
+** [[Test Hook (709)|http://www.slideshare.net/setoazusa/20101114]]
+
+! さいごに
+
+次回以降の方向性として、目次を概観するか、テスティングパターンランゲージの領域ごとに概観していくか、少し迷っています。
+
+「全体像はいいから、ここの説明を詳しく！」などのご意見などいただければ、検討させていただきたいと思います。
+
+ご意見、叱咤、反論などはいつでも承りますので、お気軽にどうぞ。
+
+長いリスティングにお付きあいいただき、本当にありがとうございました。
